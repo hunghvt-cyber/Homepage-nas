@@ -4,8 +4,56 @@
     "title": "Hộp đồ — trang mẫu",
     "area": "Ví dụ",
     "summary": "Trang mẫu để xem bố cục. Chưa phải hướng dẫn đồ vật trong nhà.",
-    "steps": ["Đọc nhãn bên ngoài để chọn đúng hộp.", "Mở nắp và lấy món đồ cần dùng.", "Dùng xong, cất lại đúng hộp và đóng nắp."],
+    "steps": [
+      "Đọc nhãn bên ngoài để chọn đúng hộp.",
+      "Mở nắp và lấy món đồ cần dùng.",
+      "Dùng xong, cất lại đúng hộp và đóng nắp."
+    ],
     "notes": "Thay nội dung này bằng hướng dẫn thực tế trước khi in QR.",
     "images": []
+  },
+  {
+    "slug": "bep-sunhouse-shb82191-vmc",
+    "title": "Bếp đôi Sunhouse",
+    "area": "Nhà bếp",
+    "summary": "SHB82191-VMC · Bên trái hồng ngoại, bên phải bếp từ.",
+    "last_cleaned": "",
+    "steps": [
+      "Bật / tắt: chạm 1 lần nút ⏻ ở bên phải bảng điều khiển của vùng muốn dùng. Chạm lại 1 lần để tắt. Mỗi bên có nút riêng.",
+      "Chỉnh nhiệt: chạm hoặc vuốt thanh chỉnh nhiệt dưới màn hình. Sang phải để nóng hơn, sang trái để nhỏ lửa hơn. Có 9 mức; khi món đã sôi, giảm xuống mức vừa đủ để tránh trào.",
+      "Bên trái — Hồng ngoại: dùng nồi/chảo kim loại, đáy phẳng. Không cần đáy bắt nam châm.",
+      "Bên phải — Bếp từ: dùng nồi/chảo đáy phẳng, bắt nam châm. Thử áp nam châm vào đáy: hút được thì phù hợp."
+    ],
+    "notes": "Tắt rồi mặt bếp vẫn có thể nóng, nhất là bên trái. Đừng chạm tay để thử nhiệt.",
+    "images": [
+      {
+        "src": "/images/sunhouse-shb82191-mat-bep.webp",
+        "alt": "Mặt bếp Sunhouse SHB82191-VMC: vùng hồng ngoại bên trái, vùng từ bên phải, mỗi bên có bảng điều khiển riêng.",
+        "caption": "Trái: hồng ngoại · Phải: bếp từ. Nút ⏻ nằm ở phía phải mỗi bảng điều khiển. Ảnh: SUNHOUSE."
+      },
+      {
+        "src": "/images/sunhouse-shb82191-dieu-khien.webp",
+        "alt": "Ảnh hãng minh họa ngón tay vuốt thanh chỉnh nhiệt nằm dưới màn hình của vùng nấu bên phải.",
+        "caption": "Thanh dưới màn hình: chạm hoặc vuốt để chỉnh nhiệt. Sang phải tăng, sang trái giảm. Ảnh: SUNHOUSE."
+      }
+    ],
+    "details": [
+      {
+        "title": "Các nút và tính năng",
+        "body": "Booster — Nấu nhanh: tăng công suất để làm nóng nhanh.\nSlow Cook — Nấu chậm: duy trì nhiệt thấp, phù hợp món kho, hầm.\nGiữ ấm: giữ món ăn ấm sau khi nấu.\nHẹn giờ: đặt thời gian nấu.\nTạm dừng: tạm ngưng quá trình nấu.\nKhóa phím: tránh chạm nhầm làm đổi cài đặt.\n\nCách bấm các tính năng này đang được bổ sung. Chưa có hướng dẫn mở khóa đã xác minh cho bếp này."
+      },
+      {
+        "title": "Vệ sinh và chăm sóc",
+        "body": "Sau khi nấu: chờ mặt bếp nguội, lau bằng khăn mềm hơi ẩm rồi lau khô. Lau sạch dầu mỡ và nước tràn, nhất là quanh nút cảm ứng.\n\nKhi có vết bám: dùng sản phẩm vệ sinh phù hợp với mặt kính bếp. Tránh búi sắt, chất tẩy có hạt và cạo bằng dao.\n\nThỉnh thoảng kiểm tra: giữ khe thông gió thoáng, tránh để đồ che kín. Không tự tháo bếp để vệ sinh bên trong.\n\nChưa ghi nhận lịch bảo dưỡng định kỳ riêng của model này. Ngày vệ sinh đầu trang chỉ cập nhật khi đã thực hiện."
+      },
+      {
+        "title": "Lưu ý thêm",
+        "body": "Giữ tay và khu vực nút cảm ứng khô để bấm dễ hơn.\nKhông đun nồi rỗng hoặc để thức ăn cạn cháy.\nKhông đổ nước lạnh lên mặt bếp đang nóng.\nNếu kính nứt hoặc có mùi khét bất thường: ngừng dùng, ngắt nguồn và gọi kỹ thuật."
+      },
+      {
+        "title": "Nguồn thông tin",
+        "body": "Model, loại nồi, thanh chỉnh nhiệt và tính năng: trang sản phẩm chính hãng SUNHOUSE SHB82191-VMC.\nhttps://sunhouse.com.vn/thiet-bi-nha-bep/bep-tu-doi/bep-doi-dien-tu-sunhouse-shb82191-vmc.html\nBật/tắt bằng 1 chạm: chủ nhà xác nhận sử dụng thực tế ngày 09/10/2026."
+      }
+    ]
   }
 ]
