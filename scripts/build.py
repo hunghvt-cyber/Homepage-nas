@@ -8,7 +8,7 @@ OUT = ROOT / 'dist'
 esc = lambda value: html.escape(str(value), quote=True)
 site = json.loads((ROOT / 'content/site.json').read_text())
 guides = json.loads((ROOT / 'content/guides.json').read_text())
-base = os.getenv('PORTAL_BASE_URL', '').rstrip('/')
+base = os.getenv('PORTAL_BASE_URL', site.get('base_url', '')).rstrip('/')
 if base:
     parsed = urlparse(base)
     if parsed.scheme != 'https' or not parsed.hostname or parsed.path not in ('', '/') or parsed.query or parsed.fragment or parsed.username:
