@@ -1,6 +1,6 @@
 # Homepage và QR trên Vercel
 
-Website tĩnh độc lập; text và ảnh trong GitHub. Không Firebase SDK, Firestore, Auth hay API Home-AI. Chỉ dist được phục vụ; Home-AI là dự án riêng; Homepage chỉ chứa shortcut đến ứng dụng đó.
+Website tĩnh độc lập; text và ảnh trong GitHub. Không Firebase SDK, Firestore hay API Home-AI. Khu vực sửa nội dung dùng GitHub OAuth riêng trên Vercel; trang đọc vẫn tĩnh và công khai. Chỉ dist được phục vụ; Home-AI là dự án riêng; Homepage chỉ chứa shortcut đến ứng dụng đó.
 
 ## Nội dung
 - content/site.json: tên trang và shortcut. Link trống là chưa cấu hình. Viewer/FnNAS chỉ điền đường Tailscale đã xác minh; Home-AI giữ truy cập/đăng nhập hiện tại.
@@ -35,3 +35,7 @@ Build, syntax, link nội bộ/404, ảnh và QR trước khi commit. Kiểm tra
 
 ## Trạng thái
 Đã bỏ cấu hình/workflow Firebase Hosting. Source sẵn sàng chưa có nghĩa website đã live; cần quyền tạo project đúng account Vercel.
+
+
+## Sửa nội dung trên web
+Mở `/sua/` hoặc nút Sửa hướng dẫn ở cuối trang. Đăng nhập GitHub có quyền push repo; mỗi lần lưu tạo commit trên main. Cần cấu hình OAuth App và ba biến môi trường riêng cho Homepage trước khi đăng nhập: [hướng dẫn cấu hình](docs/GUIDE-EDITOR.md). URL cố định, ảnh và trường khác được giữ nguyên.

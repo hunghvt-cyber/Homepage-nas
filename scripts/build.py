@@ -61,8 +61,12 @@ for guide in guides:
         output.parent.mkdir(exist_ok=True)
         qrcode.make(base+path,image_factory=qrcode.image.svg.SvgPathImage,border=4).save(output)
         qr='<details class="noprint"><summary>QR cho trang này</summary><p><img width="220" height="220" src="/qr/'+slug+'.svg" alt="QR mở hướng dẫn"></p><a download href="/qr/'+slug+'.svg">Tải QR SVG để in</a><p>'+esc(base+path)+'</p></details>'
-    write('do-vat/'+slug+'/index.html',page(guide['title'],'<header><a href="/huong-dan/">← Hướng dẫn</a><h1>'+esc(guide['title'])+'</h1><span class="badge">'+esc(guide['area'])+'</span><p>'+esc(guide['summary'])+'</p></header><section><div class="bar"><h2>Cách sử dụng</h2></div><div class="body"><ol>'+''.join('<li>'+esc(step)+'</li>' for step in guide['steps'])+'</ol>'+''.join(images)+(('<p><strong>Lưu ý:</strong> '+esc(guide['notes'])+'</p>') if guide.get('notes') else '')+'</div></section>'+qr))
+    extra = ''.join('<details><summary>'+esc(item['title'])+'</summary><div class="body"><p style="white-space:pre-line">'+esc(item['body'])+'</p></div></details>' for item in guide.get('details', []))
+    care = '<p><strong>Vệ sinh kỹ gần nhất:</strong> '+esc(guide.get('last_cleaned') or 'Chưa ghi nhận')+'</p>' if 'last_cleaned' in guide else ''
+    edit = '<p class="noprint"><a href="/sua/?guide='+slug+'">Sửa hướng dẫn · đăng nhập GitHub</a></p>'
+    write('do-vat/'+slug+'/index.html',page(guide['title'],'<header><a href="/huong-dan/">← Hướng dẫn</a><h1>'+esc(guide['title'])+'</h1><span class="badge">'+esc(guide['area'])+'</span><p>'+esc(guide['summary'])+'</p>'+care+'</header><section><div class="bar"><h2>Cách sử dụng</h2></div><div class="body"><ol>'+''.join('<li>'+esc(step)+'</li>' for step in guide['steps'])+'</ol>'+''.join(images)+(('<p><strong>Lưu ý:</strong> '+esc(guide['notes'])+'</p>') if guide.get('notes') else '')+'</div></section>'+extra+edit+qr))
     cards.append('<a class="shortcut" href="'+path+'"><strong>'+esc(guide['title'])+'</strong><small>'+esc(guide['area'])+'</small></a>')
-write('huong-dan/index.html',page('Hướng dẫn đồ vật','<header><a href="/">← Trang chủ</a><h1>Hướng dẫn đồ vật</h1><p>Chọn đồ vật để xem hướng dẫn ngắn.</p></header>'+''.join(cards)))
+write('huong-dan/index.html',page('Hướng dẫn đồ vật','<header><a href="/">← Trang chủ</a><h1>Hướng dẫn đồ vật</h1><p>Chọn đồ vật để xem hướng dẫn ngắn.</p></header>'+''.join(cards)+'<p><a href="/sua/">Sửa hướng dẫn · đăng nhập GitHub</a></p>'))
 write('404.html',page('Không tìm thấy','<h1>Chưa có hướng dẫn này</h1><p>Kiểm tra lại đường dẫn hoặc mở danh mục.</p><a href="/huong-dan/">Danh mục hướng dẫn</a>'))
 print(f'Built {len(guides)} guides; QR '+('enabled' if base else 'pending confirmed origin'))
+
