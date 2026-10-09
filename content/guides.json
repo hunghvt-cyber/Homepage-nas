@@ -55,5 +55,49 @@
         "body": "Model, loại nồi, thanh chỉnh nhiệt và tính năng: trang sản phẩm chính hãng SUNHOUSE SHB82191-VMC.\nhttps://sunhouse.com.vn/thiet-bi-nha-bep/bep-tu-doi/bep-doi-dien-tu-sunhouse-shb82191-vmc.html\nBật/tắt bằng 1 chạm: chủ nhà xác nhận sử dụng thực tế ngày 09/10/2026."
       }
     ]
+  },
+  {
+    "slug": "tu-lanh-aqua-aqr-t305fa-lb",
+    "title": "Tủ lạnh Aqua",
+    "area": "Nhà bếp",
+    "summary": "AQR-T305FA(LB) · Chỉnh độ lạnh, chọn ngăn và vệ sinh.",
+    "last_cleaned": "",
+    "steps": [
+      "Ngăn mát — núm tròn: xoay vạch nhỏ trên núm tới mức cần chọn. MIN: ít lạnh hơn · MED: mức giữa · MAX: lạnh hơn.",
+      "Ngăn đá — thanh gạt FREEZER TEMP-CONTROL: gạt sang trái về MIN, giữa MED, sang phải về MAX.",
+      "Dùng hằng ngày: có thể bắt đầu ở MED cho cả hai ngăn, rồi điều chỉnh theo lượng đồ và độ lạnh thực tế.",
+      "Thanh chọn thực phẩm phía trên núm tròn: gạt về biểu tượng phù hợp với đồ đang cất — phô mai, đồ uống hoặc thịt. Chưa gán nhiệt độ cụ thể cho từng vị trí."
+    ],
+    "notes": "Không chắn cửa gió bằng thực phẩm. Đậy kín đồ ăn và đóng cửa tủ kín sau khi lấy đồ.",
+    "images": [
+      {
+        "src": "/images/aqua-t305fa-ngan-mat.webp",
+        "alt": "Núm tròn chỉnh lạnh ngăn mát với MIN bên trái, MED phía trên, MAX bên phải; phía trên là thanh chọn thực phẩm.",
+        "caption": "Ngăn mát: dùng vạch nhỏ trên núm để chọn MIN / MED / MAX. Thanh phía trên có ba biểu tượng thực phẩm. Ảnh tủ thực tế."
+      },
+      {
+        "src": "/images/aqua-t305fa-ngan-da.webp",
+        "alt": "Thanh gạt FREEZER TEMP-CONTROL trong ngăn đá với MIN trái, MED giữa, MAX phải.",
+        "caption": "Ngăn đá: gạt trái → MIN · giữa → MED · phải → MAX. Ảnh tủ thực tế."
+      }
+    ],
+    "details": [
+      {
+        "title": "Ngăn Magic Zone",
+        "body": "AQUA công bố ngăn Magic Zone của model này có ba mức 0°C, 2°C và 4°C. Đây là ngăn trữ lạnh, không thay thế ngăn đông để cấp đông thực phẩm.\n\nẢnh thực tế có các biểu tượng phô mai, đồ uống và thịt. Chưa đối chiếu được tài liệu riêng để xác nhận mức nhiệt tại từng vị trí, nên hướng dẫn chưa gán 0/2/4°C cho thanh gạt."
+      },
+      {
+        "title": "Vệ sinh và chăm sóc",
+        "body": "Trước khi vệ sinh kỹ: rút điện và chuyển thực phẩm sang nơi giữ lạnh phù hợp.\n\nLau bên trong bằng khăn mềm hơi ẩm rồi lau khô. Rửa khay và ngăn kéo bằng nước ấm, lau khô trước khi lắp lại. Nhớ lau gioăng cửa, nhất là mép dưới.\n\nTránh nước sôi, miếng chà cứng và chất tẩy mạnh. Không đổ nước vào cửa gió hoặc bộ phận điện.\n\nDọn ngay đồ bị đổ và thực phẩm hỏng. Kiểm tra gioăng sạch, cửa đóng kín. Chưa có lịch bảo dưỡng định kỳ riêng của model để đưa vào trang; ngày vệ sinh chỉ ghi khi đã thực hiện."
+      },
+      {
+        "title": "Khi tủ có mùi hoặc kém lạnh",
+        "body": "Có mùi: kiểm tra đồ ăn hỏng, đậy kín thức ăn và vệ sinh khay, ngăn kéo, gioăng cửa.\n\nKém lạnh: kiểm tra cửa đã đóng kín, thực phẩm có chắn cửa gió không và núm/thanh gạt có bị đổi mức không. Nếu vẫn bất thường, liên hệ kỹ thuật.\n\nKhông tự nạp gas hoặc tháo hệ thống làm lạnh."
+      },
+      {
+        "title": "Nguồn và giới hạn xác minh",
+        "body": "Model và Magic Zone: trang chính hãng AQUA AQR-T305FA(LB).\nhttps://aquavietnam.com.vn/san-pham/aqr-t305falb/\n\nVị trí và nhãn điều khiển: ảnh tủ thực tế chủ nhà cung cấp ngày 09/10/2026.\n\nÝ nghĩa MIN/MED/MAX, gợi ý MED dùng thông thường và cách vệ sinh: đối chiếu hướng dẫn AQUA AQR-T239FA có bộ điều khiển tương tự. Chưa tìm được sách riêng AQR-T305FA(LB); không áp dụng nhiệt độ cụ thể hoặc lịch bảo dưỡng từ model khác.\nhttps://aquavietnam.com.vn/wp-content/uploads/2021/01/6-INSTRUCTION-MANUAL-AQR-T239FA.pdf"
+      }
+    ]
   }
 ]
