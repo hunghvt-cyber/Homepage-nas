@@ -11,17 +11,20 @@ Implemented a Python publisher that reads the existing 15-second FnNAS monitorin
 
 ## Evidence and freshness
 
-- NAS state is derived from the fresh collector's root and volume filesystem measurements. Camera containers being present/running is not proof of camera operation, so both camera states stay `unknown`.
-- Maintenance and retention are `unknown` when their recorded result is older than 15 minutes. The page independently flags old measurement times and shows those times; it does not present an old result as current PASS.
-- At implementation time, the monitoring cache was fresh. The maintenance result was from the prior day, and retention was only a dry run, so both are published as `unknown` with their source measurement time.
+- NAS state is derived from collector root and volume filesystem measurements. The overall cache timestamp is preserved as `updated_at`.
+- Camera state uses existing per-camera cache evidence: recent `last_video_at`, `status=recording`, `recorder_active`, and `sample_growth`. A running container alone is insufficient. If the camera cache or recording evidence is missing or stale, its state is `unknown`.
+- Maintenance reads only `LAST_UPDATE` and `STATUS` from its summary. It preserves that result and its measurement time regardless of age; the summary's `RETENTION=DRY_RUN` is never used as a verified retention result.
+- Verified retention reads its independent latest result, validates date, timezone-aware start/finish times, overall status and job statuses, then verifies each referenced result's SHA-256 and `mode=APPLY` under the configured evidence root. A dry run or incomplete/inconsistent result becomes `unknown`; valid results use `finished` as `measured_at`.
+- The page marks camera/NAS telemetry stale when snapshot `updated_at` is older than 15 minutes. That stale marker does not replace the historical maintenance/retention result; their latest state and measurement time remain visible.
 - The payload is limited to the allowlisted fields and does not expose IPs, recording paths, events, secrets, or administrator details.
 
 ## Verification
 
 - Two successful uploads used the same returned Blob URL. Listing the dedicated store found exactly one object, `nas-status.json`.
 - The public URL returned HTTP 200 and `application/json`. A request carrying the Homepage origin received `Access-Control-Allow-Origin: *`.
-- Homepage `status_url` points at that returned URL. UI source preserves the existing camera/NAS five-minute refresh, loads maintenance/retention on page open, and labels measurements older than 15 minutes as old.
+- Homepage `status_url` points at that returned URL. UI source preserves the existing camera/NAS five-minute refresh, loads maintenance/retention on page open, and marks only telemetry stale from the snapshot timestamp.
 - QR assets and Home-AI shortcut markup were not changed by the status feed implementation.
+- Snapshot fixtures cover previous-day and current-day result timestamps, verified retention dry-run, old telemetry snapshots, fresh recording evidence, and missing sources.
 
 ## Schedule
 

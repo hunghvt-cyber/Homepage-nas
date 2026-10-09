@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Publish a small public snapshot derived only from existing NAS caches."""
 import fcntl
+import hashlib
 import json
+import math
 import os
 import signal
 import sys
@@ -14,67 +16,164 @@ CACHE = Path(os.environ.get("STATUS_CACHE", "/var/lib/fnnas-monitor/snapshot.jso
 MAINTENANCE = Path(os.environ.get(
     "STATUS_MAINTENANCE", "/vol1/Docker/tapo-nas-lab/state/daily-maintenance/latest.env"
 ))
+VERIFIED_RETENTION = Path(os.environ.get(
+    "STATUS_VERIFIED_RETENTION", "/vol1/Docker/tapo-nas-lab/state/retention-auto/latest.json"
+))
+VERIFIED_RETENTION_RESULTS = Path(os.environ.get(
+    "STATUS_VERIFIED_RETENTION_RESULTS", "/vol1/Docker/tapo-nas-lab/state/verified-retention"
+))
 TOKEN_FILE = Path(os.environ.get("STATUS_TOKEN_FILE", "~/.config/homepage-nas/blob-token")).expanduser()
 OUTPUT = Path(os.environ.get("STATUS_OUTPUT", "~/.local/state/homepage-status/nas-status.json")).expanduser()
 LOCK = OUTPUT.with_suffix(".lock")
 STATES = {"ok", "pass", "warn", "fail", "unknown"}
 MAX_CACHE_AGE = 120
-MAX_MAINTENANCE_AGE = 15 * 60
+MAX_RECORDING_AGE = 15 * 60
+FUTURE_SKEW = 5 * 60
 
 
 def iso(epoch):
     return datetime.fromtimestamp(epoch, timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
+def epoch(value):
+    """Parse Unix seconds or an ISO timestamp with an explicit timezone."""
+    try:
+        if isinstance(value, (int, float)) and not isinstance(value, bool):
+            return float(value)
+        if isinstance(value, str):
+            parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            if parsed.tzinfo is not None:
+                return parsed.timestamp()
+    except (ValueError, OverflowError, OSError):
+        pass
+    return None
+
+
 def valid_state(value):
     return value if value in STATES else "unknown"
 
 
-def read_maintenance():
+def read_maintenance(path=MAINTENANCE):
     try:
         values = {}
-        for line in MAINTENANCE.read_text(encoding="utf-8").splitlines():
+        for line in path.read_text(encoding="utf-8").splitlines():
             key, sep, value = line.partition("=")
-            if sep and key in {"LAST_UPDATE", "STATUS", "RETENTION"}:
+            if sep and key in {"LAST_UPDATE", "STATUS"}:
                 values[key] = value
-        measured = datetime.fromisoformat(values["LAST_UPDATE"]).timestamp()
-        age = time.time() - measured
-        fresh = 0 <= age <= MAX_MAINTENANCE_AGE
+        measured = epoch(values["LAST_UPDATE"])
+        if measured is None or not math.isfinite(measured) or measured > time.time() + FUTURE_SKEW:
+            raise ValueError("invalid maintenance timestamp")
         maintenance_state = {"PASS": "pass", "WARN": "warn", "FAIL": "fail"}.get(values.get("STATUS"), "unknown")
-        retention_state = {"PASS": "pass", "DRY_RUN": "warn", "BLOCKED": "warn", "FAIL": "fail"}.get(values.get("RETENTION"), "unknown")
         return {
-            "maintenance": {"state": valid_state(maintenance_state) if fresh else "unknown", "measured_at": iso(measured)},
-            "retention": {"state": valid_state(retention_state) if fresh else "unknown", "measured_at": iso(measured)},
+            "maintenance": {"state": valid_state(maintenance_state), "measured_at": iso(measured)},
         }
     except (OSError, KeyError, ValueError, OverflowError):
-        return {"maintenance": {"state": "unknown", "measured_at": None}, "retention": {"state": "unknown", "measured_at": None}}
+        return {"maintenance": {"state": "unknown", "measured_at": None}}
 
 
-def make_snapshot():
+def read_verified_retention(path=VERIFIED_RETENTION, results_root=VERIFIED_RETENTION_RESULTS):
     try:
-        source = json.loads(CACHE.read_text(encoding="utf-8"))
-        updated = float(source["updated_at"])
-        age = time.time() - updated
-        fresh = 0 <= age <= MAX_CACHE_AGE
+        data = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(data, dict):
+            raise ValueError("invalid retention result")
+        if not isinstance(data.get("started"), str) or not isinstance(data.get("finished"), str):
+            raise ValueError("missing retention timestamps")
+        started, finished = epoch(data.get("started")), epoch(data.get("finished"))
+        jobs = data.get("jobs")
+        if (started is None or finished is None or not math.isfinite(started) or not math.isfinite(finished)
+                or finished < started or finished > time.time() + FUTURE_SKEW):
+            raise ValueError("invalid retention timestamps")
+        started_text = data.get("started")
+        started_date = datetime.fromisoformat(started_text.replace("Z", "+00:00")).date().isoformat()
+        if data.get("date") != started_date:
+            raise ValueError("retention date mismatch")
+        if not isinstance(jobs, list) or not jobs:
+            raise ValueError("missing retention jobs")
+        job_states = []
+        results_root = results_root.resolve()
+        for job in jobs:
+            if not isinstance(job, dict):
+                raise ValueError("invalid retention job")
+            result_name, expected_hash = job.get("result"), job.get("result_sha256")
+            if not isinstance(result_name, str) or not isinstance(expected_hash, str):
+                raise ValueError("missing retention job evidence")
+            result_path = Path(result_name).resolve()
+            if not result_path.is_relative_to(results_root):
+                raise ValueError("retention evidence outside configured root")
+            result_bytes = result_path.read_bytes()
+            if hashlib.sha256(result_bytes).hexdigest() != expected_hash:
+                raise ValueError("retention evidence hash mismatch")
+            result_data = json.loads(result_bytes)
+            if (not isinstance(result_data, dict) or result_data.get("schema") != 1
+                    or result_data.get("mode") != "APPLY" or result_data.get("policy") != job.get("policy")):
+                raise ValueError("retention evidence is not an applied result")
+            job_states.append({"PASS": "pass", "WARN": "warn", "FAIL": "fail"}.get(job.get("status"), "unknown"))
+        overall = {"PASS": "pass", "WARN": "warn", "FAIL": "fail"}.get(data.get("status"), "unknown")
+        if overall == "pass" and all(state == "pass" for state in job_states):
+            state = "pass"
+        elif overall == "fail" or "fail" in job_states:
+            state = "fail"
+        elif overall == "warn" or "warn" in job_states:
+            state = "warn"
+        else:
+            state = "unknown"
+        measured_at = iso(finished) if state != "unknown" else None
+        return {"retention": {"state": valid_state(state), "measured_at": measured_at}}
+    except (OSError, ValueError, TypeError, OverflowError, AttributeError):
+        return {"retention": {"state": "unknown", "measured_at": None}}
+
+
+def camera_state(item, now=None):
+    now = time.time() if now is None else now
+    if not isinstance(item, dict):
+        return "unknown"
+    checked = epoch(item.get("updated_at"))
+    recorded = epoch(item.get("last_video_at"))
+    if checked is None or recorded is None or not math.isfinite(checked) or not math.isfinite(recorded):
+        return "unknown"
+    if now - checked < 0 or now - checked > MAX_CACHE_AGE:
+        return "unknown"
+    if now - recorded < -FUTURE_SKEW or now - recorded > MAX_RECORDING_AGE:
+        return "unknown"
+    if item.get("status") == "recording" and item.get("recorder_active") is True and item.get("sample_growth") is True:
+        return "ok"
+    return "unknown"
+
+
+def make_snapshot(now=None, cache_path=CACHE, maintenance_path=MAINTENANCE, retention_path=VERIFIED_RETENTION,
+                  retention_results_root=VERIFIED_RETENTION_RESULTS):
+    now = time.time() if now is None else now
+    try:
+        source = json.loads(cache_path.read_text(encoding="utf-8"))
+        if not isinstance(source, dict):
+            raise ValueError("invalid collector cache")
+        updated = epoch(source["updated_at"])
+        if updated is None or not math.isfinite(updated) or updated > now + FUTURE_SKEW:
+            raise ValueError("future cache timestamp")
     except (OSError, ValueError, KeyError, TypeError):
-        source, updated, fresh = {}, None, False
+        source, updated = {}, None
 
     nas_state = "unknown"
-    if fresh and source.get("host", {}).get("status") != "unavailable":
-        filesystems = {item.get("path"): item for item in source.get("host", {}).get("filesystems", [])}
+    host = source.get("host") if isinstance(source.get("host"), dict) else {}
+    if updated is not None and host.get("status") != "unavailable":
+        rows = host.get("filesystems", [])
+        filesystems = {item.get("path"): item for item in rows if isinstance(item, dict)} if isinstance(rows, list) else {}
         root, volume = filesystems.get("/"), filesystems.get("/vol1")
         if root and volume and root.get("status") == volume.get("status") == "ok":
             total = volume.get("total_bytes", 0)
             free = volume.get("available_bytes", 0)
             nas_state = "warn" if total <= 0 or free / total < 0.05 else "ok"
 
+    tapo = source.get("tapo") if isinstance(source.get("tapo"), dict) else {}
+    cameras = tapo.get("cameras") if isinstance(tapo.get("cameras"), dict) else {}
     snapshot = {
         "schema": 1,
         "updated_at": iso(updated) if updated is not None else None,
-        "cam1": {"state": "unknown"},
-        "cam2": {"state": "unknown"},
+        "cam1": {"state": camera_state(cameras.get("cam1"), now)},
+        "cam2": {"state": camera_state(cameras.get("cam2"), now)},
         "nas": {"state": nas_state},
-        **read_maintenance(),
+        **read_maintenance(maintenance_path),
+        **read_verified_retention(retention_path, retention_results_root),
     }
     validate(snapshot)
     return snapshot

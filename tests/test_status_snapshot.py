@@ -1,0 +1,131 @@
+import json
+import hashlib
+import tempfile
+import unittest
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+from scripts.publish_status import make_snapshot, read_maintenance, read_verified_retention
+
+
+LOCAL = timezone(timedelta(hours=7))
+NOW = datetime(2026, 10, 9, 12, 0, tzinfo=LOCAL).timestamp()
+
+
+def write_retention(path, day, results_root, status="PASS", job_status="PASS", mode="APPLY"):
+    results_root.mkdir(parents=True, exist_ok=True)
+    jobs = []
+    for number in range(1, 2):
+        policy = "TEST_POLICY"
+        result_path = results_root / f"result-{number}.json"
+        result_bytes = json.dumps({"schema": 1, "mode": mode, "policy": policy}).encode()
+        result_path.write_bytes(result_bytes)
+        jobs.append({
+            "status": job_status,
+            "policy": policy,
+            "result": str(result_path),
+            "result_sha256": hashlib.sha256(result_bytes).hexdigest(),
+        })
+    path.write_text(json.dumps({
+        "date": day,
+        "started": f"{day}T04:19:08+07:00",
+        "finished": f"{day}T05:26:41+07:00",
+        "status": status,
+        "jobs": jobs,
+    }), encoding="utf-8")
+
+
+def write_cache(path, updated_at, camera_at):
+    path.write_text(json.dumps({
+        "updated_at": updated_at,
+        "host": {"filesystems": [
+            {"path": "/", "status": "ok"},
+            {"path": "/vol1", "status": "ok", "total_bytes": 100, "available_bytes": 20},
+        ]},
+        "tapo": {"cameras": {
+            name: {
+                "updated_at": updated_at,
+                "last_video_at": camera_at,
+                "status": "recording",
+                "recorder_active": True,
+                "sample_growth": True,
+            } for name in ("cam1", "cam2")
+        }},
+    }), encoding="utf-8")
+
+
+class StatusSnapshotTests(unittest.TestCase):
+    def test_maintenance_and_verified_retention_keep_previous_day_result(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            maintenance = root / "latest.env"
+            retention = root / "latest.json"
+            maintenance.write_text(
+                "LAST_UPDATE=2026-10-08T01:43:17+07:00\nSTATUS=PASS\nRETENTION=DRY_RUN\n",
+                encoding="utf-8",
+            )
+            results_root = root / "verified"
+            write_retention(retention, "2026-10-08", results_root)
+            self.assertEqual(read_maintenance(maintenance)["maintenance"]["state"], "pass")
+            result = read_verified_retention(retention, results_root)["retention"]
+            self.assertEqual(result["state"], "pass")
+            self.assertEqual(result["measured_at"], "2026-10-07T22:26:41Z")
+
+    def test_current_day_verified_retention_pass_is_used(self):
+        with tempfile.TemporaryDirectory() as temp:
+            retention = Path(temp) / "latest.json"
+            results_root = Path(temp) / "verified"
+            write_retention(retention, "2026-10-09", results_root)
+            result = read_verified_retention(retention, results_root)["retention"]
+            self.assertEqual(result["state"], "pass")
+            self.assertEqual(result["measured_at"], "2026-10-08T22:26:41Z")
+
+    def test_dry_run_is_not_verified_retention(self):
+        with tempfile.TemporaryDirectory() as temp:
+            retention = Path(temp) / "latest.json"
+            results_root = Path(temp) / "verified"
+            write_retention(retention, "2026-10-09", results_root, status="DRY_RUN", job_status="DRY_RUN", mode="DRY_RUN")
+            result = read_verified_retention(retention, results_root)["retention"]
+            self.assertEqual(result["state"], "unknown")
+            self.assertIsNone(result["measured_at"])
+
+    def test_old_snapshot_keeps_history_but_camera_freshness_is_unknown(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            cache, maintenance, retention = root / "cache.json", root / "latest.env", root / "latest.json"
+            write_cache(cache, NOW - 3600, NOW - 60)
+            maintenance.write_text("LAST_UPDATE=2026-10-08T01:43:17+07:00\nSTATUS=PASS\n", encoding="utf-8")
+            results_root = root / "verified"
+            write_retention(retention, "2026-10-08", results_root)
+            snapshot = make_snapshot(NOW, cache, maintenance, retention, results_root)
+            self.assertEqual(snapshot["updated_at"], "2026-10-09T04:00:00Z")
+            self.assertEqual(snapshot["cam1"]["state"], "unknown")
+            self.assertEqual(snapshot["nas"]["state"], "ok")
+            self.assertEqual(snapshot["maintenance"]["state"], "pass")
+            self.assertEqual(snapshot["retention"]["state"], "pass")
+
+    def test_fresh_recording_evidence_marks_cameras_ok(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            cache, maintenance, retention = root / "cache.json", root / "latest.env", root / "latest.json"
+            write_cache(cache, NOW - 10, NOW - 30)
+            maintenance.write_text("LAST_UPDATE=2026-10-09T01:43:17+07:00\nSTATUS=PASS\n", encoding="utf-8")
+            results_root = root / "verified"
+            write_retention(retention, "2026-10-09", results_root)
+            snapshot = make_snapshot(NOW, cache, maintenance, retention, results_root)
+            self.assertEqual(snapshot["cam1"]["state"], "ok")
+            self.assertEqual(snapshot["cam2"]["state"], "ok")
+
+    def test_missing_sources_are_unknown_without_rejecting_partial_snapshot(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            snapshot = make_snapshot(NOW, root / "missing-cache", root / "missing-maintenance", root / "missing-retention", root / "missing-verified")
+            self.assertIsNone(snapshot["updated_at"])
+            self.assertEqual(snapshot["nas"]["state"], "unknown")
+            self.assertEqual(snapshot["cam1"]["state"], "unknown")
+            self.assertEqual(snapshot["maintenance"], {"state": "unknown", "measured_at": None})
+            self.assertEqual(snapshot["retention"], {"state": "unknown", "measured_at": None})
+
+
+if __name__ == "__main__":
+    unittest.main()

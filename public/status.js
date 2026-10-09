@@ -6,22 +6,22 @@ async function refresh(initial=false){
     const response=await fetch(window.PORTAL_STATUS_URL||'/status.json',{cache:'no-store',signal:AbortSignal.timeout(5000)});
     if(!response.ok)throw new Error('HTTP');
     const data=await response.json();
-    if(data.schema!==1||!time(data.updated_at))throw new Error('schema');
-    const age=Date.now()-new Date(data.updated_at).getTime();
-    const stale=age>15*60*1000||age< -5*60*1000;
+    if(data.schema!==1)throw new Error('schema');
+    const snapshotTime=time(data.updated_at);
+    const age=snapshotTime?Date.now()-new Date(data.updated_at).getTime():Infinity;
+    const stale=!!snapshotTime&&(age>15*60*1000||age< -5*60*1000);
     for(const key of ['cam1','cam2','nas','maintenance','retention']){
       if(!initial&&(key==='maintenance'||key==='retention'))continue;
       const item=data[key]||{};
       const el=document.getElementById(key);
       if(key==='maintenance'||key==='retention'){
-        const measuredAt=item.measured_at?new Date(item.measured_at).getTime():NaN;
-        const resultStale=!Number.isFinite(measuredAt)||Date.now()-measuredAt>15*60*1000||measuredAt>Date.now()+5*60*1000;
-        el.textContent=(stale||resultStale)?'Dữ liệu cũ':(labels[item.state]||labels.unknown);
+        el.textContent=labels[item.state]||labels.unknown;
         const detail=document.getElementById(key+'-time');
-        detail.textContent=time(item.measured_at)||'Chưa có thời điểm kết quả';
+        const measured=time(item.measured_at);
+        detail.textContent=measured?'Kết quả gần nhất · '+measured:'Chưa có thời điểm kết quả';
       }else el.textContent=stale?'Dữ liệu cũ':(labels[item.state]||labels.unknown);
     }
-    stamp.textContent=(stale?'Dữ liệu cũ · ':'Cập nhật · ')+time(data.updated_at);
+    stamp.textContent=snapshotTime?(stale?'Dữ liệu cũ · ':'Cập nhật · ')+snapshotTime:'Chưa có thời điểm cập nhật snapshot';
   }catch{stamp.textContent='Không tải được trạng thái. Các link và hướng dẫn vẫn dùng được.';}
 }
 refresh(true);

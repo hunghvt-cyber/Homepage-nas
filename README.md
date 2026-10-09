@@ -27,7 +27,7 @@ Tạo QR: pip install -r requirements.txt, chạy build với PORTAL_BASE_URL l�
 
 ## Trạng thái NAS
 Homepage đọc snapshot JSON công khai tối thiểu từ Vercel Blob; `content/site.json` giữ URL nguồn. Publisher Python lấy cache collector sẵn có, không quét NAS lại, và chạy bằng user systemd timer mỗi 5 phút. Snapshot được ghi đè tại pathname cố định; không commit cache vận hành hoặc snapshot.
-State: ok/pass/warn/fail/unknown. `updated_at` theo cache nguồn; maintenance/retention có `measured_at` riêng. Kết quả bảo trì quá 15 phút được xem là cũ/unknown. Camera/NAS làm mới 5 phút một lần; maintenance/retention chỉ khi mở/reload.
+State: ok/pass/warn/fail/unknown. `updated_at` theo cache nguồn; maintenance/retention giữ kết quả lần chạy gần nhất cùng `measured_at`. Snapshot quá 15 phút đánh dấu camera/NAS cũ nhưng không xóa kết quả maintenance/retention. Camera/NAS làm mới 5 phút một lần; maintenance/retention chỉ khi mở/reload.
 Publisher dùng Blob SDK và token đọc từ `~/.config/homepage-nas/blob-token`. Không đẩy GitHub theo lịch, mở tunnel, hoặc xuất IP, đường dẫn recording, event, secret hay thông tin quản trị. Chi tiết và kiểm chứng: [báo cáo status feed](docs/NAS-STATUS-FEED-20261009.md).
 
 ## Kiểm chứng và quay lại
