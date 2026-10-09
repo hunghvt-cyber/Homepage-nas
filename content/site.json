@@ -1,0 +1,8 @@
+{
+  "title": "Nhà mình",
+  "links": [
+    {"label": "Home-AI", "description": "Tìm và quản lý đồ vật", "url": ""},
+    {"label": "Viewer", "description": "Xem lại camera · cần Tailscale", "url": ""},
+    {"label": "FnNAS", "description": "Quản lý NAS · cần Tailscale", "url": ""}
+  ]
+}

@@ -1,0 +1,4 @@
+dist/
+.build-deps/
+.vercel/
+__pycache__/

@@ -1,0 +1,11 @@
+[
+  {
+    "slug": "hop-do-mau",
+    "title": "Hộp đồ — trang mẫu",
+    "area": "Ví dụ",
+    "summary": "Trang mẫu để xem bố cục. Chưa phải hướng dẫn đồ vật trong nhà.",
+    "steps": ["Đọc nhãn bên ngoài để chọn đúng hộp.", "Mở nắp và lấy món đồ cần dùng.", "Dùng xong, cất lại đúng hộp và đóng nắp."],
+    "notes": "Thay nội dung này bằng hướng dẫn thực tế trước khi in QR.",
+    "images": []
+  }
+]
