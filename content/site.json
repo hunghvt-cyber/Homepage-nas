@@ -1,10 +1,10 @@
 {
-  "title": "Nhà mình",
+  "title": "Homepage AIO",
   "links": [
     {
       "label": "Home-AI",
       "description": "Tìm và quản lý đồ vật",
-      "url": ""
+      "url": "https://home-ai-two-topaz.vercel.app"
     },
     {
       "label": "Viewer",
@@ -17,5 +17,7 @@
       "url": ""
     }
   ],
-  "base_url": "https://homepage-nas.vercel.app"
+  "base_url": "https://homepage-nas.vercel.app",
+  "subtitle": "Ecohome Premia, XH2.1-0219",
+  "status_url": "/status.json"
 }
