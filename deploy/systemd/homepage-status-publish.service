@@ -1,0 +1,11 @@
+[Unit]
+Description=Publish minimal NAS status snapshot to Vercel Blob
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/share/homepage-status/venv/bin/python /vol1/Docker/projects/Homepage-nas/scripts/publish_status.py
+TimeoutStartSec=35
+Nice=10
+UMask=0077

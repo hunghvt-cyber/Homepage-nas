@@ -1,0 +1,11 @@
+[Unit]
+Description=Publish NAS status every five minutes
+
+[Timer]
+OnBootSec=1min
+OnUnitActiveSec=5min
+AccuracySec=15s
+Unit=homepage-status-publish.service
+
+[Install]
+WantedBy=timers.target

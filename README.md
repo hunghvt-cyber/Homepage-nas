@@ -26,9 +26,9 @@ Không tạo QR: python3 scripts/build.py.
 Tạo QR: pip install -r requirements.txt, chạy build với PORTAL_BASE_URL là HTTPS origin đã xác nhận. QR SVG nằm trong dist/qr, có link tải ở từng hướng dẫn. Thư viện QR chỉ dùng khi build.
 
 ## Trạng thái NAS
-public/status.json là schema mẫu, chưa phải dữ liệu thật. updated_at là lúc xuất snapshot; maintenance/retention có measured_at riêng. State: ok/pass/warn/fail/unknown. Snapshot quá 15 phút hoặc timestamp tương lai bất thường được đánh dấu cũ.
-Camera/NAS tải khi mở và mỗi 5 phút; maintenance/retention chỉ khi mở/reload.
-Chưa có nguồn NAS/job snapshot. Không push mỗi 5 phút gây build liên tục. Chốt nguồn snapshot HTTPS chỉ đọc riêng sau, bảo đảm CORS; không mở API quản trị công khai hoặc xuất IP, đường dẫn recording, event, secret.
+Homepage đọc snapshot JSON công khai tối thiểu từ Vercel Blob; `content/site.json` giữ URL nguồn. Publisher Python lấy cache collector sẵn có, không quét NAS lại, và chạy bằng user systemd timer mỗi 5 phút. Snapshot được ghi đè tại pathname cố định; không commit cache vận hành hoặc snapshot.
+State: ok/pass/warn/fail/unknown. `updated_at` theo cache nguồn; maintenance/retention có `measured_at` riêng. Kết quả bảo trì quá 15 phút được xem là cũ/unknown. Camera/NAS làm mới 5 phút một lần; maintenance/retention chỉ khi mở/reload.
+Publisher dùng Blob SDK và token đọc từ `~/.config/homepage-nas/blob-token`. Không đẩy GitHub theo lịch, mở tunnel, hoặc xuất IP, đường dẫn recording, event, secret hay thông tin quản trị. Chi tiết và kiểm chứng: [báo cáo status feed](docs/NAS-STATUS-FEED-20261009.md).
 
 ## Kiểm chứng và quay lại
 Build, syntax, link nội bộ/404, ảnh và QR trước khi commit. Kiểm tra điện thoại không đăng nhập Vercel, dữ liệu cũ, link Tailscale sau deploy. Revert commit hoặc rollback Vercel; giữ Homepage/tunnel cũ đến khi bản mới được kiểm chứng.

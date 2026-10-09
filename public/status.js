@@ -13,11 +13,13 @@ async function refresh(initial=false){
       if(!initial&&(key==='maintenance'||key==='retention'))continue;
       const item=data[key]||{};
       const el=document.getElementById(key);
-      el.textContent=stale?'Dữ liệu cũ':(labels[item.state]||labels.unknown);
       if(key==='maintenance'||key==='retention'){
+        const measuredAt=item.measured_at?new Date(item.measured_at).getTime():NaN;
+        const resultStale=!Number.isFinite(measuredAt)||Date.now()-measuredAt>15*60*1000||measuredAt>Date.now()+5*60*1000;
+        el.textContent=(stale||resultStale)?'Dữ liệu cũ':(labels[item.state]||labels.unknown);
         const detail=document.getElementById(key+'-time');
         detail.textContent=time(item.measured_at)||'Chưa có thời điểm kết quả';
-      }
+      }else el.textContent=stale?'Dữ liệu cũ':(labels[item.state]||labels.unknown);
     }
     stamp.textContent=(stale?'Dữ liệu cũ · ':'Cập nhật · ')+time(data.updated_at);
   }catch{stamp.textContent='Không tải được trạng thái. Các link và hướng dẫn vẫn dùng được.';}
