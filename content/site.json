@@ -8,12 +8,12 @@
     },
     {
       "label": "Viewer",
-      "description": "Xem lại camera · cần Tailscale",
+      "description": "Xem lại camera - Chỉ dành cho MVP",
       "url": "http://100.94.158.94:8080/"
     },
     {
       "label": "FnNAS",
-      "description": "Quản lý NAS · cần Tailscale",
+      "description": "Quản lý NAS - Chỉ dành cho MVP",
       "url": "http://100.94.158.94:5666/"
     }
   ],
