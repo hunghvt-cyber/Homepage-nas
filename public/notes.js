@@ -33,7 +33,7 @@
       if (snapshot.title === $('note-title').value && snapshot.text === $('note-text').value && snapshot.pinned === $('note-pinned').checked) fill(r); else {selected = r; dirty = true;}
       message(dirty ? 'Đã lưu bản trước; bấm Lưu để lưu thay đổi mới.' : 'Đã lưu.');
       try { await refresh(); } catch { message(dirty ? 'Đã lưu bản trước; bấm Lưu để lưu thay đổi mới.' : 'Đã lưu. Danh sách chưa cập nhật; tải lại trang khi cần.'); }
-    } catch(e) {message(e.message + ' Nội dung đang nhập vẫn được giữ. Bấm Lưu để thử lại.');} finally {busy = false; disable();}
+    } catch(e) {message(e.message + ' Nội dung đang nhập vẫn được giữ. Bấm Lưu để thử lại. Mã hỗ trợ: ' + (e.reference || 'N4-khong-co-phan-hoi') + '.');} finally {busy = false; disable();}
   }
   function change() {dirty = true; message('Chưa lưu — bấm Lưu để lưu thay đổi.');}
   for (const id of ['note-title','note-text','note-pinned']) $(id).addEventListener('input', change);

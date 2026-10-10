@@ -17,7 +17,7 @@ test('real Blob SDK sends unconditional private writes for two stale manual clie
    return {url:'https://teststore.private.blob.vercel-storage.com/'+path,pathname:path,etag:current.etag,contentType:'application/json'};
   }).times(2);
   const h=createNotesHandler({authorize:async()=>{},saveOnly:true,load:async()=>structuredClone(current)});
-  for(const text of ['device A','device B']){const r=response();await h({method:'POST',headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},query:{},body:{action:'save',id,revision:'stale-revision',title:'note',text}},r);assert.equal(r.code,200,JSON.stringify(r.value));assert.equal(r.headers['X-Notes-Writer'],'manual-v3');assert.equal(r.value.text,text);}
+  for(const text of ['device A','device B']){const r=response();await h({method:'POST',headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},query:{},body:{action:'save',id,revision:'stale-revision',title:'note',text}},r);assert.equal(r.code,200,JSON.stringify(r.value));assert.equal(r.headers['X-Notes-Writer'],'manual-v4');assert.equal(r.value.text,text);}
   assert.equal(current.value.history[0].text,'device A');assert.equal(writes,2);agent.assertNoPendingInterceptors();
  }finally{setGlobalDispatcher(previous);await agent.close();}
 });

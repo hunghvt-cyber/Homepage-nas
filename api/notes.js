@@ -3,14 +3,24 @@ import { owner, sameOrigin, body, reply, fail, HttpError } from '../lib/security
 import { read, write, paths, overwriteNote } from '../lib/storage.js';
 import { validId, noteInput, revision } from '../lib/validation.js';
 export function createNotesHandler(deps = {}) {
- const {authorize = owner, load = read, persist = write, enumerate = paths, saveOnly = false} = deps;
+ const {authorize = owner, load = read, persist = write, enumerate = paths, saveOnly = false,
+   observe = event => console.info('notes', JSON.stringify(event))} = deps;
  const persistNote = deps.persistNote || (deps.persist ? (path,value) => persist(path,value,undefined,{overwrite:true}) : overwriteNote);
  return async function handler(req, res) {
+  const reference = 'N4-' + randomUUID().slice(0,8);
+  let operation = req.method === 'GET' ? 'read' : 'write', stage = 'authorize';
+  const report = status => {
+    // Never record bodies, note IDs/paths, revisions, credentials or raw errors.
+    try { observe({writer: 'manual-v4', reference, operation, stage, status}); } catch {}
+  };
   try {
+    res.setHeader('X-Notes-Writer', 'manual-v4');
+    res.setHeader('X-Notes-Request', reference);
     await authorize(req, res);
-    res.setHeader('X-Notes-Writer', 'manual-v3');
+    stage = 'method';
     if (saveOnly && req.method !== 'POST') throw new HttpError(405, 'Chỉ hỗ trợ lưu note.');
     if (req.method === 'GET') {
+      stage = 'read';
       if (req.query.id) { const r = await load('notes/' + validId(req.query.id) + '.json'); if (!r || r.value.deleted) throw new HttpError(404, 'Không tìm thấy note.'); return reply(res, 200, {...r.value, revision: r.etag}); }
       const names = await enumerate('notes/'); const notes = [];
       // Read in bounded groups: no burst of one request for every stored note.
@@ -18,10 +28,13 @@ export function createNotesHandler(deps = {}) {
       notes.sort((a,b) => Number(b.pinned) - Number(a.pinned) || b.updatedAt.localeCompare(a.updatedAt)); return reply(res, 200, {notes});
     }
     if (req.method !== 'POST') throw new HttpError(405, 'Phương thức không hỗ trợ.');
-    sameOrigin(req); const b = body(req); const id = b.id ? validId(b.id) : randomUUID(); const path = 'notes/' + id + '.json'; const current = await load(path);
+    stage = 'validate'; sameOrigin(req); const b = body(req);
+    operation = ['save','delete'].includes(b.action) ? b.action : 'unsupported';
+    const id = b.id ? validId(b.id) : randomUUID(); const path = 'notes/' + id + '.json';
+    stage = 'read'; const current = await load(path); stage = 'validate';
     if (saveOnly && b.action !== 'save') throw new HttpError(400, 'Thao tác không hợp lệ.');
     if (b.action !== 'save') revision(current, b.revision);
-    if (b.action === 'delete') { if (!current || current.value.deleted) throw new HttpError(404, 'Không tìm thấy note.'); await persist(path, {...current.value, deleted: true, updatedAt: new Date().toISOString()}, current.etag); return reply(res, 200, {deleted: true}); }
+    if (b.action === 'delete') { if (!current || current.value.deleted) throw new HttpError(404, 'Không tìm thấy note.'); stage = 'persist'; await persist(path, {...current.value, deleted: true, updatedAt: new Date().toISOString()}, current.etag); report(200); return reply(res, 200, {deleted: true}); }
     if (b.action !== 'save') throw new HttpError(400, 'Thao tác không hợp lệ.');
     if (current?.value.deleted) throw new HttpError(409, 'Note đã bị xóa trên thiết bị khác.');
     const input = noteInput(b);
@@ -29,9 +42,9 @@ export function createNotesHandler(deps = {}) {
     const value = {id, ...input, updatedAt: new Date().toISOString(), history};
     while (Buffer.byteLength(JSON.stringify(value)) > 3000000 && history.length) history.pop();
     if (Buffer.byteLength(JSON.stringify(value)) > 3000000) throw new HttpError(413, 'Nội dung sau mã hóa quá dài để lưu.');
-    const saved = await persistNote(path, value);
+    stage = 'persist'; const saved = await persistNote(path, value); report(200);
     return reply(res, 200, {...value, revision: saved.etag});
-  } catch(e) { return fail(res, e); }
+  } catch(e) { report(e.status || 503); return fail(res, e, {reference}); }
 }
 
 }

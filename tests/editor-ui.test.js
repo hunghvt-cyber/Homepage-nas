@@ -46,3 +46,11 @@ test('confirmed Notes save remains successful when subsequent list read fails',a
  w.PortalAccount={state:{authenticated:true},api:async(url,b)=>{if(b){assert.equal(url,'/api/notes-save');saved=true;return {...b,id:'12345678-1234-1234-1234-123456789abc',revision:'new',history:[],updatedAt:'2026-10-10T00:00:00Z'};}if(saved)throw new Error('list read failed');return {notes:[]};}};
  w.eval(readFileSync('public/notes.js','utf8'));w.dispatchEvent(new w.CustomEvent('account-change',{detail:{authenticated:true}}));await flush();$('note-title').value='note';$('note-text').value='draft';$('note-text').dispatchEvent(new w.Event('input'));$('note-save').click();await flush();assert.match($('note-message').textContent,/^Đã lưu\./);assert.doesNotMatch($('note-message').textContent,/chưa được lưu|thiết bị khác/);assert.equal($('note-text').value,'draft');dom.window.close();
 });
+
+test('Notes storage failure carries the support reference to the UI and keeps the draft',async()=>{
+ const dom=new JSDOM(readFileSync('dist/notes/index.html','utf8'),{url:'https://homepage-nas.vercel.app/notes/',runScripts:'outside-only'}),w=dom.window,$=id=>w.document.getElementById(id);
+ w.fetch=async(url,options)=>url==='/api/auth'?{ok:true,json:async()=>({authenticated:true})}:options?.method==='POST'?{ok:false,status:503,json:async()=>({error:'Kho lưu từ chối ghi note.',reference:'N4-1234abcd'})}:{ok:true,json:async()=>({notes:[]})};
+ w.eval(readFileSync('public/account.js','utf8'));w.eval(readFileSync('public/notes.js','utf8'));await flush();
+ $('note-title').value='test';$('note-text').value='keep this draft';$('note-text').dispatchEvent(new w.Event('input'));$('note-save').click();await flush();
+ assert.equal($('note-text').value,'keep this draft');assert.match($('note-message').textContent,/Kho lưu từ chối ghi note.*N4-1234abcd/);assert.equal($('note-save').disabled,false);dom.window.close();
+});

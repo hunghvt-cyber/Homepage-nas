@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'dist'
 esc = lambda value: html.escape(str(value), quote=True)
 notes_version = hashlib.sha256((ROOT / 'public/notes.js').read_bytes()).hexdigest()[:12]
+account_version = hashlib.sha256((ROOT / 'public/account.js').read_bytes()).hexdigest()[:12]
 site = json.loads((ROOT / 'content/site.json').read_text())
 guides = json.loads((ROOT / 'content/guides.json').read_text())
 base = os.getenv('PORTAL_BASE_URL', site.get('base_url', '')).rstrip('/')
@@ -19,6 +20,7 @@ if OUT.exists():
 shutil.copytree(ROOT / 'public', OUT)
 
 def page(title, body):
+    body = body.replace('<script src="/account.js"', '<script src="/account.js?v='+account_version+'"')
     return '<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+esc(title)+'</title><link rel="stylesheet" href="/style.css"><main>'+body+'<footer>'+esc(site['title'])+' · Hướng dẫn ngắn, dễ dùng.</footer></main></html>'
 
 ACCOUNT = '<div class="account noprint"><span id="account-state">Chưa mở khóa</span><div class="account-actions"><button id="account-login" type="button">Nhập mật khẩu</button><button id="account-logout" type="button" hidden>Khóa lại</button></div><form id="password-form" hidden><label for="account-password">Mật khẩu chung</label><input id="account-password" type="password" autocomplete="current-password" maxlength="256" required><button id="password-submit" type="submit">Mở khóa</button></form><p id="account-message" role="status"></p></div>'

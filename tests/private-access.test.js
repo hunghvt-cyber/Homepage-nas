@@ -54,3 +54,12 @@ test('manual Notes save is unconditional even when old clients omit takeover',as
  const run=async takeover=>{const r=response();await h({method:'POST',query:{},headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},body:{action:'save',id,revision:'blob-etag',title:'device',text:'my draft',takeover}},r);return r;};
  assert.equal((await run(false)).code,200);assert.equal(overwriteSeen,true);assert.equal((await run(true)).code,200);assert.equal(overwriteSeen,true);
 });
+
+test('Notes failure reference identifies the stage without logging private inputs or errors',async()=>{
+ const events=[],id='12345678-1234-1234-1234-123456789abc',privateValue='private-test-value-do-not-log';
+ const h=createNotesHandler({authorize:async()=>{},load:async()=>null,persistNote:async()=>{throw new Error(privateValue);},observe:event=>events.push(event),saveOnly:true}),r=response();
+ await h({method:'POST',query:{},headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json',cookie:privateValue},body:{action:'save',id,title:privateValue,text:privateValue,revision:privateValue}},r);
+ assert.equal(r.code,503);assert.match(r.value.reference,/^N4-[0-9a-f]{8}$/);assert.equal(r.headers['X-Notes-Request'],r.value.reference);
+ assert.deepEqual(events,[{writer:'manual-v4',reference:r.value.reference,operation:'save',stage:'persist',status:503}]);
+ assert.doesNotMatch(JSON.stringify({events,response:r.value}),new RegExp(privateValue+'|'+id));
+});

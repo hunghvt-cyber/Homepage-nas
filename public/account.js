@@ -10,7 +10,7 @@
  };
  async function api(url,value) {
   const r=await fetch(url,{credentials:'same-origin',cache:'no-store',...(value?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(value)}:{})});
-  const data=await r.json();if(!r.ok){if(r.status===401){state={authenticated:false,expired:true};update();}const error=new Error(data.error||'Không thể thực hiện.');error.status=r.status;throw error;}return data;
+  const data=await r.json();if(!r.ok){if(r.status===401){state={authenticated:false,expired:true};update();}const error=new Error(data.error||'Không thể thực hiện.');error.status=r.status;error.reference=/^N4-[0-9a-f]{8}$/.test(data.reference||'')?data.reference:null;throw error;}return data;
  }
  function login(){document.getElementById('password-form').hidden=false;document.getElementById('account-password').focus();}
  window.PortalAccount={api,get state(){return state;},login};
