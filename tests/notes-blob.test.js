@@ -28,3 +28,26 @@ test('Blob rejects an unconditional write: return storage error, never blame ano
   const h=createNotesHandler({authorize:async()=>{},saveOnly:true,load:async()=>null}),r=response();await h({method:'POST',headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},query:{},body:{action:'save',id,title:'note',text:'keep draft'}},r);assert.equal(r.code,503);assert.match(r.value.error,/NOTE_STORE_REJECTED/);assert.doesNotMatch(r.value.error,/thiết bị khác/);agent.assertNoPendingInterceptors();
  }finally{setGlobalDispatcher(previous);await agent.close();}
 });
+
+test('stale Delete uses real Blob unconditional writes, preserves the latest copy and retries safely',async()=>{
+ const previous=getGlobalDispatcher(),agent=new MockAgent();agent.disableNetConnect();setGlobalDispatcher(agent);
+ const original={id,title:'latest server title',text:'latest server content',pinned:true,history:[{title:'before',text:'older content',updatedAt:'2026-10-09T00:00:00Z'}],updatedAt:'2026-10-10T00:00:00Z'};
+ let current={etag:'latest-etag',value:structuredClone(original)},writes=0;
+ try{
+  agent.get('https://vercel.com').intercept({path:'/api/blob/?pathname='+encodeURIComponent(path),method:'PUT'}).reply(200,options=>{
+   const h=new Headers(options.headers);assert.equal(h.get('x-allow-overwrite'),'1');assert.equal(h.get('x-vercel-blob-access'),'private');
+   for(const name of ['x-if-match','if-match','if-none-match'])assert.equal(h.has(name),false);
+   current={value:JSON.parse(options.body),etag:'deleted-etag'};writes++;
+   return {url:'https://teststore.private.blob.vercel-storage.com/'+path,pathname:path,etag:current.etag,contentType:'application/json'};
+  });
+  const h=createNotesHandler({authorize:async()=>{},load:async()=>structuredClone(current),enumerate:async()=>[path],observe:()=>{}});
+  const run=async body=>{const r=response();await h({method:'POST',headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},query:{},body},r);return r;};
+  const deleted=await run({action:'delete',id,revision:'stale-device-etag'});assert.equal(deleted.code,200,JSON.stringify(deleted.value));assert.deepEqual(deleted.value,{deleted:true});
+  assert.equal(current.value.deleted,true);assert.equal(current.value.text,original.text);assert.equal(current.value.title,original.title);assert.deepEqual(current.value.history,original.history);
+  assert.equal((await run({action:'delete',id,revision:'stale-device-etag'})).code,200);assert.equal(writes,1);
+  const detail=response();await h({method:'GET',query:{id}},detail);assert.equal(detail.code,404);
+  const list=response();await h({method:'GET',query:{}},list);assert.deepEqual(list.value,{notes:[]});
+  assert.equal((await run({action:'save',id,revision:'stale-device-etag',title:'old editor',text:'must not revive'})).code,409);assert.equal(writes,1);
+  agent.assertNoPendingInterceptors();
+ }finally{setGlobalDispatcher(previous);await agent.close();}
+});

@@ -54,3 +54,28 @@ test('Notes storage failure carries the support reference to the UI and keeps th
  $('note-title').value='test';$('note-text').value='keep this draft';$('note-text').dispatchEvent(new w.Event('input'));$('note-save').click();await flush();
  assert.equal($('note-text').value,'keep this draft');assert.match($('note-message').textContent,/Kho lưu từ chối ghi note.*N4-1234abcd/);assert.equal($('note-save').disabled,false);dom.window.close();
 });
+
+test('confirmed Delete removes the cached card and stays successful when list refresh fails',async()=>{
+ const dom=new JSDOM(readFileSync('dist/notes/index.html','utf8'),{url:'https://homepage-nas.vercel.app/notes/',runScripts:'outside-only'}),w=dom.window,$=id=>w.document.getElementById(id);
+ const note={id:'12345678-1234-1234-1234-123456789abc',title:'test delete',text:'test content',revision:'old',updatedAt:'2026-10-10T00:00:00Z',history:[]};let deleted=false;
+ w.confirm=()=>true;
+ w.PortalAccount={state:{authenticated:true},api:async(url,b)=>{
+  if(b){assert.deepEqual(JSON.parse(JSON.stringify(b)),{action:'delete',id:note.id});deleted=true;return {deleted:true};}
+  if(url.includes('?id='))return note;
+  if(deleted)throw new Error('list read failed');return {notes:[note]};
+ }};
+ w.eval(readFileSync('public/notes.js','utf8'));w.dispatchEvent(new w.CustomEvent('account-change',{detail:{authenticated:true}}));await flush();
+ $('note-list').querySelector('button').click();await flush();$('note-delete').click();await flush();
+ assert.equal(deleted,true);assert.match($('note-message').textContent,/^Đã xóa note\./);assert.doesNotMatch($('note-message').textContent,/list read failed/);
+ assert.equal($('note-list').querySelector('button'),null);assert.equal($('note-title').value,'');assert.equal($('note-text').value,'');dom.window.close();
+});
+
+test('failed Delete preserves the editor and card and displays its support reference',async()=>{
+ const dom=new JSDOM(readFileSync('dist/notes/index.html','utf8'),{url:'https://homepage-nas.vercel.app/notes/',runScripts:'outside-only'}),w=dom.window,$=id=>w.document.getElementById(id);
+ const note={id:'12345678-1234-1234-1234-123456789abc',title:'test delete',text:'saved text',revision:'old',updatedAt:'2026-10-10T00:00:00Z',history:[]};
+ w.confirm=()=>true;
+ w.PortalAccount={state:{authenticated:true},api:async(url,b)=>{if(b)throw Object.assign(new Error('Kho lưu chưa cập nhật.'),{reference:'N4-1234abcd'});if(url.includes('?id='))return note;return {notes:[note]};}};
+ w.eval(readFileSync('public/notes.js','utf8'));w.dispatchEvent(new w.CustomEvent('account-change',{detail:{authenticated:true}}));await flush();
+ $('note-list').querySelector('button').click();await flush();$('note-text').value='local draft';$('note-text').dispatchEvent(new w.Event('input'));$('note-delete').click();await flush();
+ assert.match($('note-message').textContent,/Kho lưu chưa cập nhật.*N4-1234abcd/);assert.equal($('note-text').value,'local draft');assert.equal($('note-list').querySelector('button').textContent,note.title);assert.equal($('note-delete').disabled,false);dom.window.close();
+});

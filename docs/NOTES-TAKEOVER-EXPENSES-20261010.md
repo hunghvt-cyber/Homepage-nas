@@ -31,3 +31,11 @@ At 11:13 Vietnam time, scoped Vercel deployment inspection and recent runtime lo
 Using secure browser authentication, created one separate diagnostic note at 11:19, then saved it four times across two browser tabs. Both tabs saved successfully after the other tab had changed the server version; reloading read the final text and three previous history entries. This verifies real private Blob persistence and stale editors in two tabs sharing a session. Existing personal notes were not edited. The user's reported device error was not reproduced, so its cause remains unknown.
 
 The follow-up adds `manual-v4` headers, a per-request `N4-xxxxxxxx` reference, and metadata-only save/failure logs: writer, reference, operation, stage and HTTP status. Logs exclude titles, text, note identifiers, paths, revisions, cookies, passwords, tokens and raw errors. Failed saves retain the draft and display the reference for correlation with Vercel logs. Notes HTML and the account script use no-store; versioned scripts load the current client after reopening the page. Save behavior remains unconditional and manual, with no autosave or periodic requests.
+
+## Delete conflict fix
+
+At 11:57 Vietnam time, production logs showed successful manual saves and repeated Delete failures with status 409 at `stage: persist`. Delete still used conditional Blob writes. This confirms the failing boundary; the reason Blob rejected the condition is not established.
+
+Delete now ignores the browser revision, reads the latest server copy and soft-deletes it through the same unconditional private writer as Save. Existing content and history remain in the tombstone. Requests from older pages work; repeating an already completed Delete returns success without another write. Save still rejects an already deleted note. QR edits and login rate limits retain their separate conditional writer and authorization.
+
+After a confirmed Delete the client removes the cached card immediately. Failure to refresh the list is reported separately from the completed deletion. Actual deletion failures retain the editor and display the support reference. Tests exercise the real installed Blob SDK with blocked external networking, stale revisions, deletion retries, hidden deleted records, rejected stale saves, and both client error paths.

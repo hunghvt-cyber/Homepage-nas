@@ -41,7 +41,12 @@
   $('note-new').addEventListener('click', () => {if (busy || dirty && !confirm('Bỏ nội dung chưa lưu để tạo note mới?')) return; ++loadCounter; fill(null); $('note-title').focus();});
   $('note-delete').addEventListener('click', async () => {
     if (!selected || busy || !confirm('Xóa note “' + selected.title + '”?')) return; busy = true; disable();
-    try {await api('/api/notes', {action: 'delete', id: selected.id, revision: selected.revision}); fill(null); await refresh(); message('Đã xóa note.');} catch(e) {message(e.message);} finally {busy = false; disable();}
+    try {
+      const id = selected.id;
+      await api('/api/notes', {action: 'delete', id});
+      list = list.filter(n => n.id !== id); fill(null); renderList(); message('Đã xóa note.');
+      try { await refresh(); } catch { message('Đã xóa note. Danh sách chưa cập nhật; tải lại trang khi cần.'); }
+    } catch(e) {message(e.message + ' Mã hỗ trợ: ' + (e.reference || 'N4-khong-co-phan-hoi') + '.');} finally {busy = false; disable();}
   });
   $('note-copy').addEventListener('click', async () => { try {await navigator.clipboard.writeText($('note-text').value); message('Đã copy toàn bộ nội dung.');} catch { $('note-text').focus(); $('note-text').select(); message('Đã chọn toàn bộ — nhấn Ctrl+C hoặc chọn Sao chép.'); } });
   $('note-search').addEventListener('input', renderList);

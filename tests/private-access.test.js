@@ -30,7 +30,7 @@ test('manual Notes saves accept stale clients and preserve the latest server ver
   const stale=await run({action:'save',id:first.value.id,revision:first.value.revision,title:'stale',text:'lost'});assert.equal(stale.code,200);assert.equal(stale.value.history[0].text,'new');
   const takeover=await run({action:'save',id:first.value.id,revision:first.value.revision,takeover:true,title:'takeover',text:'device B'});assert.equal(takeover.code,200);assert.equal(takeover.value.history[0].text,'lost');
   const displaced=await run({action:'save',id:next.value.id,revision:next.value.revision,title:'old device',text:'obsolete'});assert.equal(displaced.code,200);
-  const deleted=await run({action:'delete',id:displaced.value.id,revision:displaced.value.revision});assert.equal(deleted.code,200);
+  const deleted=await run({action:'delete',id:displaced.value.id,revision:first.value.revision});assert.equal(deleted.code,200);
   const res=response();await h({method:'GET',query:{id:next.value.id}},res);assert.equal(res.code,404);
 });
 test('Notes byte limit handles Unicode; QR slug and original images stay fixed', () => {

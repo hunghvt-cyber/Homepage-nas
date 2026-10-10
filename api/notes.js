@@ -1,11 +1,11 @@
 import { randomUUID } from 'node:crypto';
 import { owner, sameOrigin, body, reply, fail, HttpError } from '../lib/security.js';
-import { read, write, paths, overwriteNote } from '../lib/storage.js';
-import { validId, noteInput, revision } from '../lib/validation.js';
+import { read, paths, overwriteNote } from '../lib/storage.js';
+import { validId, noteInput } from '../lib/validation.js';
 export function createNotesHandler(deps = {}) {
- const {authorize = owner, load = read, persist = write, enumerate = paths, saveOnly = false,
+ const {authorize = owner, load = read, enumerate = paths, saveOnly = false,
    observe = event => console.info('notes', JSON.stringify(event))} = deps;
- const persistNote = deps.persistNote || (deps.persist ? (path,value) => persist(path,value,undefined,{overwrite:true}) : overwriteNote);
+ const persistNote = deps.persistNote || (deps.persist ? (path,value) => deps.persist(path,value,undefined,{overwrite:true}) : overwriteNote);
  return async function handler(req, res) {
   const reference = 'N4-' + randomUUID().slice(0,8);
   let operation = req.method === 'GET' ? 'read' : 'write', stage = 'authorize';
@@ -30,12 +30,19 @@ export function createNotesHandler(deps = {}) {
     if (req.method !== 'POST') throw new HttpError(405, 'Phương thức không hỗ trợ.');
     stage = 'validate'; sameOrigin(req); const b = body(req);
     operation = ['save','delete'].includes(b.action) ? b.action : 'unsupported';
+    if (operation === 'unsupported' || saveOnly && b.action !== 'save') throw new HttpError(400, 'Thao tác không hợp lệ.');
+    if (b.action === 'delete') validId(b.id);
     const id = b.id ? validId(b.id) : randomUUID(); const path = 'notes/' + id + '.json';
     stage = 'read'; const current = await load(path); stage = 'validate';
-    if (saveOnly && b.action !== 'save') throw new HttpError(400, 'Thao tác không hợp lệ.');
-    if (b.action !== 'save') revision(current, b.revision);
-    if (b.action === 'delete') { if (!current || current.value.deleted) throw new HttpError(404, 'Không tìm thấy note.'); stage = 'persist'; await persist(path, {...current.value, deleted: true, updatedAt: new Date().toISOString()}, current.etag); report(200); return reply(res, 200, {deleted: true}); }
-    if (b.action !== 'save') throw new HttpError(400, 'Thao tác không hợp lệ.');
+    if (b.action === 'delete') {
+      // A confirmed Delete acts on the latest server copy, including from older pages.
+      // Retrying an already completed soft-delete is successful without another write.
+      if (current && !current.value.deleted) {
+        stage = 'persist';
+        await persistNote(path, {...current.value, deleted: true, updatedAt: new Date().toISOString()});
+      }
+      report(200); return reply(res, 200, {deleted: true});
+    }
     if (current?.value.deleted) throw new HttpError(409, 'Note đã bị xóa trên thiết bị khác.');
     const input = noteInput(b);
     const history = current ? [{title: current.value.title, text: current.value.text, updatedAt: current.value.updatedAt}, ...(current.value.history || [])].slice(0,5) : [];
