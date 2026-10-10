@@ -1,6 +1,6 @@
 const labels={ok:'Hoạt động',pass:'Đạt',warn:'Cần kiểm tra',fail:'Có lỗi',unknown:'Chưa xác minh'};
 const time=value=>{if(!value)return null;const d=new Date(value);return Number.isFinite(d.getTime())?d.toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}):null};
-async function refresh(initial=false){
+async function refresh(){
   const stamp=document.getElementById('updated');
   try{
     const response=await fetch(window.PORTAL_STATUS_URL||'/status.json',{cache:'no-store',signal:AbortSignal.timeout(5000)});
@@ -11,7 +11,6 @@ async function refresh(initial=false){
     const age=snapshotTime?Date.now()-new Date(data.updated_at).getTime():Infinity;
     const stale=!!snapshotTime&&(age>15*60*1000||age< -5*60*1000);
     for(const key of ['cam1','cam2','nas','maintenance','retention']){
-      if(!initial&&(key==='maintenance'||key==='retention'))continue;
       const item=data[key]||{};
       const el=document.getElementById(key);
       if(key==='maintenance'||key==='retention'){
@@ -24,5 +23,5 @@ async function refresh(initial=false){
     stamp.textContent=snapshotTime?(stale?'Dữ liệu cũ · ':'Cập nhật · ')+snapshotTime:'Chưa có thời điểm cập nhật snapshot';
   }catch{stamp.textContent='Không tải được trạng thái. Các link và hướng dẫn vẫn dùng được.';}
 }
-refresh(true);
+refresh();
 setInterval(refresh,300000);
