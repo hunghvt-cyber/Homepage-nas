@@ -1,5 +1,8 @@
 const labels={ok:'Hoạt động',pass:'Đạt',warn:'Cần kiểm tra',fail:'Có lỗi',unknown:'Chưa xác minh'};
 const time=value=>{if(!value)return null;const d=new Date(value);return Number.isFinite(d.getTime())?d.toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}):null};
+const bytesGiB=value=>typeof value==='number'&&Number.isSafeInteger(value)&&value>=0?(value/1024**3).toFixed(1)+' GiB':null;
+const percent=value=>typeof value==='number'&&Number.isFinite(value)&&value>=0&&value<=100?value.toFixed(1)+'%':null;
+const display=(id,value,stale,hasTimestamp)=>{document.getElementById(id).textContent=stale?'Dữ liệu cũ':(hasTimestamp?(value||'Chưa có dữ liệu'):'Chưa có dữ liệu')};
 async function refresh(){
   const stamp=document.getElementById('updated');
   try{
@@ -24,6 +27,20 @@ async function refresh(){
       }
     }
     stamp.textContent=snapshotTime?'Báo cáo gần nhất: '+snapshotTime+(stale?' · Chưa nhận được báo cáo mới.':''):'Chưa có thời gian báo cáo';
+    const health=data.health||{};
+    const healthStamp=document.getElementById('health-updated');
+    healthStamp.textContent=snapshotTime?'Theo báo cáo gần nhất · '+snapshotTime+(stale?' · Dữ liệu cũ':''):'Chưa có dữ liệu';
+    const root=health.root||{},vol1=health.vol1||{},ram=health.ram||{},swap=health.swap||{};
+    display('health-root-used',percent(root.used_percent),stale,!!snapshotTime);
+    display('health-root-free',bytesGiB(root.available_bytes),stale,!!snapshotTime);
+    display('health-vol1-used',percent(vol1.used_percent),stale,!!snapshotTime);
+    display('health-vol1-free',bytesGiB(vol1.available_bytes),stale,!!snapshotTime);
+    display('health-ram',bytesGiB(ram.available_bytes),stale,!!snapshotTime);
+    const swapValid=Number.isSafeInteger(swap.used_bytes)&&Number.isSafeInteger(swap.total_bytes)&&swap.used_bytes>=0&&swap.total_bytes>0&&swap.used_bytes<=swap.total_bytes;
+    const swapUsage=swapValid?bytesGiB(swap.used_bytes)+' / '+bytesGiB(swap.total_bytes):null;
+    const swapPercent=swapValid?(swap.used_bytes/swap.total_bytes*100).toFixed(1)+'%':null;
+    display('health-swap-usage',swapUsage,stale,!!snapshotTime);
+    display('health-swap-percent',swapPercent,stale,!!snapshotTime);
   }catch{stamp.textContent='Không tải được trạng thái. Các link và hướng dẫn vẫn dùng được.';}
 }
 refresh();

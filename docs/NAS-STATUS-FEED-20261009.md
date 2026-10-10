@@ -1,6 +1,6 @@
 # Homepage AIO status feed
 
-Implemented a Python publisher that reads the existing 15-second FnNAS monitoring cache and the last maintenance summary. It does not start another NAS scan or include collector payloads in the upload. The allowlisted schema contains only `schema`, source `updated_at`, camera/NAS states, and maintenance/retention states with their own measurement time.
+Implemented a Python publisher that reads the existing 15-second FnNAS monitoring cache and the last maintenance summary. It does not start another NAS scan or include collector payloads in the upload. The allowlisted schema contains only `schema`, source `updated_at`, camera/NAS states, maintenance/retention states with their own measurement time, and minimal filesystem, RAM, and swap metrics. Missing, invalid, failed, or older-than-15-minute health measurements become `null`; schema version remains 1 and the UI accepts older payloads without `health`.
 
 ## Publishing
 
@@ -12,6 +12,7 @@ Implemented a Python publisher that reads the existing 15-second FnNAS monitorin
 ## Evidence and freshness
 
 - NAS state is derived from collector root and volume filesystem measurements. The overall cache timestamp is preserved as `updated_at`.
+- The Collector cache provides filesystem `status`, `total_bytes`, and `available_bytes` for `/` and `/vol1`, plus `host.memory.status`, `available_bytes`, `total_bytes`, `swap_total_bytes`, and `swap_used_bytes`. The publisher maps those exact aggregate swap fields to `health.swap.total_bytes` and `health.swap.used_bytes`; it does not require or infer a source `free_bytes` field.
 - Camera state uses existing per-camera cache evidence: recent `last_video_at`, `status=recording`, `recorder_active`, and `sample_growth`. A running container alone is insufficient. If the camera cache or recording evidence is missing or stale, its state is `unknown`.
 - Maintenance reads only `LAST_UPDATE` and `STATUS` from its summary. It preserves that result and its measurement time regardless of age; the summary's `RETENTION=DRY_RUN` is never used as a verified retention result.
 - Verified retention reads its independent latest result, validates date, timezone-aware start/finish times, overall status and job statuses, then verifies each referenced result's SHA-256 and `mode=APPLY` under the configured evidence root. A dry run or incomplete/inconsistent result becomes `unknown`; valid results use `finished` as `measured_at`.

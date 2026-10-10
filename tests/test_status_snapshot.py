@@ -38,10 +38,14 @@ def write_retention(path, day, results_root, status="PASS", job_status="PASS", m
 def write_cache(path, updated_at, camera_at):
     path.write_text(json.dumps({
         "updated_at": updated_at,
-        "host": {"filesystems": [
-            {"path": "/", "status": "ok"},
-            {"path": "/vol1", "status": "ok", "total_bytes": 100, "available_bytes": 20},
-        ]},
+        "host": {
+            "filesystems": [
+                {"path": "/", "status": "ok", "total_bytes": 100, "available_bytes": 20},
+                {"path": "/vol1", "status": "ok", "total_bytes": 200, "available_bytes": 40},
+            ],
+            "memory": {"status": "ok", "total_bytes": 800, "available_bytes": 300,
+                       "swap_total_bytes": 1000, "swap_used_bytes": 250},
+        },
         "tapo": {"cameras": {
             name: {
                 "updated_at": updated_at,
@@ -100,7 +104,9 @@ class StatusSnapshotTests(unittest.TestCase):
             snapshot = make_snapshot(NOW, cache, maintenance, retention, results_root)
             self.assertEqual(snapshot["updated_at"], "2026-10-09T04:00:00Z")
             self.assertEqual(snapshot["cam1"]["state"], "unknown")
-            self.assertEqual(snapshot["nas"]["state"], "ok")
+            self.assertEqual(snapshot["nas"]["state"], "unknown")
+            self.assertEqual(snapshot["health"]["root"], {"used_percent": None, "available_bytes": None})
+            self.assertEqual(snapshot["health"]["vol1"], {"used_percent": None, "available_bytes": None})
             self.assertEqual(snapshot["maintenance"]["state"], "pass")
             self.assertEqual(snapshot["retention"]["state"], "pass")
 
@@ -115,6 +121,95 @@ class StatusSnapshotTests(unittest.TestCase):
             snapshot = make_snapshot(NOW, cache, maintenance, retention, results_root)
             self.assertEqual(snapshot["cam1"]["state"], "ok")
             self.assertEqual(snapshot["cam2"]["state"], "ok")
+            self.assertEqual(snapshot["health"]["root"], {"used_percent": 80.0, "available_bytes": 20})
+            self.assertEqual(snapshot["health"]["vol1"], {"used_percent": 80.0, "available_bytes": 40})
+            self.assertEqual(snapshot["health"]["ram"]["available_bytes"], 300)
+            self.assertEqual(snapshot["health"]["swap"], {"used_bytes": 250, "total_bytes": 1000})
+
+    def test_missing_swap_metrics_are_unknown(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            cache = root / "cache.json"
+            write_cache(cache, NOW - 10, NOW - 30)
+            data = json.loads(cache.read_text())
+            data["host"] = {"filesystems": [], "memory": {"status": "unavailable"}}
+            cache.write_text(json.dumps(data), encoding="utf-8")
+            snapshot = make_snapshot(NOW, cache, root / "missing-maintenance", root / "missing-retention", root / "missing-verified")
+            self.assertEqual(snapshot["nas"]["state"], "unknown")
+            self.assertEqual(snapshot["health"]["root"], {"used_percent": None, "available_bytes": None})
+            self.assertEqual(snapshot["health"]["vol1"], {"used_percent": None, "available_bytes": None})
+            self.assertIsNone(snapshot["health"]["ram"]["available_bytes"])
+            self.assertEqual(snapshot["health"]["swap"], {"used_bytes": None, "total_bytes": None})
+
+    def test_invalid_swap_values_are_suppressed(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            cache = root / "cache.json"
+            write_cache(cache, NOW - 10, NOW - 30)
+            data = json.loads(cache.read_text())
+            for invalid in (float("nan"), -1, 1001):
+                data["host"]["memory"]["swap_used_bytes"] = invalid
+                cache.write_text(json.dumps(data), encoding="utf-8")
+                snapshot = make_snapshot(NOW, cache, root / "missing-maintenance", root / "missing-retention", root / "missing-verified")
+                self.assertEqual(snapshot["health"]["swap"], {"used_bytes": None, "total_bytes": None})
+
+    def test_nan_negative_and_invalid_filesystems_are_suppressed(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            cache = root / "cache.json"
+            write_cache(cache, NOW - 10, NOW - 30)
+            data = json.loads(cache.read_text())
+            data["host"]["filesystems"][0]["available_bytes"] = float("nan")
+            data["host"]["filesystems"][1]["available_bytes"] = -1
+            data["host"]["memory"]["available_bytes"] = float("nan")
+            cache.write_text(json.dumps(data), encoding="utf-8")
+            snapshot = make_snapshot(NOW, cache, root / "missing-maintenance", root / "missing-retention", root / "missing-verified")
+            self.assertEqual(snapshot["nas"]["state"], "unknown")
+            self.assertEqual(snapshot["health"]["root"], {"used_percent": None, "available_bytes": None})
+            self.assertEqual(snapshot["health"]["vol1"], {"used_percent": None, "available_bytes": None})
+            self.assertIsNone(snapshot["health"]["ram"]["available_bytes"])
+
+    def test_filesystem_error_status_suppresses_metrics(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            cache = root / "cache.json"
+            write_cache(cache, NOW - 10, NOW - 30)
+            data = json.loads(cache.read_text())
+            data["host"]["filesystems"][1]["status"] = "unavailable"
+            cache.write_text(json.dumps(data), encoding="utf-8")
+            snapshot = make_snapshot(NOW, cache, root / "missing-maintenance", root / "missing-retention", root / "missing-verified")
+            self.assertEqual(snapshot["nas"]["state"], "unknown")
+            self.assertEqual(snapshot["health"]["vol1"], {"used_percent": None, "available_bytes": None})
+
+    def test_health_metrics_are_null_when_snapshot_is_stale(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            cache = root / "cache.json"
+            write_cache(cache, NOW - 16 * 60, NOW - 30)
+            snapshot = make_snapshot(NOW, cache, root / "missing-maintenance", root / "missing-retention", root / "missing-verified")
+            self.assertEqual(snapshot["nas"]["state"], "unknown")
+            self.assertIsNone(snapshot["health"]["root"]["used_percent"])
+            self.assertIsNone(snapshot["health"]["ram"]["available_bytes"])
+            self.assertEqual(snapshot["health"]["swap"], {"used_bytes": None, "total_bytes": None})
+
+    def test_swap_used_cannot_exceed_total(self):
+        from scripts.publish_status import validate
+        base = {
+            "schema": 1, "updated_at": None, "cam1": {"state": "unknown"},
+            "cam2": {"state": "unknown"}, "nas": {"state": "unknown"},
+            "maintenance": {"state": "unknown", "measured_at": None},
+            "retention": {"state": "unknown", "measured_at": None},
+            "health": {
+                "root": {"used_percent": None, "available_bytes": None},
+                "vol1": {"used_percent": None, "available_bytes": None},
+                "ram": {"available_bytes": None}, "swap": {"used_bytes": None, "total_bytes": None},
+            },
+        }
+        import copy
+        data = copy.deepcopy(base)
+        data["health"]["swap"] = {"used_bytes": 1001, "total_bytes": 1000}
+        with self.assertRaises(AssertionError):
+            validate(data)
 
     def test_missing_sources_are_unknown_without_rejecting_partial_snapshot(self):
         with tempfile.TemporaryDirectory() as temp:
