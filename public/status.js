@@ -14,13 +14,16 @@ async function refresh(){
       const item=data[key]||{};
       const el=document.getElementById(key);
       if(key==='maintenance'||key==='retention'){
-        el.textContent=labels[item.state]||labels.unknown;
+        el.textContent=key==='retention'?({pass:'Đã dọn xong',ok:'Đã dọn xong',warn:'Cần kiểm tra',fail:'Dọn chưa thành công',unknown:'Chưa có kết quả xác nhận'}[item.state]||'Chưa có kết quả xác nhận'):(labels[item.state]||'Chưa có kết quả xác nhận');
         const detail=document.getElementById(key+'-time');
         const measured=time(item.measured_at);
         detail.textContent=measured?'Kết quả gần nhất · '+measured:'Chưa có thời điểm kết quả';
-      }else el.textContent=stale?'Dữ liệu cũ':(labels[item.state]||labels.unknown);
+      }else {
+        const label=labels[item.state]||labels.unknown;
+        el.textContent=stale?(item.state==='ok'?'Hoạt động theo báo cáo gần nhất':label+' theo báo cáo gần nhất'):label;
+      }
     }
-    stamp.textContent=snapshotTime?(stale?'Dữ liệu cũ · ':'Cập nhật · ')+snapshotTime:'Chưa có thời điểm cập nhật snapshot';
+    stamp.textContent=snapshotTime?'Báo cáo gần nhất: '+snapshotTime+(stale?' · Chưa nhận được báo cáo mới.':''):'Chưa có thời gian báo cáo';
   }catch{stamp.textContent='Không tải được trạng thái. Các link và hướng dẫn vẫn dùng được.';}
 }
 refresh();
