@@ -1,22 +1,14 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { OAuth2Client } from 'google-auth-library';
-import { authorizeClaims, sameOrigin, verifyGoogle, OWNER, HttpError } from '../lib/security.js';
+import { sameOrigin, passwordVersion, verifyPassword, HttpError } from '../lib/security.js';
 import { guideInput, noteInput } from '../lib/validation.js';
 import { createNotesHandler } from '../api/notes.js';
 const response = () => ({headers: {}, setHeader(k,v){this.headers[k]=v;}, status(s){this.code=s; return this;}, json(v){this.value=v; return this;}});
 process.env.PORTAL_BASE_URL = 'https://homepage-nas.vercel.app';
 process.env.GOOGLE_CLIENT_ID = 'test-client';
-test('only exact verified Gmail is authorized, case insensitive', () => {
-  assert.equal(authorizeClaims({sub:'123',email:OWNER.toUpperCase(),email_verified:true}).email, OWNER);
-  for(const p of [{sub:'123',email:OWNER,email_verified:false},{sub:'123',email:'other@gmail.com',email_verified:true},{email:OWNER,email_verified:true}]) assert.throws(() => authorizeClaims(p), {status:403});
-});
-test('Google verification uses configured audience and validates nonce; invalid tokens fail closed', async t => {
-  const mock = t.mock.method(OAuth2Client.prototype, 'verifyIdToken', async args => {assert.equal(args.audience,'test-client'); return {getPayload:()=>({sub:'123',email:OWNER,email_verified:true,nonce:'challenge'})};});
-  assert.equal((await verifyGoogle('credential','challenge')).email, OWNER);
-  await assert.rejects(verifyGoogle('credential','wrong'),{status:401});
-  mock.mock.mockImplementation(async () => {throw new Error('bad signature');});
-  await assert.rejects(verifyGoogle('forged','challenge'),{status:401});
+test('shared password rejects wrong, missing and oversized input; rotation changes sessions', () => {
+ process.env.PORTAL_PASSWORD='test-password-long';const old=passwordVersion();assert.equal(verifyPassword('test-password-long'),true);for(const v of ['wrong',null,'x'.repeat(257)])assert.equal(verifyPassword(v),false);
+ process.env.PORTAL_PASSWORD='replacement-password';assert.notEqual(passwordVersion(),old);
 });
 test('cross-origin writes and non-JSON writes are rejected', () => {
   assert.throws(()=>sameOrigin({headers:{origin:'https://evil.example','content-type':'application/json'}}),{status:403});
@@ -30,7 +22,7 @@ test('anonymous GET and POST cannot reach Notes storage', async () => {
 });
 test('Notes keep code verbatim, preserve history and reject stale device writes', async () => {
   const records = new Map(); let version=0;
-  const h = createNotesHandler({authorize:async()=>({email:OWNER}),load:async p=>structuredClone(records.get(p)||null),persist:async(p,value,etag)=>{if(records.has(p)&&records.get(p).etag!==etag) throw new HttpError(409,'conflict'); const result={etag:String(++version)}; records.set(p,{value:structuredClone(value),...result}); return result;},enumerate:async()=>[...records.keys()]});
+  const h = createNotesHandler({authorize:async()=>({authenticated:true}),load:async p=>structuredClone(records.get(p)||null),persist:async(p,value,etag)=>{if(records.has(p)&&records.get(p).etag!==etag) throw new HttpError(409,'conflict'); const result={etag:String(++version)}; records.set(p,{value:structuredClone(value),...result}); return result;},enumerate:async()=>[...records.keys()]});
   const run=async b=>{const res=response();await h({method:'POST',query:{},headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},body:b},res);return res;};
   const code='\tMsgBox, "<script> $HOME `n"\r\n  return\n';
   const first=await run({action:'save',title:'AHK',text:code}); assert.equal(first.code,200);assert.equal(first.value.text,code);
@@ -45,4 +37,11 @@ test('Notes byte limit handles Unicode; QR slug and original images stay fixed',
   const edited=guideInput({slug:'bep',title:'Bếp',area:'Bếp',summary:'',steps:['Bật'],details:[],images:[]},original);
   assert.deepEqual(edited.images,original.images);
   assert.throws(()=>guideInput({...edited,slug:'other'},original),{status:400});
+});
+test('encrypted session grants access and password rotation revokes the same cookie',async()=>{
+ const {sealData}=await import('iron-session');const {owner}=await import('../lib/security.js');
+ process.env.SESSION_PASSWORD='a-strong-test-session-secret-more-than-32-characters';process.env.PORTAL_PASSWORD='session-test-password';
+ const sealed=await sealData({authVersion:passwordVersion()},{password:process.env.SESSION_PASSWORD,ttl:7*86400});const req={headers:{cookie:'__Host-homepage='+sealed}};const res=response();res.getHeader=k=>res.headers[k];
+ await owner(req,res);process.env.PORTAL_PASSWORD='rotated-session-password';await assert.rejects(owner(req,res),{status:401});
+ await assert.rejects(owner({headers:{cookie:'__Host-homepage=forged'}},res),{status:401});
 });

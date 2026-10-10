@@ -3,7 +3,7 @@
 Repository: hunghvt-cyber/Homepage-nas. Homepage with static public pages, QR instructions and private Notes; Home-AI is only a shortcut.
 
 - Keep plain HTML/CSS/JavaScript. Python generates static pages; qrcode is build-only.
-- Text in content/, compressed images in public/images/. No Firestore or Home-AI API dependencies. Google identity and server-only private Blob storage are authorized for Notes and QR editing. Keep public QR reading independent of login; enforce the single verified owner Gmail on the server.
+- Text in content/, compressed images in public/images/. No Firestore or Home-AI API dependencies. Shared-password sessions and server-only private Blob storage are authorized for Notes and QR editing. Keep public QR reading independent of login; enforce the server-verified shared password on the server.
 - Build: python3 scripts/build.py; QR build needs requirements.txt and a confirmed PORTAL_BASE_URL HTTPS origin.
 - Never change guide slugs after QR printing. Never derive printed QR URLs from preview deployment URLs.
 - Root Vercel project uses main and dist output. Never deploy this repo into the existing Home-AI project.
