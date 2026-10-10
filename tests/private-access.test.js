@@ -20,17 +20,17 @@ test('anonymous GET and POST cannot reach Notes storage', async () => {
   for(const method of ['GET','POST']) {const res=response(); await h({method,query:{},headers:{}},res); assert.equal(res.code,401); assert.equal(res.headers['Cache-Control'],'no-store');}
   assert.equal(touched,false);
 });
-test('Notes keep code verbatim, preserve history and reject stale device writes', async () => {
+test('manual Notes saves accept stale clients and preserve the latest server version', async () => {
   const records = new Map(); let version=0;
   const h = createNotesHandler({authorize:async()=>({authenticated:true}),load:async p=>structuredClone(records.get(p)||null),persist:async(p,value,etag,{overwrite=false}={})=>{if(!overwrite&&records.has(p)&&records.get(p).etag!==etag) throw new HttpError(409,'conflict'); const result={etag:String(++version)}; records.set(p,{value:structuredClone(value),...result}); return result;},enumerate:async()=>[...records.keys()]});
   const run=async b=>{const res=response();await h({method:'POST',query:{},headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},body:b},res);return res;};
   const code='\tMsgBox, "<script> $HOME `n"\r\n  return\n';
   const first=await run({action:'save',title:'AHK',text:code}); assert.equal(first.code,200);assert.equal(first.value.text,code);
   const next=await run({action:'save',id:first.value.id,revision:first.value.revision,title:'AHK 2',text:'new'});assert.equal(next.value.history[0].text,code);
-  const stale=await run({action:'save',id:first.value.id,revision:first.value.revision,title:'stale',text:'lost'});assert.equal(stale.code,409);
-  const takeover=await run({action:'save',id:first.value.id,revision:first.value.revision,takeover:true,title:'takeover',text:'device B'});assert.equal(takeover.code,200);assert.equal(takeover.value.history[0].text,'new');
-  const displaced=await run({action:'save',id:next.value.id,revision:next.value.revision,title:'old device',text:'obsolete'});assert.equal(displaced.code,409);
-  const deleted=await run({action:'delete',id:takeover.value.id,revision:takeover.value.revision});assert.equal(deleted.code,200);
+  const stale=await run({action:'save',id:first.value.id,revision:first.value.revision,title:'stale',text:'lost'});assert.equal(stale.code,200);assert.equal(stale.value.history[0].text,'new');
+  const takeover=await run({action:'save',id:first.value.id,revision:first.value.revision,takeover:true,title:'takeover',text:'device B'});assert.equal(takeover.code,200);assert.equal(takeover.value.history[0].text,'lost');
+  const displaced=await run({action:'save',id:next.value.id,revision:next.value.revision,title:'old device',text:'obsolete'});assert.equal(displaced.code,200);
+  const deleted=await run({action:'delete',id:displaced.value.id,revision:displaced.value.revision});assert.equal(deleted.code,200);
   const res=response();await h({method:'GET',query:{id:next.value.id}},res);assert.equal(res.code,404);
 });
 test('Notes byte limit handles Unicode; QR slug and original images stay fixed', () => {
@@ -48,9 +48,9 @@ test('encrypted session grants access and password rotation revokes the same coo
  await assert.rejects(owner({headers:{cookie:'__Host-homepage=forged'}},res),{status:401});
 });
 
-test('explicit Notes Save bypasses Blob preconditions; automatic saves retain them',async()=>{
+test('manual Notes save is unconditional even when old clients omit takeover',async()=>{
  const id='12345678-1234-1234-1234-123456789abc';let overwriteSeen=false;
  const h=createNotesHandler({authorize:async()=>{},load:async()=>({etag:'blob-etag',value:{id,title:'server',text:'latest server',updatedAt:'2026-10-10T00:00:00Z'}}),persist:async(p,value,etag,options)=>{if(!options.overwrite)throw new HttpError(409,'Blob precondition failed');overwriteSeen=true;assert.equal(value.history[0].text,'latest server');return {etag:'saved'};}});
  const run=async takeover=>{const r=response();await h({method:'POST',query:{},headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},body:{action:'save',id,revision:'blob-etag',title:'device',text:'my draft',takeover}},r);return r;};
- assert.equal((await run(false)).code,409);assert.equal(overwriteSeen,false);assert.equal((await run(true)).code,200);assert.equal(overwriteSeen,true);
+ assert.equal((await run(false)).code,200);assert.equal(overwriteSeen,true);assert.equal((await run(true)).code,200);assert.equal(overwriteSeen,true);
 });

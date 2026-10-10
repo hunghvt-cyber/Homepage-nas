@@ -41,3 +41,8 @@ test('Notes never schedules autosave or polling; manual save keeps the draft', a
  $('note-title').value='manual';$('note-text').value='local draft';$('note-text').dispatchEvent(new w.Event('input'));await flush();assert.equal(sent,undefined);assert.equal(timers,0);assert.equal(polls,0);assert.equal($('note-refresh'),null);
  $('note-save').click();await flush();assert.equal(sent.takeover,true);assert.equal(sent.text,'local draft');assert.equal($('note-message').textContent,'Đã lưu.');dom.window.close();
 });
+test('confirmed Notes save remains successful when subsequent list read fails',async()=>{
+ const dom=new JSDOM(readFileSync('dist/notes/index.html','utf8'),{url:'https://homepage-nas.vercel.app/notes/',runScripts:'outside-only'}),w=dom.window,$=id=>w.document.getElementById(id);let saved=false;
+ w.PortalAccount={state:{authenticated:true},api:async(url,b)=>{if(b){assert.equal(url,'/api/notes-save');saved=true;return {...b,id:'12345678-1234-1234-1234-123456789abc',revision:'new',history:[],updatedAt:'2026-10-10T00:00:00Z'};}if(saved)throw new Error('list read failed');return {notes:[]};}};
+ w.eval(readFileSync('public/notes.js','utf8'));w.dispatchEvent(new w.CustomEvent('account-change',{detail:{authenticated:true}}));await flush();$('note-title').value='note';$('note-text').value='draft';$('note-text').dispatchEvent(new w.Event('input'));$('note-save').click();await flush();assert.match($('note-message').textContent,/^Đã lưu\./);assert.doesNotMatch($('note-message').textContent,/chưa được lưu|thiết bị khác/);assert.equal($('note-text').value,'draft');dom.window.close();
+});

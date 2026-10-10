@@ -1,11 +1,12 @@
 """Build independent static portal; QR URLs require a confirmed HTTPS origin."""
-import html, json, os, re, shutil
+import hashlib, html, json, os, re, shutil
 from pathlib import Path
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / 'dist'
 esc = lambda value: html.escape(str(value), quote=True)
+notes_version = hashlib.sha256((ROOT / 'public/notes.js').read_bytes()).hexdigest()[:12]
 site = json.loads((ROOT / 'content/site.json').read_text())
 guides = json.loads((ROOT / 'content/guides.json').read_text())
 base = os.getenv('PORTAL_BASE_URL', site.get('base_url', '')).rstrip('/')
@@ -75,7 +76,7 @@ print(f'Built {len(guides)} guides; QR '+('enabled' if base else 'pending confir
 
 
 
-write('notes/index.html',page('Notes','<header><a href="/">← Trang chủ</a><h1>Notes</h1><p>Ghi chú dài và code. Chỉ chủ tài khoản được đọc và sửa.</p></header>'+ACCOUNT+'<div id="notes-workspace" hidden><div class="editor-actions"><button id="note-new" type="button">Note mới</button></div><div class="notes-layout"><aside><label for="note-search">Tìm theo tiêu đề</label><input id="note-search" type="search"><div id="note-list"></div></aside><section class="body"><label for="note-title">Tiêu đề</label><input id="note-title" maxlength="200"><label><input id="note-pinned" type="checkbox"> Ghim note</label><label for="note-text">Nội dung · Tối đa 1 MB/note</label><textarea id="note-text" spellcheck="false" wrap="off"></textarea><div class="editor-actions"><button id="note-save" type="button">Lưu</button><button id="note-copy" type="button">Copy toàn bộ</button><button id="note-delete" type="button">Xóa</button></div><label for="note-history">Khôi phục bản trước</label><select id="note-history"></select><p id="note-message" role="status"></p><small>Bấm Lưu để lưu thay đổi. Chờ “Đã lưu” trước khi đóng. Giữ tối đa 5 bản trước, trong giới hạn 3 MB mỗi note gồm lịch sử.</small></section></div></div><script src="/account.js" defer></script><script src="/notes.js?v=manual-save-20261010" defer></script>'))
+write('notes/index.html',page('Notes','<header><a href="/">← Trang chủ</a><h1>Notes</h1><p>Ghi chú dài và code. Chỉ chủ tài khoản được đọc và sửa.</p></header>'+ACCOUNT+'<div id="notes-workspace" hidden><div class="editor-actions"><button id="note-new" type="button">Note mới</button></div><div class="notes-layout"><aside><label for="note-search">Tìm theo tiêu đề</label><input id="note-search" type="search"><div id="note-list"></div></aside><section class="body"><label for="note-title">Tiêu đề</label><input id="note-title" maxlength="200"><label><input id="note-pinned" type="checkbox"> Ghim note</label><label for="note-text">Nội dung · Tối đa 1 MB/note</label><textarea id="note-text" spellcheck="false" wrap="off"></textarea><div class="editor-actions"><button id="note-save" type="button">Lưu</button><button id="note-copy" type="button">Copy toàn bộ</button><button id="note-delete" type="button">Xóa</button></div><label for="note-history">Khôi phục bản trước</label><select id="note-history"></select><p id="note-message" role="status"></p><small>Bấm Lưu để lưu thay đổi. Chờ “Đã lưu” trước khi đóng. Giữ tối đa 5 bản trước, trong giới hạn 3 MB mỗi note gồm lịch sử.</small></section></div></div><script src="/account.js" defer></script><script src="/notes.js?v='+notes_version+'" defer></script>'))
 
 
 write('chi-tieu/index.html',page('Chi tiêu gia đình','<header><a href="/">← Trang chủ</a><h1>Chi tiêu gia đình</h1></header>'+ACCOUNT+'<div id="expenses-workspace" hidden><section><div class="bar"><h2>Thống kê</h2></div><div class="body"><label for="expense-month">Tháng</label><input id="expense-month" type="month"><label for="expense-payer">Người chi</label><select id="expense-payer"><option value="">Cả nhà</option></select><button id="expense-refresh" type="button">Làm mới</button><p id="expense-message" role="status"></p><div id="expense-summary" class="expense-summary"></div><h3>Chi theo ngày</h3><div id="expense-days"></div><h3>Theo danh mục</h3><div id="expense-categories"></div><p id="expense-updated" class="muted"></p></div></section></div><script src="/account.js" defer></script><script src="/expenses.js" defer></script>'))

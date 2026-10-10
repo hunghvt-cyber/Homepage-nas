@@ -28,11 +28,12 @@
     busy = true; disable(); message('Đang lưu…');
     try {
       const snapshot = {title: $('note-title').value, text: $('note-text').value, pinned: $('note-pinned').checked};
-      const r = await api('/api/notes', {action: 'save', id: selected?.id, revision: selected?.revision, takeover: true, ...snapshot});
+      const r = await api('/api/notes-save', {action: 'save', id: selected?.id, revision: selected?.revision, takeover: true, ...snapshot});
       if (!window.PortalAccount.state.authenticated) return;
       if (snapshot.title === $('note-title').value && snapshot.text === $('note-text').value && snapshot.pinned === $('note-pinned').checked) fill(r); else {selected = r; dirty = true;}
-      await refresh(); message(dirty ? 'Đã lưu bản trước; đang có thay đổi mới.' : 'Đã lưu.');
-    } catch(e) {message(e.message + ' Nội dung đang nhập vẫn được giữ. Bấm Lưu để tiếp quản.');} finally {busy = false; disable();}
+      message(dirty ? 'Đã lưu bản trước; bấm Lưu để lưu thay đổi mới.' : 'Đã lưu.');
+      try { await refresh(); } catch { message(dirty ? 'Đã lưu bản trước; bấm Lưu để lưu thay đổi mới.' : 'Đã lưu. Danh sách chưa cập nhật; tải lại trang khi cần.'); }
+    } catch(e) {message(e.message + ' Nội dung đang nhập vẫn được giữ. Bấm Lưu để thử lại.');} finally {busy = false; disable();}
   }
   function change() {dirty = true; message('Chưa lưu — bấm Lưu để lưu thay đổi.');}
   for (const id of ['note-title','note-text','note-pinned']) $(id).addEventListener('input', change);
