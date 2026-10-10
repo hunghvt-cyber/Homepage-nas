@@ -1,6 +1,6 @@
 # Homepage và QR trên Vercel
 
-Website tĩnh độc lập; text và ảnh trong GitHub. Không Firebase SDK, Firestore hay API Home-AI. Trang đọc tĩnh và công khai; sửa nội dung bằng giao diện GitHub, không có API đăng nhập riêng. Chỉ dist được phục vụ; Home-AI là dự án riêng; Homepage chỉ chứa shortcut đến ứng dụng đó.
+Homepage độc lập; nội dung nền và ảnh trong GitHub. Không Firebase SDK, Firestore hay API Home-AI. Trang QR đọc công khai; sửa hướng dẫn và Notes riêng tư dùng mật khẩu chung, chỉ cho người biết mật khẩu. API chạy trên Vercel và dữ liệu lưu trong Blob PRIVATE riêng. Chỉ dist được phục vụ; Home-AI là dự án riêng; Homepage chỉ chứa shortcut đến ứng dụng đó.
 
 ## Nội dung
 - content/site.json: tên trang và shortcut. Link trống là chưa cấu hình. Viewer/FnNAS chỉ điền đường Tailscale đã xác minh; Home-AI giữ truy cập/đăng nhập hiện tại.
@@ -37,5 +37,12 @@ Build, syntax, link nội bộ/404, ảnh và QR trước khi commit. Kiểm tra
 Đã bỏ cấu hình/workflow Firebase Hosting. Source sẵn sàng chưa có nghĩa website đã live; cần quyền tạo project đúng account Vercel.
 
 
-## Sửa nội dung trên GitHub
-Bấm “Sửa trên GitHub” ở cuối hướng dẫn hoặc danh mục để mở `content/guides.json` trên main. Đăng nhập tài khoản GitHub có quyền ghi, tìm đồ vật theo slug, sửa nội dung và bấm Commit changes. Giữ JSON hợp lệ và không đổi slug. Vercel tự triển khai sau commit. Có thể revert commit để khôi phục bản cũ. Không cần OAuth App hoặc secret riêng cho Homepage.
+## Notes và sửa hướng dẫn bằng mật khẩu
+
+Mở `/notes/` để tạo, sửa và copy ghi chú/code. Ở trang đồ vật, chọn “Sửa hướng dẫn”, đăng nhập mật khẩu rồi sửa trực tiếp trên web. Chỉ người biết mật khẩu chung được truy cập Notes và sửa QR; đọc QR vẫn công khai. Không cần GitHub login.
+
+Sửa trên web lưu override riêng trong private Blob; không tự commit GitHub. Nội dung nền vẫn trong content/guides.json. Rollback code không rollback dữ liệu Blob. Xem [cấu hình, quyền truy cập và giới hạn](docs/NOTES-PASSWORD-AUTH-20261010.md).
+
+Chức năng riêng tư cần PORTAL_PASSWORD, SESSION_PASSWORD, PORTAL_BASE_URL và PORTAL_PRIVATE_BLOB_TOKEN. Khi thiếu cấu hình, API từ chối truy cập và giao diện báo chưa cấu hình. Không dùng Blob public đang phục vụ NAS status để lưu Notes.
+
+Cài dependency Node: `npm ci --ignore-scripts`. Kiểm tra API: `npm test`.
