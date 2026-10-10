@@ -32,12 +32,12 @@ test('QR override renders as text; editor requires owner and preserves slug on s
  w.PortalAccount.state.authenticated=true;$('guide-edit').click();assert.equal($('guide-editor').hidden,false);$('edit-title').value='Bếp mới';$('guide-form').dispatchEvent(new w.Event('submit',{cancelable:true}));await flush();assert.equal(saved.guide.slug,original.slug);assert.equal(saved.revision,'first');assert.equal($('guide-title').textContent,'Bếp mới');dom.window.close();
 });
 
-test('displaced Notes page stops autosave, keeps draft and manual Save takes over', async()=>{
+test('Notes never schedules autosave or polling; manual save keeps the draft', async()=>{
  const dom=new JSDOM(readFileSync('dist/notes/index.html','utf8'),{url:'https://homepage-nas.vercel.app/notes/',runScripts:'outside-only'}),w=dom.window,$=id=>w.document.getElementById(id);
- let poll,auto,revision='1',sent;const n={id:'12345678-1234-1234-1234-123456789abc',title:'test',text:'old',history:[],updatedAt:'2026-10-10T00:00:00Z'};
- w.setInterval=fn=>{poll=fn;};w.setTimeout=fn=>{auto=fn;return 1;};w.clearTimeout=()=>{};w.confirm=()=>true;Object.defineProperty(w.document,'hidden',{value:false});
- w.PortalAccount={state:{authenticated:true},api:async(url,b)=>{if(b){sent=b;return {...n,...b,revision:'3'};}if(url.includes('?id='))return {...n,revision};return {notes:[n]};}};
- w.eval(readFileSync('public/notes.js','utf8'));w.dispatchEvent(new w.CustomEvent('account-change',{detail:{authenticated:true}}));await flush();$('note-list').firstChild.click();await flush();
- $('note-text').value='local draft';$('note-text').dispatchEvent(new w.Event('input'));revision='2';await poll();assert.match($('note-message').textContent,/Tự lưu đã dừng/);await auto();assert.equal(sent,undefined);assert.equal($('note-text').value,'local draft');
+ let sent, timers=0, polls=0;
+ w.setTimeout=()=>{timers++;};w.setInterval=()=>{polls++;};w.confirm=()=>true;
+ w.PortalAccount={state:{authenticated:true},api:async(url,b)=>{if(b){sent=b;return {...b,id:'12345678-1234-1234-1234-123456789abc',revision:'3',history:[],updatedAt:'2026-10-10T00:00:00Z'};}return {notes:[]};}};
+ w.eval(readFileSync('public/notes.js','utf8'));w.dispatchEvent(new w.CustomEvent('account-change',{detail:{authenticated:true}}));await flush();
+ $('note-title').value='manual';$('note-text').value='local draft';$('note-text').dispatchEvent(new w.Event('input'));await flush();assert.equal(sent,undefined);assert.equal(timers,0);assert.equal(polls,0);assert.equal($('note-refresh'),null);
  $('note-save').click();await flush();assert.equal(sent.takeover,true);assert.equal(sent.text,'local draft');assert.equal($('note-message').textContent,'Đã lưu.');dom.window.close();
 });
