@@ -1,4 +1,6 @@
 dist/
 .build-deps/
+node_modules/
+.env*
 .vercel/
 __pycache__/
