@@ -28,7 +28,9 @@ test('Notes keep code verbatim, preserve history and reject stale device writes'
   const first=await run({action:'save',title:'AHK',text:code}); assert.equal(first.code,200);assert.equal(first.value.text,code);
   const next=await run({action:'save',id:first.value.id,revision:first.value.revision,title:'AHK 2',text:'new'});assert.equal(next.value.history[0].text,code);
   const stale=await run({action:'save',id:first.value.id,revision:first.value.revision,title:'stale',text:'lost'});assert.equal(stale.code,409);
-  const deleted=await run({action:'delete',id:next.value.id,revision:next.value.revision});assert.equal(deleted.code,200);
+  const takeover=await run({action:'save',id:first.value.id,revision:first.value.revision,takeover:true,title:'takeover',text:'device B'});assert.equal(takeover.code,200);assert.equal(takeover.value.history[0].text,'new');
+  const displaced=await run({action:'save',id:next.value.id,revision:next.value.revision,title:'old device',text:'obsolete'});assert.equal(displaced.code,409);
+  const deleted=await run({action:'delete',id:takeover.value.id,revision:takeover.value.revision});assert.equal(deleted.code,200);
   const res=response();await h({method:'GET',query:{id:next.value.id}},res);assert.equal(res.code,404);
 });
 test('Notes byte limit handles Unicode; QR slug and original images stay fixed', () => {
@@ -45,3 +47,4 @@ test('encrypted session grants access and password rotation revokes the same coo
  await owner(req,res);process.env.PORTAL_PASSWORD='rotated-session-password';await assert.rejects(owner(req,res),{status:401});
  await assert.rejects(owner({headers:{cookie:'__Host-homepage=forged'}},res),{status:401});
 });
+

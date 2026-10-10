@@ -15,17 +15,23 @@ export function createNotesHandler(deps = {}) {
       notes.sort((a,b) => Number(b.pinned) - Number(a.pinned) || b.updatedAt.localeCompare(a.updatedAt)); return reply(res, 200, {notes});
     }
     if (req.method !== 'POST') throw new HttpError(405, 'Phương thức không hỗ trợ.');
-    sameOrigin(req); const b = body(req); const id = b.id ? validId(b.id) : randomUUID(); const path = 'notes/' + id + '.json'; const current = await load(path); revision(current, b.revision);
+    sameOrigin(req); const b = body(req); const id = b.id ? validId(b.id) : randomUUID(); const path = 'notes/' + id + '.json'; let current = await load(path);
+    if (b.action !== 'save' || b.takeover !== true) revision(current, b.revision);
     if (b.action === 'delete') { if (!current || current.value.deleted) throw new HttpError(404, 'Không tìm thấy note.'); await persist(path, {...current.value, deleted: true, updatedAt: new Date().toISOString()}, current.etag); return reply(res, 200, {deleted: true}); }
     if (b.action !== 'save') throw new HttpError(400, 'Thao tác không hợp lệ.');
     if (current?.value.deleted) throw new HttpError(409, 'Note đã bị xóa trên thiết bị khác.');
-    const input = noteInput(b); const history = current ? [{title: current.value.title, text: current.value.text, updatedAt: current.value.updatedAt}, ...(current.value.history || [])].slice(0,5) : [];
+    const input = noteInput(b);
+    for (let attempt = 0; attempt < 3; attempt++) {
+    const history = current ? [{title: current.value.title, text: current.value.text, updatedAt: current.value.updatedAt}, ...(current.value.history || [])].slice(0,5) : [];
     const value = {id, ...input, updatedAt: new Date().toISOString(), history};
     while (Buffer.byteLength(JSON.stringify(value)) > 3000000 && history.length) history.pop();
     if (Buffer.byteLength(JSON.stringify(value)) > 3000000) throw new HttpError(413, 'Nội dung sau mã hóa quá dài để lưu.');
-    const saved = await persist(path, value, current?.etag); return reply(res, 200, {...value, revision: saved.etag});
+    try { const saved = await persist(path, value, current?.etag); return reply(res, 200, {...value, revision: saved.etag}); }
+    catch (e) { if (e.status !== 409 || b.takeover !== true || attempt === 2) throw e; current = await load(path); if (!current || current.value.deleted) throw new HttpError(409, 'Note đã bị xóa.'); }
+    }
   } catch(e) { return fail(res, e); }
 }
 
 }
 export default createNotesHandler();
+

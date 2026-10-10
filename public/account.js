@@ -10,7 +10,7 @@
  };
  async function api(url,value) {
   const r=await fetch(url,{credentials:'same-origin',cache:'no-store',...(value?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(value)}:{})});
-  const data=await r.json();if(!r.ok){if(r.status===401){state={authenticated:false,expired:true};update();}throw new Error(data.error||'Không thể thực hiện.');}return data;
+  const data=await r.json();if(!r.ok){if(r.status===401){state={authenticated:false,expired:true};update();}const error=new Error(data.error||'Không thể thực hiện.');error.status=r.status;throw error;}return data;
  }
  function login(){document.getElementById('password-form').hidden=false;document.getElementById('account-password').focus();}
  window.PortalAccount={api,get state(){return state;},login};
@@ -23,3 +23,4 @@
  document.getElementById('account-logout').addEventListener('click',async()=>{try{state=await api('/api/auth',{action:'logout'});document.getElementById('account-password').value='';show('Đã khóa lại.');update();}catch(e){show(e.message);}});
  api('/api/auth').then(s=>{state=s;update();}).catch(e=>{show(e.message);update();});
 })();
+
