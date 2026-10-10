@@ -26,7 +26,7 @@ export function createNotesHandler(deps = {}) {
     const value = {id, ...input, updatedAt: new Date().toISOString(), history};
     while (Buffer.byteLength(JSON.stringify(value)) > 3000000 && history.length) history.pop();
     if (Buffer.byteLength(JSON.stringify(value)) > 3000000) throw new HttpError(413, 'Nội dung sau mã hóa quá dài để lưu.');
-    try { const saved = await persist(path, value, current?.etag); return reply(res, 200, {...value, revision: saved.etag}); }
+    try { const saved = await persist(path, value, current?.etag, {overwrite: b.takeover === true}); return reply(res, 200, {...value, revision: saved.etag}); }
     catch (e) { if (e.status !== 409 || b.takeover !== true || attempt === 2) throw e; current = await load(path); if (!current || current.value.deleted) throw new HttpError(409, 'Note đã bị xóa.'); }
     }
   } catch(e) { return fail(res, e); }

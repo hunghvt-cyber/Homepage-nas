@@ -22,7 +22,7 @@ test('anonymous GET and POST cannot reach Notes storage', async () => {
 });
 test('Notes keep code verbatim, preserve history and reject stale device writes', async () => {
   const records = new Map(); let version=0;
-  const h = createNotesHandler({authorize:async()=>({authenticated:true}),load:async p=>structuredClone(records.get(p)||null),persist:async(p,value,etag)=>{if(records.has(p)&&records.get(p).etag!==etag) throw new HttpError(409,'conflict'); const result={etag:String(++version)}; records.set(p,{value:structuredClone(value),...result}); return result;},enumerate:async()=>[...records.keys()]});
+  const h = createNotesHandler({authorize:async()=>({authenticated:true}),load:async p=>structuredClone(records.get(p)||null),persist:async(p,value,etag,{overwrite=false}={})=>{if(!overwrite&&records.has(p)&&records.get(p).etag!==etag) throw new HttpError(409,'conflict'); const result={etag:String(++version)}; records.set(p,{value:structuredClone(value),...result}); return result;},enumerate:async()=>[...records.keys()]});
   const run=async b=>{const res=response();await h({method:'POST',query:{},headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},body:b},res);return res;};
   const code='\tMsgBox, "<script> $HOME `n"\r\n  return\n';
   const first=await run({action:'save',title:'AHK',text:code}); assert.equal(first.code,200);assert.equal(first.value.text,code);
@@ -48,3 +48,9 @@ test('encrypted session grants access and password rotation revokes the same coo
  await assert.rejects(owner({headers:{cookie:'__Host-homepage=forged'}},res),{status:401});
 });
 
+test('explicit Notes Save bypasses Blob preconditions; automatic saves retain them',async()=>{
+ const id='12345678-1234-1234-1234-123456789abc';let overwriteSeen=false;
+ const h=createNotesHandler({authorize:async()=>{},load:async()=>({etag:'blob-etag',value:{id,title:'server',text:'latest server',updatedAt:'2026-10-10T00:00:00Z'}}),persist:async(p,value,etag,options)=>{if(!options.overwrite)throw new HttpError(409,'Blob precondition failed');overwriteSeen=true;assert.equal(value.history[0].text,'latest server');return {etag:'saved'};}});
+ const run=async takeover=>{const r=response();await h({method:'POST',query:{},headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},body:{action:'save',id,revision:'blob-etag',title:'device',text:'my draft',takeover}},r);return r;};
+ assert.equal((await run(false)).code,409);assert.equal(overwriteSeen,false);assert.equal((await run(true)).code,200);assert.equal(overwriteSeen,true);
+});

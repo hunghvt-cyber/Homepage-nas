@@ -7,6 +7,15 @@
   "trailingSlash": true,
   "headers": [
     {
+      "source": "/notes.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
       "source": "/status.json",
       "headers": [
         {
