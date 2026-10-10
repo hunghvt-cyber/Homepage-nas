@@ -28,6 +28,7 @@ LOCK = OUTPUT.with_suffix(".lock")
 STATES = {"ok", "pass", "warn", "fail", "unknown"}
 MAX_CACHE_AGE = 120
 MAX_RECORDING_AGE = 15 * 60
+MAX_HEALTH_AGE = 15 * 60
 FUTURE_SKEW = 5 * 60
 
 
@@ -140,6 +141,61 @@ def camera_state(item, now=None):
     return "unknown"
 
 
+def nonnegative_number(value):
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return None
+    if not math.isfinite(value) or value < 0 or not float(value).is_integer():
+        return None
+    return value
+
+
+def filesystem_metrics(item):
+    empty = {"used_percent": None, "available_bytes": None}
+    if not isinstance(item, dict) or item.get("status") != "ok":
+        return empty
+    total = nonnegative_number(item.get("total_bytes"))
+    available = nonnegative_number(item.get("available_bytes"))
+    if total is None or total <= 0 or available is None or available > total:
+        return empty
+    return {"used_percent": round((total - available) * 100 / total, 1), "available_bytes": int(available)}
+
+
+def health_metrics(host, updated, now):
+    empty_fs = {"used_percent": None, "available_bytes": None}
+    empty = {
+        "root": empty_fs.copy(), "vol1": empty_fs.copy(),
+        "ram": {"available_bytes": None}, "swap": {"used_bytes": None, "total_bytes": None},
+    }
+    if updated is None or now - updated > MAX_HEALTH_AGE or now - updated < -FUTURE_SKEW:
+        return empty
+
+    rows = host.get("filesystems", [])
+    filesystems = {item.get("path"): item for item in rows if isinstance(item, dict)} if isinstance(rows, list) else {}
+    root = filesystem_metrics(filesystems.get("/"))
+    volume = filesystem_metrics(filesystems.get("/vol1"))
+    memory = host.get("memory") if isinstance(host.get("memory"), dict) else {}
+    ram_available = nonnegative_number(memory.get("available_bytes")) if memory.get("status") == "ok" else None
+    ram_total = nonnegative_number(memory.get("total_bytes")) if memory.get("status") == "ok" else None
+    if ram_available is None or ram_total is None or ram_total <= 0 or ram_available > ram_total:
+        ram_available = None
+
+    # Map only the aggregate swap fields confirmed in the installed cache.
+    swap_used = nonnegative_number(memory.get("swap_used_bytes")) if memory.get("status") == "ok" else None
+    swap_total = nonnegative_number(memory.get("swap_total_bytes")) if memory.get("status") == "ok" else None
+    if swap_used is None or swap_total is None or swap_total <= 0 or swap_used > swap_total:
+        swap_used = swap_total = None
+
+    return {
+        "root": root,
+        "vol1": volume,
+        "ram": {"available_bytes": int(ram_available) if ram_available is not None else None},
+        "swap": {
+            "used_bytes": int(swap_used) if swap_used is not None else None,
+            "total_bytes": int(swap_total) if swap_total is not None else None,
+        },
+    }
+
+
 def make_snapshot(now=None, cache_path=CACHE, maintenance_path=MAINTENANCE, retention_path=VERIFIED_RETENTION,
                   retention_results_root=VERIFIED_RETENTION_RESULTS):
     now = time.time() if now is None else now
@@ -155,14 +211,10 @@ def make_snapshot(now=None, cache_path=CACHE, maintenance_path=MAINTENANCE, rete
 
     nas_state = "unknown"
     host = source.get("host") if isinstance(source.get("host"), dict) else {}
-    if updated is not None and host.get("status") != "unavailable":
-        rows = host.get("filesystems", [])
-        filesystems = {item.get("path"): item for item in rows if isinstance(item, dict)} if isinstance(rows, list) else {}
-        root, volume = filesystems.get("/"), filesystems.get("/vol1")
-        if root and volume and root.get("status") == volume.get("status") == "ok":
-            total = volume.get("total_bytes", 0)
-            free = volume.get("available_bytes", 0)
-            nas_state = "warn" if total <= 0 or free / total < 0.05 else "ok"
+    health = health_metrics(host, updated, now)
+    root, volume = health["root"], health["vol1"]
+    if root["used_percent"] is not None and volume["used_percent"] is not None:
+        nas_state = "warn" if volume["used_percent"] > 95 else "ok"
 
     tapo = source.get("tapo") if isinstance(source.get("tapo"), dict) else {}
     cameras = tapo.get("cameras") if isinstance(tapo.get("cameras"), dict) else {}
@@ -172,6 +224,7 @@ def make_snapshot(now=None, cache_path=CACHE, maintenance_path=MAINTENANCE, rete
         "cam1": {"state": camera_state(cameras.get("cam1"), now)},
         "cam2": {"state": camera_state(cameras.get("cam2"), now)},
         "nas": {"state": nas_state},
+        "health": health,
         **read_maintenance(maintenance_path),
         **read_verified_retention(retention_path, retention_results_root),
     }
@@ -180,7 +233,7 @@ def make_snapshot(now=None, cache_path=CACHE, maintenance_path=MAINTENANCE, rete
 
 
 def validate(data):
-    assert set(data) == {"schema", "updated_at", "cam1", "cam2", "nas", "maintenance", "retention"}
+    assert set(data) == {"schema", "updated_at", "cam1", "cam2", "nas", "health", "maintenance", "retention"}
     assert data["schema"] == 1
     for name in ("cam1", "cam2", "nas"):
         assert set(data[name]) == {"state"} and data[name]["state"] in STATES
@@ -189,6 +242,22 @@ def validate(data):
         assert data[name]["state"] in STATES
         assert data[name]["measured_at"] is None or isinstance(data[name]["measured_at"], str)
     assert data["updated_at"] is None or isinstance(data["updated_at"], str)
+    assert set(data["health"]) == {"root", "vol1", "ram", "swap"}
+    for name in ("root", "vol1"):
+        assert set(data["health"][name]) == {"used_percent", "available_bytes"}
+        percent = data["health"][name]["used_percent"]
+        available = data["health"][name]["available_bytes"]
+        assert percent is None or (not isinstance(percent, bool) and isinstance(percent, (int, float)) and math.isfinite(percent) and 0 <= percent <= 100)
+        assert available is None or (not isinstance(available, bool) and isinstance(available, int) and available >= 0)
+    assert set(data["health"]["ram"]) == {"available_bytes"}
+    ram_available = data["health"]["ram"]["available_bytes"]
+    assert ram_available is None or (not isinstance(ram_available, bool) and isinstance(ram_available, int) and ram_available >= 0)
+    assert set(data["health"]["swap"]) == {"used_bytes", "total_bytes"}
+    swap = data["health"]["swap"]
+    for value in swap.values():
+        assert value is None or (not isinstance(value, bool) and isinstance(value, int) and value >= 0)
+    assert (swap["used_bytes"] is None) == (swap["total_bytes"] is None)
+    assert swap["total_bytes"] is None or (swap["total_bytes"] > 0 and swap["used_bytes"] <= swap["total_bytes"])
     # Allowlist output is intentionally tiny; reject accidental operational fields.
     assert len(json.dumps(data, separators=(",", ":"))) < 2048
 
