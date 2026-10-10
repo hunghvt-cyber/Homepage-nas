@@ -20,7 +20,7 @@ async function refresh(){
         detail.textContent=measured?'Kết quả gần nhất · '+measured:'Chưa có thời điểm kết quả';
       }else {
         const label=labels[item.state]||labels.unknown;
-        el.textContent=stale?(item.state==='ok'?'Hoạt động theo báo cáo gần nhất':label+' theo báo cáo gần nhất'):label;
+        el.textContent=label;
       }
     }
     stamp.textContent=snapshotTime?'Báo cáo gần nhất: '+snapshotTime+(stale?' · Chưa nhận được báo cáo mới.':''):'Chưa có thời gian báo cáo';
