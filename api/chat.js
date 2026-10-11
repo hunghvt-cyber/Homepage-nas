@@ -27,7 +27,10 @@ export function createChatHandler({authorize=owner,request=fetch}={}) {
    const response=await request(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'homepage_chat',payload,signature}),signal:AbortSignal.timeout(55000)});
    if(!response.ok) throw new HttpError(502,'Gemini chưa phản hồi. Thử lại sau.');
    const data=await response.json();
-   if(!data.ok) throw new HttpError(data.code===429?429:502,data.code===429?'Đã hết hạn mức hoặc đang quá tải. Hãy thử lại sau.':'Không kết nối được Gemini. Kiểm tra cấu hình botchitieu.');
+   if(!data.ok) {
+    const error=data.code===429?'Đã hết hạn mức hoặc đang quá tải. Hãy thử lại sau.':data.reason==='CONFIG'?'Botchitieu chưa cấu hình khóa Gemini.':data.reason==='INCOMPLETE'?'Gemini trả lời chưa đầy đủ. Thử câu hỏi ngắn hơn.':data.reason==='HTTP'&&Number.isInteger(data.upstreamStatus)?'Gemini báo lỗi HTTP '+data.upstreamStatus+'. Kiểm tra khóa hoặc model.':'Không kết nối được Gemini. Kiểm tra cấu hình botchitieu.';
+    throw new HttpError(data.code===429?429:502,error);
+   }
    if(typeof data.text!=='string' || !data.text.trim() || data.text.length>16000) throw new HttpError(502,'Câu trả lời không hợp lệ.');
    return reply(res,200,{text:data.text});
   } catch(e) {if(!e.status)e=new HttpError(502,'Không kết nối được Gemini. Thử lại sau.');return fail(res,e);}
