@@ -15,7 +15,7 @@ Luồng: trình duyệt `/gemini/` → phiên mật khẩu chung → Vercel `/ap
 - Lịch sử trong bộ nhớ của trang, không lưu Blob hoặc Sheets; khóa lại xóa lịch sử và hủy chờ.
 - Dừng chờ không bảo đảm hủy request đã đến Google.
 - Tối đa 10 lượt/cuộc trò chuyện, 4.000 ký tự/câu hỏi, 24.000 ký tự toàn bộ lịch sử; 30 request/ngày cho cả nhà theo giờ Việt Nam.
-- Không tự retry hoặc chuyển model trả phí. Dùng `GEMINI_MODEL` sẵn có của botchitieu.
+- Không tự retry hoặc chuyển model trả phí. Dùng `GEMINI_SHARED_MODEL`, mặc định `gemini-3.5-flash-lite` có Free Tier; cấu hình cũ của bot trả HTTP 404 trong kiểm tra live, không đổi parser giao dịch bằng chữ.
 
 Không bật thanh toán hoặc tạo dịch vụ trả phí. Chưa xác minh được billing tier của Google Cloud; giới hạn trong mã không biến khóa đang trả phí thành miễn phí. Nếu project của khóa đang ở Free Tier, hết hạn mức Google sẽ báo giới hạn. Cả chat và scan bill cùng tiêu thụ quota của khóa botchitieu.
 
