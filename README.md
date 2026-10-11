@@ -46,3 +46,8 @@ Sửa trên web lưu override riêng trong private Blob; không tự commit GitH
 Chức năng riêng tư cần PORTAL_PASSWORD, SESSION_PASSWORD, PORTAL_BASE_URL và PORTAL_PRIVATE_BLOB_TOKEN. Khi thiếu cấu hình, API từ chối truy cập và giao diện báo chưa cấu hình. Không dùng Blob public đang phục vụ NAS status để lưu Notes.
 
 Cài dependency Node: `npm ci --ignore-scripts`. Kiểm tra API: `npm test`.
+
+
+## Chat Gemini
+
+Trong Notes chọn **Mở chat Gemini**, hoặc mở `/gemini/`. Dùng mật khẩu chung và kết nối Apps Script của trang Chi tiêu; không thêm khóa Gemini vào Homepage. [Kiến trúc và giới hạn](docs/GEMINI-CHAT-20261011.md).

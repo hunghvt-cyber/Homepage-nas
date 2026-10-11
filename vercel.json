@@ -7,12 +7,31 @@
   "trailingSlash": true,
   "headers": [
     {
+      "source": "/gemini/",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
+    },
+    {
       "source": "/notes/",
-      "headers": [{"key": "Cache-Control", "value": "no-store"}]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
     },
     {
       "source": "/account.js",
-      "headers": [{"key": "Cache-Control", "value": "no-store"}]
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
+      ]
     },
     {
       "source": "/notes.js",
@@ -45,6 +64,9 @@
   "functions": {
     "api/guides.js": {
       "includeFiles": "content/guides.json"
+    },
+    "api/chat.js": {
+      "maxDuration": 60
     }
   }
 }
