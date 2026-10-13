@@ -147,9 +147,9 @@
       for(const link of r.links){
         const row=document.createElement('div');
         const label=document.createElement('span');
-        label.textContent=(link.revoked?'Đã thu hồi · ':Date.parse(link.expiresAt)<=Date.now()?'Hết hạn · ':'Đang hoạt động · ')+new Date(link.expiresAt).toLocaleDateString('vi-VN')+' ';
+        label.textContent=(link.revoked?'Đã thu hồi · ':(link.expiresAt&&Date.parse(link.expiresAt)<=Date.now())?'Hết hạn · ':'Đang hoạt động · ')+(link.expiresAt?new Date(link.expiresAt).toLocaleDateString('vi-VN'):'Không hết hạn')+' ';
         row.append(label);
-        if(!link.revoked&&Date.parse(link.expiresAt)>Date.now()){
+        if(!link.revoked&&(!link.expiresAt||Date.parse(link.expiresAt)>Date.now())){
           const revoke=document.createElement('button');revoke.type='button';revoke.textContent='Thu hồi';
           revoke.addEventListener('click',async()=>{
             if(!confirm('Thu hồi link này ngay?'))return;
@@ -165,11 +165,11 @@
   $('note-share-create').addEventListener('click',async()=>{
     if(!selected?.id){shareMessage('Lưu Note trước khi chia sẻ.');return;}
     if(dirty){shareMessage('Lưu thay đổi trước khi tạo link.');return;}
-    if(!confirm('Người có link sẽ xem và SỬA được Note này trong 30 ngày. Tiếp tục?'))return;
+    if(!confirm('Người có link sẽ xem và SỬA được Note này không giới hạn thời gian. Tiếp tục?'))return;
     try{
       const r=await api('/api/note-share',{action:'create',noteId:selected.id});
       $('note-share-link').value=location.origin+'/share/?token='+r.token;
-      shareMessage('Đã tạo link. Hết hạn: '+new Date(r.expiresAt).toLocaleString('vi-VN'));
+      shareMessage('Đã tạo link không hết hạn.');
       await listShares();
     }catch(e){shareMessage(e.message);}
   });
@@ -177,6 +177,51 @@
     if(!$('note-share-link').value){shareMessage('Hãy tạo link trước.');return;}
     try{await navigator.clipboard.writeText($('note-share-link').value);shareMessage('Đã sao chép link.');}
     catch{ $('note-share-link').select();shareMessage('Đã chọn link để sao chép.');}
+  });
+
+  function folderSharePicker(){
+    const select=$('folder-share-select'),current=select.value;
+    select.replaceChildren(new Option('Chọn thư mục…',''),...folders().map(name=>new Option(name,name)));
+    if(folders().includes(current))select.value=current;
+  }
+  async function folderShares(){
+    const folder=$('folder-share-select').value,el=$('folder-share-list');el.replaceChildren();
+    if(!folder)return;
+    try{
+      const r=await api('/api/note-share?folder='+encodeURIComponent(folder));
+      for(const link of r.links){
+        const line=document.createElement('div'),label=document.createElement('span');
+        label.textContent=(link.revoked?'Đã thu hồi':link.expiresAt&&Date.parse(link.expiresAt)<=Date.now()?'Hết hạn':'Đang hoạt động')+' · '+(link.expiresAt?new Date(link.expiresAt).toLocaleDateString('vi-VN'):'Không hết hạn')+' ';
+        line.append(label);
+        if(!link.revoked&&(!link.expiresAt||Date.parse(link.expiresAt)>Date.now())){
+          const button=document.createElement('button');button.type='button';button.textContent='Ngừng chia sẻ';
+          button.addEventListener('click',async()=>{
+            if(!confirm('Ngừng chia sẻ workspace? Link cũ sẽ không thể dùng lại.'))return;
+            try{await api('/api/note-share',{action:'revoke',folder,id:link.id});$('folder-share-message').textContent='Đã ngừng chia sẻ.';await folderShares();}
+            catch(e){$('folder-share-message').textContent=e.message;}
+          });line.append(button);
+        }
+        el.append(line);
+      }
+    }catch(e){$('folder-share-message').textContent=e.message;}
+  }
+  $('folder-share-panel').addEventListener('toggle',()=>{if($('folder-share-panel').open){folderSharePicker();folderShares();}});
+  $('folder-share-select').addEventListener('change',folderShares);
+  $('folder-share-create').addEventListener('click',async()=>{
+    const folder=$('folder-share-select').value;
+    if(!folder){$('folder-share-message').textContent='Chọn thư mục trước.';return;}
+    if(!confirm('Ai có link đều có thể xem, TẠO và SỬA Note trong thư mục này cho đến khi bạn thu hồi. Tiếp tục?'))return;
+    try{
+      const r=await api('/api/note-share',{action:'create',folder});
+      $('folder-share-link').value=location.origin+'/workspace/?token='+r.token;
+      $('folder-share-message').textContent='Đã tạo link workspace không hết hạn.';
+      await folderShares();
+    }catch(e){$('folder-share-message').textContent=e.message;}
+  });
+  $('folder-share-copy').addEventListener('click',async()=>{
+    const value=$('folder-share-link').value;if(!value)return;
+    try{await navigator.clipboard.writeText(value);$('folder-share-message').textContent='Đã sao chép link.';}
+    catch{$('folder-share-link').select();$('folder-share-message').textContent='Đã chọn link để sao chép.';}
   });
   disable();
 })();
