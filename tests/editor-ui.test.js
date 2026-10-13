@@ -77,5 +77,5 @@ test('failed Delete preserves the editor and card and displays its support refer
  w.PortalAccount={state:{authenticated:true},api:async(url,b)=>{if(b)throw Object.assign(new Error('Kho lưu chưa cập nhật.'),{reference:'N4-1234abcd'});if(url.includes('?id='))return note;return {notes:[note]};}};
  w.eval(readFileSync('public/notes.js','utf8'));w.dispatchEvent(new w.CustomEvent('account-change',{detail:{authenticated:true}}));await flush();
  $('note-list').querySelector('button').click();await flush();$('note-text').value='local draft';$('note-text').dispatchEvent(new w.Event('input'));$('note-delete').click();await flush();
- assert.match($('note-message').textContent,/Kho lưu chưa cập nhật.*N4-1234abcd/);assert.equal($('note-text').value,'local draft');assert.equal($('note-list').querySelector('button').textContent,note.title);assert.equal($('note-delete').disabled,false);dom.window.close();
+ assert.match($('note-message').textContent,/Kho lưu chưa cập nhật.*N4-1234abcd/);assert.equal($('note-text').value,'local draft');assert.equal($('note-list').querySelector('.note-card-title').textContent,note.title);assert.equal($('note-delete').disabled,false);dom.window.close();
 });

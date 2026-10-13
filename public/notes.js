@@ -18,8 +18,8 @@
   function renderFolders() { const el=$('note-folders'); el.replaceChildren(); for(const name of ['',...new Set(list.map(n=>n.folder||'').filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'))) { const button=document.createElement('button');button.type='button';button.textContent=name||'Tất cả';button.className='note-folder-button';button.setAttribute('aria-pressed',String(activeFolder===name));button.addEventListener('click',()=>{activeFolder=name;renderFolders();renderList();});el.append(button); } }
   function renderList() {
     const q = $('note-search').value.toLocaleLowerCase(); $('note-list').replaceChildren();
-    for (const n of list.filter(n => (!activeFolder || n.folder === activeFolder) && n.title.toLocaleLowerCase().includes(q))) {
-      const button = document.createElement('button'); button.type = 'button'; button.className = 'note-card'; button.textContent = (n.pinned ? '📌 ' : '') + n.title; button.addEventListener('click', () => open(n.id)); $('note-list').append(button);
+    for (const n of list.filter(n => (!activeFolder || n.folder === activeFolder) && [n.title,n.text,n.folder].some(value => String(value||'').toLocaleLowerCase().includes(q)))) {
+      const button = document.createElement('button'); button.type = 'button'; button.className = 'note-card'; const heading = document.createElement('strong'); heading.className='note-card-title'; heading.textContent=(n.pinned ? '📌 ' : '') + (n.title || 'Không tiêu đề'); const preview=document.createElement('span'); preview.className='note-card-preview'; preview.textContent=n.text || ''; button.append(heading,preview); button.addEventListener('click', () => open(n.id)); $('note-list').append(button);
     }
     if (!list.length) $('note-list').textContent = 'Chưa có note. Bấm “Note mới” để bắt đầu.';
   }
@@ -37,7 +37,7 @@
   }
   async function save() {
     if (busy || !dirty || !window.PortalAccount.state.authenticated) return;
-    busy = true; disable(); message('Đang lưu…');
+    busy = true; loading(true); disable(); message('Đang lưu…');
     try {
       const snapshot = {title: $('note-title').value, text: $('note-text').value, pinned: $('note-pinned').checked, folder: $('note-folder').value.trim()};
       const r = await api('/api/notes-save', {action: 'save', id: selected?.id, revision: selected?.revision, takeover: true, ...snapshot});
@@ -45,14 +45,14 @@
       if (snapshot.title === $('note-title').value && snapshot.text === $('note-text').value && snapshot.pinned === $('note-pinned').checked && snapshot.folder === $('note-folder').value.trim()) fill(r); else {selected = r; dirty = true;}
       message(dirty ? 'Đã lưu bản trước; bấm Lưu để lưu thay đổi mới.' : 'Đã lưu.');
       try { await refresh(); } catch { message(dirty ? 'Đã lưu bản trước; bấm Lưu để lưu thay đổi mới.' : 'Đã lưu. Danh sách chưa cập nhật; tải lại trang khi cần.'); }
-    } catch(e) {message(e.message + ' Nội dung đang nhập vẫn được giữ. Bấm Lưu để thử lại. Mã hỗ trợ: ' + (e.reference || 'N4-khong-co-phan-hoi') + '.');} finally {busy = false; disable();}
+    } catch(e) {message(e.message + ' Nội dung đang nhập vẫn được giữ. Bấm Lưu để thử lại. Mã hỗ trợ: ' + (e.reference || 'N4-khong-co-phan-hoi') + '.');} finally {busy = false; loading(false); disable();}
   }
   function change() {dirty = true; message('Chưa lưu — bấm Lưu để lưu thay đổi.');}
-  for (const id of ['note-title','note-text','note-pinned']) $(id).addEventListener('input', change);
+  for (const id of ['note-title','note-text','note-pinned','note-folder']) $(id).addEventListener('input', change);
   $('note-save').addEventListener('click', save);
   $('note-new').addEventListener('click', () => {if (busy || dirty && !confirm('Bỏ nội dung chưa lưu để tạo note mới?')) return; ++loadCounter; fill(null); $('note-title').focus();});
   $('note-delete').addEventListener('click', async () => {
-    if (!selected || busy || !confirm('Xóa note “' + selected.title + '”?')) return; busy = true; disable();
+    if (!selected || busy || !confirm('Xóa note “' + selected.title + '”?')) return; busy = true; loading(true); disable();
     try {
       const id = selected.id;
       await api('/api/notes', {action: 'delete', id});
