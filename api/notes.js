@@ -34,6 +34,8 @@ export function createNotesHandler(deps = {}) {
     if (b.action === 'folderDelete') {
       const folder = typeof b.folder === 'string' ? b.folder.trim() : '';
       if (!folder || folder.length > 80 || typeof b.deleteNotes !== 'boolean') throw new HttpError(400, 'Thư mục hoặc tùy chọn xóa không hợp lệ.');
+      const links = await enumerate('shares/');
+      for(const p of links){const r=await load(p);if(r?.value.type==='folder'&&r.value.folder===folder&&!r.value.revoked)throw new HttpError(409,'Hãy ngừng chia sẻ thư mục trước khi xóa.');}
       stage = 'read';
       const names = await enumerate('notes/');
       let changed = 0;
