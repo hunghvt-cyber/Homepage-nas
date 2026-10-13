@@ -11,3 +11,14 @@ button,input,textarea,select{font:inherit}button{cursor:pointer;padding:.55rem .
 
 
 .chat-message{padding:12px;border-bottom:1px solid #aaa}.chat-message p{white-space:pre-wrap;overflow-wrap:anywhere}#chat-log{max-height:55vh;overflow:auto}#chat-input{width:100%;box-sizing:border-box}
+
+/* Notes compact cards and operation indicator */
+#note-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px;align-content:start}
+#note-list .note-card{aspect-ratio:1/1;min-height:0;overflow:hidden;overflow-wrap:anywhere;text-align:left;display:flex;align-items:flex-start;padding:12px;border-radius:12px}
+.note-progress{height:3px;overflow:hidden;background:rgba(128,128,128,.18);border-radius:8px;margin:8px 0}
+.note-progress[hidden]{display:none}
+.note-progress span{display:block;width:35%;height:100%;background:#3778cf;animation:note-loading 1s ease-in-out infinite alternate}
+@keyframes note-loading{from{transform:translateX(0)}to{transform:translateX(190%)}}
+.notes-phone-view .notes-layout{display:block}
+.notes-phone-view #note-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:650px){#note-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
