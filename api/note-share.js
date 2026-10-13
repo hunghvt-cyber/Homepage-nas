@@ -25,8 +25,8 @@ export function createShareManagement(deps={}){
     await persist('shares/'+id+'.json',{noteId,tokenHash:digest(secret),expiresAt,revoked:false},null);
     return reply(res,200,{token:id+'.'+secret,expiresAt});
    }
-   if(typeof b.token!=='string'||!/^[a-f0-9]{32}\.[a-f0-9]{64}$/.test(b.token))throw new HttpError(400,'Liên kết không hợp lệ.');
-   const [id,secret]=b.token.split('.');
+   if(typeof b.id!=='string'||!/^[a-f0-9]{32}$/.test(b.id))throw new HttpError(400,'Liên kết không hợp lệ.');
+   const id=b.id;
    const entry=await load('shares/'+id+'.json');
    if(!entry||entry.value.noteId!==noteId)throw new HttpError(404,'Không tìm thấy liên kết.');
    if(!entry.value.revoked)await persist('shares/'+id+'.json',{...entry.value,revoked:true},entry.etag);
