@@ -36,7 +36,7 @@ body:has(#notes-workspace) #note-list{grid-template-columns:repeat(auto-fill,min
 body:has(#notes-workspace) .notes-layout>section{max-width:100%;margin:0}
 @media(max-width:600px){body:has(#notes-workspace) #note-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}#note-list .note-card{padding:10px}}
 /* The Gemini iframe is an embedded chat, not a second Homepage */
-body:has(#chat-workspace) .gemini-page-header,body:has(#chat-workspace) footer{display:none}
-body:has(#chat-workspace) main{max-width:none;margin:0;padding:0}
-body:has(#chat-workspace) #chat-workspace{margin:0;border:0;box-shadow:none}
-body:has(#chat-workspace) .account{margin:8px}
+html.gemini-embedded .gemini-page-header,html.gemini-embedded footer{display:none}
+html.gemini-embedded main{max-width:none;margin:0;padding:0}
+html.gemini-embedded #chat-workspace{margin:0;border:0;box-shadow:none}
+html.gemini-embedded .account{margin:8px}
