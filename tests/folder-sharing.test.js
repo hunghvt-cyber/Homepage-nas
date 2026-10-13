@@ -1,0 +1,24 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createWorkspace} from '../api/shared-folder.js';
+import {createShareManagement} from '../api/note-share.js';
+const id='12345678-1234-1234-1234-123456789abc';
+const response=()=>({setHeader(){},status(n){this.code=n;return this;},json(v){this.data=v;return this;}});
+test('permanent folder share scopes notes, supports editing and revocation',async()=>{
+ const old=process.env.PORTAL_BASE_URL;process.env.PORTAL_BASE_URL='https://homepage-nas.vercel.app';
+ const db=new Map([['notes/'+id+'.json',{value:{id,title:'In',text:'Before',folder:'Team',pinned:false,updatedAt:'2026-01-01T00:00:00Z',history:[]},etag:'v1'}],['notes/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa.json',{value:{id:'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',title:'Secret',text:'Private',folder:'Private',pinned:false,updatedAt:'2026-01-01T00:00:00Z',history:[]},etag:'v2'}]]);
+ let rev=3;const load=async path=>db.get(path)||null,enumerate=async prefix=>[...db.keys()].filter(p=>p.startsWith(prefix));
+ const persist=async(path,value,etag)=>{if(etag&&db.get(path)?.etag!==etag)throw Object.assign(new Error('Conflict'),{status:409});const next={value,etag:'v'+rev++};db.set(path,next);return next;};
+ const manage=createShareManagement({authorize:async()=>{},load,persist,enumerate}),workspace=createWorkspace({load,persist,enumerate});
+ const headers={origin:'https://homepage-nas.vercel.app','content-type':'application/json'};
+ let r=response();await manage({method:'POST',headers,body:{action:'create',folder:'Team'}},r);assert.equal(r.code,200);assert.equal(r.data.expiresAt,null);
+ const token=r.data.token;
+ r=response();await workspace({method:'GET',query:{token}},r);assert.equal(r.code,200);assert.equal(r.data.notes.length,1);
+ r=response();await workspace({method:'GET',query:{token,id:'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'}},r);assert.equal(r.code,404);
+ r=response();await workspace({method:'GET',query:{token,id}},r);const revision=r.data.revision;
+ r=response();await workspace({method:'POST',headers,body:{token,id,action:'save',revision,title:'Edited',text:'After'}},r);assert.equal(r.code,200);
+ r=response();await workspace({method:'POST',headers,body:{token,id,action:'save',revision,title:'Old',text:'Stale'}},r);assert.equal(r.code,409);
+ r=response();await manage({method:'POST',headers,body:{action:'revoke',folder:'Team',id:token.split('.')[0]}},r);assert.equal(r.code,200);
+ r=response();await workspace({method:'GET',query:{token}},r);assert.equal(r.code,404);
+ if(old===undefined)delete process.env.PORTAL_BASE_URL;else process.env.PORTAL_BASE_URL=old;
+});
