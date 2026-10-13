@@ -54,7 +54,7 @@
   async function open(id) {
     if (busy || dirty && !confirm('Nội dung chưa lưu. Bỏ thay đổi để mở note khác?')) return;
     const sequence = ++loadCounter; busy = true; loading(true); disable();
-    try {const cached = list.find(n=>n.id===id); if(cached && sequence===loadCounter) { fill({...cached,history:[],revision:null}); message('Đang lấy phiên bản mới nhất…'); } const r = await api('/api/notes?id=' + encodeURIComponent(id)); if(sequence === loadCounter) fill(r);} catch(e) {message(e.message);} finally {busy = false; loading(false); disable();}
+    try {const r = await api('/api/notes?id=' + encodeURIComponent(id)); if(sequence === loadCounter) fill(r);} catch(e) {message(e.message);} finally {busy = false; loading(false); disable();}
   }
   async function save() {
     if (busy || !dirty || !window.PortalAccount.state.authenticated) return;
