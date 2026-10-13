@@ -137,6 +137,47 @@
       if(!e.detail.expired){selected=null;dirty=false;$('note-title').value='';$('note-text').value='';$('note-history').replaceChildren();erasePreview();}
     }
   });
+
+  const shareMessage=s=>{$('note-share-message').textContent=s;};
+  async function listShares(){
+    $('note-share-list').replaceChildren();
+    if(!selected?.id)return;
+    try{
+      const r=await api('/api/note-share?noteId='+encodeURIComponent(selected.id));
+      for(const link of r.links){
+        const row=document.createElement('div');
+        const label=document.createElement('span');
+        label.textContent=(link.revoked?'Đã thu hồi · ':Date.parse(link.expiresAt)<=Date.now()?'Hết hạn · ':'Đang hoạt động · ')+new Date(link.expiresAt).toLocaleDateString('vi-VN')+' ';
+        row.append(label);
+        if(!link.revoked&&Date.parse(link.expiresAt)>Date.now()){
+          const revoke=document.createElement('button');revoke.type='button';revoke.textContent='Thu hồi';
+          revoke.addEventListener('click',async()=>{
+            if(!confirm('Thu hồi link này ngay?'))return;
+            try{await api('/api/note-share',{action:'revoke',noteId:selected.id,id:link.id});shareMessage('Đã thu hồi liên kết.');await listShares();}
+            catch(e){shareMessage(e.message);}
+          });row.append(revoke);
+        }
+        $('note-share-list').append(row);
+      }
+    }catch(e){shareMessage(e.message);}
+  }
+  $('note-share-panel').addEventListener('toggle',()=>{if($('note-share-panel').open)listShares();});
+  $('note-share-create').addEventListener('click',async()=>{
+    if(!selected?.id){shareMessage('Lưu Note trước khi chia sẻ.');return;}
+    if(dirty){shareMessage('Lưu thay đổi trước khi tạo link.');return;}
+    if(!confirm('Người có link sẽ xem và SỬA được Note này trong 30 ngày. Tiếp tục?'))return;
+    try{
+      const r=await api('/api/note-share',{action:'create',noteId:selected.id});
+      $('note-share-link').value=location.origin+'/share/?token='+r.token;
+      shareMessage('Đã tạo link. Hết hạn: '+new Date(r.expiresAt).toLocaleString('vi-VN'));
+      await listShares();
+    }catch(e){shareMessage(e.message);}
+  });
+  $('note-share-copy').addEventListener('click',async()=>{
+    if(!$('note-share-link').value){shareMessage('Hãy tạo link trước.');return;}
+    try{await navigator.clipboard.writeText($('note-share-link').value);shareMessage('Đã sao chép link.');}
+    catch{ $('note-share-link').select();shareMessage('Đã chọn link để sao chép.');}
+  });
   disable();
 })();
 
