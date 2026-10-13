@@ -11,7 +11,7 @@ export function createShareManagement(deps={}){
    await authorize(req,res);
    if(req.method==='GET'){
     const folder=req.query.folder?scopeFolder(req.query.folder):null,noteId=folder?null:validId(req.query.noteId),entries=await enumerate('shares/'),links=[];
-    for(const path of entries){const r=await load(path);if(r&&(folder?r.value.folder===folder&&r.value.type==='folder':r.value.noteId===noteId&&!r.value.type))links.push({id:path.slice(7,-5),expiresAt:r.value.expiresAt||null,revoked:!!r.value.revoked});}
+    for(const path of entries){const r=await load(path);if(r&&(folder?r.value.folder===folder&&r.value.type==='folder':r.value.noteId===noteId&&!r.value.type))links.push({id:path.slice(7,-5),revoked:!!r.value.revoked});}
     return reply(res,200,{links});
    }
    if(req.method!=='POST')throw new HttpError(405,'Phương thức không hỗ trợ.');
@@ -22,9 +22,8 @@ export function createShareManagement(deps={}){
    if(folder){const names=await enumerate('notes/');let found=false;for(const path of names){const n=await load(path);if(n&&!n.value.deleted&&n.value.folder===folder){found=true;break;}}if(!found)throw new HttpError(404,'Thư mục chưa có Note.');}
    if(b.action==='create'){
     const id=randomBytes(16).toString('hex'),secret=randomBytes(32).toString('hex');
-    const expiresAt=null;
-    await persist('shares/'+id+'.json',{...(folder?{type:'folder',folder}:{noteId}),tokenHash:digest(secret),expiresAt,revoked:false},null);
-    return reply(res,200,{token:id+'.'+secret,expiresAt});
+    await persist('shares/'+id+'.json',{...(folder?{type:'folder',folder}:{noteId}),tokenHash:digest(secret),revoked:false},null);
+    return reply(res,200,{token:id+'.'+secret});
    }
    if(typeof b.id!=='string'||!/^[a-f0-9]{32}$/.test(b.id))throw new HttpError(400,'Liên kết không hợp lệ.');
    const id=b.id;
