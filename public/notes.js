@@ -2,6 +2,17 @@
   const $ = id => document.getElementById(id);
   const api = (...args) => window.PortalAccount.api(...args);
   let list = [], selected = null, dirty = false, busy = false, loadCounter = 0;
+  let view = 'auto';
+  const progress = $('note-progress');
+  function loading(on) { if (progress) { progress.hidden = !on; progress.setAttribute('aria-busy', String(on)); } }
+  const viewButton = $('note-view');
+  function applyView() {
+    $('notes-workspace').classList.toggle('notes-phone-view', view === 'phone');
+    viewButton.textContent = view === 'phone' ? 'Giao diện máy tính' : 'Giao diện điện thoại';
+    viewButton.setAttribute('aria-pressed', String(view === 'phone'));
+  }
+  viewButton.addEventListener('click', () => { view = view === 'phone' ? 'desktop' : 'phone'; applyView(); });
+  applyView();
   const message = value => {$('note-message').textContent = value;};
   const disable = () => { for (const id of ['note-save','note-delete','note-new','note-title','note-text','note-pinned','note-history']) $(id).disabled = (!['note-title','note-text','note-pinned'].includes(id) && busy) || !window.PortalAccount.state.authenticated; };
   function renderList() {
@@ -20,8 +31,8 @@
   }
   async function open(id) {
     if (busy || dirty && !confirm('Nội dung chưa lưu. Bỏ thay đổi để mở note khác?')) return;
-    const sequence = ++loadCounter; busy = true; disable();
-    try {const r = await api('/api/notes?id=' + encodeURIComponent(id)); if(sequence === loadCounter) fill(r);} catch(e) {message(e.message);} finally {busy = false; disable();}
+    const sequence = ++loadCounter; busy = true; loading(true); disable();
+    try {const r = await api('/api/notes?id=' + encodeURIComponent(id)); if(sequence === loadCounter) fill(r);} catch(e) {message(e.message);} finally {busy = false; loading(false); disable();}
   }
   async function save() {
     if (busy || !dirty || !window.PortalAccount.state.authenticated) return;
@@ -54,7 +65,7 @@
   window.addEventListener('beforeunload', e => {if(dirty) {e.preventDefault(); e.returnValue = '';}});
   window.addEventListener('account-change', e => {
     disable(); $('notes-workspace').hidden = !e.detail.authenticated;
-    if (e.detail.authenticated) refresh().catch(e => message(e.message)); else if (!e.detail.expired) {++loadCounter; list = []; selected = null; dirty = false; $('note-list').replaceChildren(); $('note-title').value = ''; $('note-text').value = ''; $('note-history').replaceChildren();}
+    if (e.detail.authenticated) { loading(true); refresh().catch(e => message(e.message)).finally(() => loading(false)); } else if (!e.detail.expired) {++loadCounter; list = []; selected = null; dirty = false; $('note-list').replaceChildren(); $('note-title').value = ''; $('note-text').value = ''; $('note-history').replaceChildren();}
   });
   disable();
 })();
