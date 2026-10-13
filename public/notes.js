@@ -61,7 +61,7 @@
   }
   async function refresh() {
     const seq=++refreshSequence,r=await api('/api/notes');
-    if(seq!==refreshSequence||!window.PortalAccount.state.authenticated)return;
+    if(seq!==refreshSequence)return;
     list=r.notes;listLoaded=true;cachedPreview=false;storePreview();renderFolders();renderList();
   }
   function fill(n) {
