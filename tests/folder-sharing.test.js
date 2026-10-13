@@ -11,7 +11,7 @@ test('permanent folder share scopes notes, supports editing and revocation',asyn
  const persist=async(path,value,etag)=>{if(etag&&db.get(path)?.etag!==etag)throw Object.assign(new Error('Conflict'),{status:409});const next={value,etag:'v'+rev++};db.set(path,next);return next;};
  const manage=createShareManagement({authorize:async()=>{},load,persist,enumerate}),workspace=createWorkspace({load,persist,enumerate});
  const headers={origin:'https://homepage-nas.vercel.app','content-type':'application/json'};
- let r=response();await manage({method:'POST',headers,body:{action:'create',folder:'Team'}},r);assert.equal(r.code,200);assert.equal(r.data.expiresAt,null);
+ let r=response();await manage({method:'POST',headers,body:{action:'create',folder:'Team'}},r);assert.equal(r.code,200);assert.equal('expiresAt' in r.data,false);
  const token=r.data.token;
  r=response();await workspace({method:'GET',query:{token}},r);assert.equal(r.code,200);assert.equal(r.data.notes.length,1);
  r=response();await workspace({method:'GET',query:{token,id:'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'}},r);assert.equal(r.code,404);
