@@ -29,8 +29,25 @@ export function createNotesHandler(deps = {}) {
     }
     if (req.method !== 'POST') throw new HttpError(405, 'Phương thức không hỗ trợ.');
     stage = 'validate'; sameOrigin(req); const b = body(req);
-    operation = ['save','delete'].includes(b.action) ? b.action : 'unsupported';
+    operation = ['save','delete','folderDelete'].includes(b.action) ? b.action : 'unsupported';
     if (operation === 'unsupported' || saveOnly && b.action !== 'save') throw new HttpError(400, 'Thao tác không hợp lệ.');
+    if (b.action === 'folderDelete') {
+      const folder = typeof b.folder === 'string' ? b.folder.trim() : '';
+      if (!folder || folder.length > 80 || typeof b.deleteNotes !== 'boolean') throw new HttpError(400, 'Thư mục hoặc tùy chọn xóa không hợp lệ.');
+      stage = 'read';
+      const names = await enumerate('notes/');
+      let changed = 0;
+      for (const name of names) {
+        const current = await load(name);
+        if (!current || current.value.deleted || current.value.folder !== folder) continue;
+        stage = 'persist';
+        await persistNote(name, b.deleteNotes
+          ? {...current.value, deleted: true, updatedAt: new Date().toISOString()}
+          : {...current.value, folder: '', updatedAt: new Date().toISOString()});
+        changed++;
+      }
+      report(200); return reply(res, 200, {changed, deleteNotes: b.deleteNotes});
+    }
     if (b.action === 'delete') validId(b.id);
     const id = b.id ? validId(b.id) : randomUUID(); const path = 'notes/' + id + '.json';
     stage = 'read'; const current = await load(path); stage = 'validate';
