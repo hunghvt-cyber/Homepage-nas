@@ -40,3 +40,5 @@ html.gemini-embedded .gemini-page-header,html.gemini-embedded footer{display:non
 html.gemini-embedded main{max-width:none;margin:0;padding:0}
 html.gemini-embedded #chat-workspace{margin:0;border:0;box-shadow:none}
 html.gemini-embedded .account{margin:8px}
+
+.note-folder-editor{display:flex;gap:8px;flex-wrap:wrap}.note-folder-editor select{flex:1;min-width:180px}.note-folder-editor input:not([hidden]){flex:1;min-width:180px}#folder-manager{padding:10px;border:1px solid #d5dfd6;border-radius:8px;margin:10px 0}#folder-manager summary{cursor:pointer;font-weight:600}#folder-manager button{margin:10px 0}

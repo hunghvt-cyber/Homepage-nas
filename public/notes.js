@@ -15,7 +15,27 @@
   applyView();
   const message = value => {$('note-message').textContent = value;};
   const disable = () => { for (const id of ['note-save','note-delete','note-new','note-title','note-text','note-pinned','note-history']) $(id).disabled = (!['note-title','note-text','note-pinned','note-folder'].includes(id) && busy) || !window.PortalAccount.state.authenticated; };
-  function renderFolders() { const el=$('note-folders'); el.replaceChildren(); for(const name of ['',...new Set(list.map(n=>n.folder||'').filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'))) { const button=document.createElement('button');button.type='button';button.textContent=name||'Tất cả';button.className='note-folder-button';button.setAttribute('aria-pressed',String(activeFolder===name));button.addEventListener('click',()=>{activeFolder=name;renderFolders();renderList();});el.append(button); } }
+  const folders=()=>[...new Set(list.map(n=>n.folder||'').filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'));
+  function renderFolders(){
+    const el=$('note-folders');el.replaceChildren();
+    for(const name of ['',...folders()]){
+      const button=document.createElement('button');button.type='button';button.textContent=name||'Tất cả';
+      button.className='note-folder-button';button.setAttribute('aria-pressed',String(activeFolder===name));
+      button.addEventListener('click',()=>{activeFolder=name;renderFolders();renderList();});el.append(button);
+    }
+    const manage=$('folder-manage-select'),oldManage=manage.value;
+    manage.replaceChildren(new Option('Chọn thư mục…',''),...folders().map(name=>new Option(name,name)));
+    if(folders().includes(oldManage))manage.value=oldManage;
+    $('folder-remove').disabled=!manage.value||busy;
+    const select=$('note-folder-existing'),old=select.value;
+    select.replaceChildren(new Option('Chưa phân loại',''),...folders().map(name=>new Option(name,name)),new Option('+ Tạo thư mục mới…','__new__'));
+    if(old==='__new__'||folders().includes(old))select.value=old;
+  }
+  function folderValue(){return $('note-folder-existing').value==='__new__'?folderValue():$('note-folder-existing').value;}
+  function chooseFolder(name){
+    if(name&&!folders().includes(name)){$('note-folder-existing').value='__new__';$('note-folder').value=name;$('note-folder').hidden=false;}
+    else{$('note-folder-existing').value=name||'';$('note-folder').value='';$('note-folder').hidden=true;}
+  }
   function renderList() {
     const q = $('note-search').value.toLocaleLowerCase(); $('note-list').replaceChildren();
     for (const n of list.filter(n => (!activeFolder || n.folder === activeFolder) && [n.title,n.text,n.folder].some(value => String(value||'').toLocaleLowerCase().includes(q)))) {
@@ -23,9 +43,9 @@
     }
     if (!list.length) $('note-list').textContent = 'Chưa có note. Bấm “Note mới” để bắt đầu.';
   }
-  async function refresh() {const r = await api('/api/notes'); list = r.notes; const suggestions=$('note-folder-suggestions'); suggestions.replaceChildren(...[...new Set(list.map(n=>n.folder).filter(Boolean))].map(name=>new Option(name,name))); renderFolders(); renderList();}
+  async function refresh() {const r = await api('/api/notes'); list = r.notes; renderFolders(); renderList();}
   function fill(n) {
-    selected = n; $('note-title').value = n?.title || ''; $('note-text').value = n?.text || ''; $('note-pinned').checked = n?.pinned || false; $('note-folder').value = n?.folder || ''; dirty = false;
+    selected = n; $('note-title').value = n?.title || ''; $('note-text').value = n?.text || ''; $('note-pinned').checked = n?.pinned || false; chooseFolder(n?.folder || ''); dirty = false;
     $('note-history').replaceChildren(new Option('Lịch sử sửa', ''));
     for (const [i,h] of (n?.history || []).entries()) $('note-history').add(new Option(new Date(h.updatedAt).toLocaleString('vi-VN'), String(i)));
     message(n ? 'Đã tải bản lưu ' + new Date(n.updatedAt).toLocaleString('vi-VN') : 'Note mới — nhập nội dung rồi lưu.');
@@ -39,16 +59,35 @@
     if (busy || !dirty || !window.PortalAccount.state.authenticated) return;
     busy = true; loading(true); disable(); message('Đang lưu…');
     try {
-      const snapshot = {title: $('note-title').value, text: $('note-text').value, pinned: $('note-pinned').checked, folder: $('note-folder').value.trim()};
+      const snapshot = {title: $('note-title').value, text: $('note-text').value, pinned: $('note-pinned').checked, folder: folderValue()};
       const r = await api('/api/notes-save', {action: 'save', id: selected?.id, revision: selected?.revision, takeover: true, ...snapshot});
       if (!window.PortalAccount.state.authenticated) return;
-      if (snapshot.title === $('note-title').value && snapshot.text === $('note-text').value && snapshot.pinned === $('note-pinned').checked && snapshot.folder === $('note-folder').value.trim()) fill(r); else {selected = r; dirty = true;}
+      if (snapshot.title === $('note-title').value && snapshot.text === $('note-text').value && snapshot.pinned === $('note-pinned').checked && snapshot.folder === folderValue()) fill(r); else {selected = r; dirty = true;}
       message(dirty ? 'Đã lưu bản trước; bấm Lưu để lưu thay đổi mới.' : 'Đã lưu.');
       try { await refresh(); } catch { message(dirty ? 'Đã lưu bản trước; bấm Lưu để lưu thay đổi mới.' : 'Đã lưu. Danh sách chưa cập nhật; tải lại trang khi cần.'); }
     } catch(e) {message(e.message + ' Nội dung đang nhập vẫn được giữ. Bấm Lưu để thử lại. Mã hỗ trợ: ' + (e.reference || 'N4-khong-co-phan-hoi') + '.');} finally {busy = false; loading(false); disable();}
   }
   function change() {dirty = true; message('Chưa lưu — bấm Lưu để lưu thay đổi.');}
   for (const id of ['note-title','note-text','note-pinned','note-folder']) $(id).addEventListener('input', change);
+  $('note-folder-existing').addEventListener('change',()=>{$('note-folder').hidden=$('note-folder-existing').value!=='__new__';if(!$('note-folder').hidden)$('note-folder').focus();change();});
+  $('folder-manage-select').addEventListener('change',()=>{$('folder-remove').disabled=!$('folder-manage-select').value||busy;});
+  $('folder-remove').addEventListener('click',async()=>{
+    const folder=$('folder-manage-select').value,deleteNotes=$('folder-delete-notes').checked;
+    if(!folder||busy||!window.PortalAccount.state.authenticated)return;
+    if(dirty){message('Lưu hoặc bỏ thay đổi Note trước khi quản lý thư mục.');return;}
+    const count=list.filter(n=>n.folder===folder).length;
+    const warning=deleteNotes?'XÓA '+count+' NOTE trong thư mục “'+folder+'”. Bạn chắc chắn?':'Xóa thư mục “'+folder+'”, GIỮ '+count+' Note và chuyển về chưa phân loại?';
+    if(!confirm(warning))return;
+    busy=true;loading(true);disable();$('folder-remove').disabled=true;
+    try{
+      const r=await api('/api/notes',{action:'folderDelete',folder,deleteNotes});
+      if(selected?.folder===folder)fill(null);
+      if(activeFolder===folder)activeFolder='';
+      await refresh();$('folder-delete-notes').checked=false;
+      message(deleteNotes?'Đã xóa thư mục và '+r.changed+' Note.':'Đã xóa thư mục; giữ lại '+r.changed+' Note.');
+    }catch(e){message('Thao tác thư mục chưa hoàn tất: '+e.message+'. Có thể đã xử lý một phần; kiểm tra danh sách trước khi thử lại.');try{await refresh();}catch{}}
+    finally{busy=false;loading(false);disable();$('folder-remove').disabled=!$('folder-manage-select').value;}
+  });
   $('note-save').addEventListener('click', save);
   $('note-new').addEventListener('click', () => {if (busy || dirty && !confirm('Bỏ nội dung chưa lưu để tạo note mới?')) return; ++loadCounter; fill(null); $('note-title').focus();});
   $('note-delete').addEventListener('click', async () => {
@@ -62,7 +101,7 @@
   });
   $('note-copy').addEventListener('click', async () => { try {await navigator.clipboard.writeText($('note-text').value); message('Đã copy toàn bộ nội dung.');} catch { $('note-text').focus(); $('note-text').select(); message('Đã chọn toàn bộ — nhấn Ctrl+C hoặc chọn Sao chép.'); } });
   $('note-search').addEventListener('input', renderList);
-  $('note-history').addEventListener('change', () => {const h = selected?.history?.[Number($('note-history').value)]; if ($('note-history').value === '' || !h) return; if (dirty && !confirm('Thay nội dung đang nhập bằng bản lịch sử?')) return; $('note-title').value = h.title; $('note-text').value = h.text; $('note-folder').value = h.folder || ''; change();});
+  $('note-history').addEventListener('change', () => {const h = selected?.history?.[Number($('note-history').value)]; if ($('note-history').value === '' || !h) return; if (dirty && !confirm('Thay nội dung đang nhập bằng bản lịch sử?')) return; $('note-title').value = h.title; $('note-text').value = h.text; chooseFolder(h.folder || ''); change();});
   window.addEventListener('beforeunload', e => {if(dirty) {e.preventDefault(); e.returnValue = '';}});
   window.addEventListener('account-change', e => {
     disable(); $('notes-workspace').hidden = !e.detail.authenticated;
