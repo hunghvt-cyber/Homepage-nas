@@ -1,4 +1,4 @@
-import { randomBytes, createHash, timingSafeEqual } from 'node:crypto';
+import { randomBytes, createHash } from 'node:crypto';
 import { owner, sameOrigin, body, reply, fail, HttpError } from '../lib/security.js';
 import { read, write, paths } from '../lib/storage.js';
 import { validId } from '../lib/validation.js';
