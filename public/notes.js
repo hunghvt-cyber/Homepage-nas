@@ -3,7 +3,7 @@
   const api = (...args) => window.PortalAccount.api(...args);
   let activeFolder = '', list = [], selected = null, dirty = false, busy = false, loadCounter = 0;
   let view = 'auto';
-  let listLoaded = false, cachedPreview = false, refreshSequence = 0;
+  let listLoaded = false, cachedPreview = false, refreshSequence = 0, wasExpired = false;
   const CACHE_KEY='homepage-notes-preview-v1';
   function storePreview(){
     try{localStorage.setItem(CACHE_KEY,JSON.stringify({savedAt:Date.now(),notes:list.map(n=>({id:n.id,title:String(n.title||'').slice(0,200),text:String(n.text||'').slice(0,180),folder:String(n.folder||'').slice(0,80),pinned:!!n.pinned,updatedAt:n.updatedAt}))}));}catch{}
@@ -126,12 +126,14 @@
   window.addEventListener('account-change', e => {
     disable(); $('notes-workspace').hidden = !e.detail.authenticated;
     if (e.detail.authenticated) {
+      if(wasExpired){selected=null;dirty=false;$('note-title').value='';$('note-text').value='';wasExpired=false;}
       if(listLoaded){renderFolders();renderList();}else restorePreview();
       if(!dirty && !selected){$('note-title').value='';$('note-text').value='';}
       loading(true);refresh().catch(e=>message(e.message)).finally(()=>loading(false));
     } else {
       ++refreshSequence;++loadCounter;list=[];listLoaded=false;cachedPreview=false;
       $('note-list').replaceChildren();
+      wasExpired=!!e.detail.expired;
       if(!e.detail.expired){selected=null;dirty=false;$('note-title').value='';$('note-text').value='';$('note-history').replaceChildren();erasePreview();}
     }
   });
