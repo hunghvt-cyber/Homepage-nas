@@ -127,11 +127,12 @@
     disable(); $('notes-workspace').hidden = !e.detail.authenticated;
     if (e.detail.authenticated) {
       if(listLoaded){renderFolders();renderList();}else restorePreview();
+      if(!dirty && !selected){$('note-title').value='';$('note-text').value='';}
       loading(true);refresh().catch(e=>message(e.message)).finally(()=>loading(false));
     } else {
-      ++refreshSequence;++loadCounter;list=[];listLoaded=false;cachedPreview=false;selected=null;dirty=false;
-      $('note-list').replaceChildren();$('note-title').value='';$('note-text').value='';$('note-history').replaceChildren();
-      if(!e.detail.expired)erasePreview();
+      ++refreshSequence;++loadCounter;list=[];listLoaded=false;cachedPreview=false;
+      $('note-list').replaceChildren();
+      if(!e.detail.expired){selected=null;dirty=false;$('note-title').value='';$('note-text').value='';$('note-history').replaceChildren();erasePreview();}
     }
   });
   disable();
