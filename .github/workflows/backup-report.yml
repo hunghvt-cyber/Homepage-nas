@@ -1,6 +1,8 @@
 name: Refresh backup homepage report
 on:
   workflow_dispatch:
+  repository_dispatch:
+    types: [backup_completed]
 permissions:
   contents: write
 concurrency:
