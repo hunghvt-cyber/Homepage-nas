@@ -1,0 +1,35 @@
+name: Refresh backup homepage report
+on:
+  schedule:
+    - cron: '20 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: homepage-backup-report
+  cancel-in-progress: false
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch latest completed backup log and publish sanitized metrics
+        env:
+          BACKUP_READ_TOKEN: ${{ secrets.BACKUP_READ_TOKEN }}
+        run: |
+          if [ -z "$BACKUP_READ_TOKEN" ]; then
+            echo "::error::Configure BACKUP_READ_TOKEN with read-only Actions access to the private backup repository."
+            exit 1
+          fi
+          python3 scripts/update_backup_report.py
+      - name: Commit only if the report changed
+        run: |
+          if git diff --quiet -- public/backup-latest.json; then
+            echo "No new backup run."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/backup-latest.json
+          git commit -m "chore: refresh latest backup metrics"
+          git push
