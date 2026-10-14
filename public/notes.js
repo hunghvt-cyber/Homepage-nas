@@ -27,6 +27,7 @@
     folderToggle.setAttribute('aria-expanded', 'false');
   }
   function showEditor() {
+    $('note-resume').hidden = false;
     workspace.classList.add('notes-editing');
     closeFolders();
   }
@@ -34,6 +35,7 @@
     const expanded = workspace.classList.toggle('notes-folders-open');
     folderToggle.setAttribute('aria-expanded', String(expanded));
   });
+  $('note-resume').addEventListener('click', showEditor);
   $('note-back').addEventListener('click', () => {
     // Returning to the list preserves unsaved content in this editor.
     workspace.classList.remove('notes-editing');
@@ -84,6 +86,7 @@
     message(n ? 'Đã tải bản lưu ' + new Date(n.updatedAt).toLocaleString('vi-VN') : 'Note mới — nhập nội dung rồi lưu.');
   }
   async function open(id) {
+    if (!busy && selected?.id === id) {showEditor(); return;}
     if (busy || dirty && !confirm('Nội dung chưa lưu. Bỏ thay đổi để mở note khác?')) return;
     const sequence = ++loadCounter; busy = true; loading(true); disable();
     try {const r = await api('/api/notes?id=' + encodeURIComponent(id)); if(sequence === loadCounter && window.PortalAccount.state.authenticated) {fill(r); showEditor();}} catch(e) {message(e.message);} finally {busy = false; loading(false); disable();}
@@ -128,7 +131,7 @@
     try {
       const id = selected.id;
       await api('/api/notes', {action: 'delete', id});
-      list = list.filter(n => n.id !== id); storePreview(); fill(null); workspace.classList.remove('notes-editing'); renderFolders(); renderList(); message('Đã xóa note.');
+      list = list.filter(n => n.id !== id); storePreview(); fill(null); $('note-resume').hidden=true; workspace.classList.remove('notes-editing'); renderFolders(); renderList(); message('Đã xóa note.');
 
     } catch(e) {message(e.message + ' Mã hỗ trợ: ' + (e.reference || 'N4-khong-co-phan-hoi') + '.');} finally {busy = false; disable();}
   });
@@ -144,7 +147,7 @@
       if(!dirty && !selected){$('note-title').value='';$('note-text').value='';}
       loading(true);refresh().catch(e=>message(e.message)).finally(()=>loading(false));
     } else {
-      workspace.classList.remove('notes-editing');closeFolders();
+      $('note-resume').hidden=true;workspace.classList.remove('notes-editing');closeFolders();
       ++refreshSequence;++loadCounter;list=[];listLoaded=false;cachedPreview=false;
       $('note-list').replaceChildren();
       wasExpired=!!e.detail.expired;

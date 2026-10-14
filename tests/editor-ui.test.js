@@ -17,6 +17,7 @@ test('Notes navigation preserves an unsaved draft, toggles folders and returns a
  $('note-text').value='Unsaved draft';$('note-text').dispatchEvent(new w.Event('input'));$('note-back').click();
  assert.equal($('notes-workspace').classList.contains('notes-editing'),false);assert.equal($('note-text').value,'Unsaved draft');
  assert.match($('notes-status').textContent,/Chưa lưu/);
+ $('note-resume').click();assert.equal($('notes-workspace').classList.contains('notes-editing'),true);assert.equal($('note-text').value,'Unsaved draft');
  $('note-delete').click();await flush();assert.equal($('notes-workspace').classList.contains('notes-editing'),false);assert.equal($('note-list').querySelector('button'),null);
  $('note-new').click();assert.equal($('notes-workspace').classList.contains('notes-editing'),true);assert.equal($('note-text').value,'');dom.window.close();
 });
