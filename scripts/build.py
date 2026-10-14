@@ -38,7 +38,7 @@ write('config.js', 'window.PORTAL_STATUS_URL = '+json.dumps(status_url)+';\n')
 backup_base = site.get('backup_reports_base_url', '').rstrip('/')
 if backup_base and (urlparse(backup_base).scheme != 'https' or not urlparse(backup_base).hostname or not urlparse(backup_base).hostname.endswith('.public.blob.vercel-storage.com') or urlparse(backup_base).path not in ('', '/') or urlparse(backup_base).query):
     raise ValueError('backup_reports_base_url must be a public Vercel Blob origin')
-write('backup-config.js', 'window.BACKUP_REPORTS_BASE_URL = '+json.dumps(backup_base)+';\\n')
+write('backup-config.js', 'window.BACKUP_REPORTS_BASE_URL = '+json.dumps(backup_base)+';\n')
 
 
 links = []
