@@ -1,6 +1,5 @@
 name: Refresh backup homepage report
 on:
-  workflow_dispatch:
   repository_dispatch:
     types: [backup_completed]
 permissions:
@@ -13,19 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Fetch latest completed backup log and publish sanitized metrics
+      - name: Validate and save backup summary
         env:
-          BACKUP_READ_TOKEN: ${{ secrets.BACKUP_READ_TOKEN }}
+          BACKUP_REPORT: ${{ toJSON(github.event.client_payload) }}
         run: |
-          if [ -z "$BACKUP_READ_TOKEN" ]; then
-            echo "::error::Configure BACKUP_READ_TOKEN with read-only Actions access to the private backup repository."
-            exit 1
-          fi
-          python3 scripts/update_backup_report.py
-      - name: Commit only if the report changed
+          python3 scripts/receive_backup_report.py
+      - name: Commit only when updated
         run: |
           if git diff --quiet -- public/backup-latest.json; then
-            echo "No new backup run."
+            echo "No update."
             exit 0
           fi
           git config user.name "github-actions[bot]"
