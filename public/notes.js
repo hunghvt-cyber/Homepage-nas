@@ -18,6 +18,7 @@
   }
   function erasePreview(){try{localStorage.removeItem(CACHE_KEY);}catch{}}
 
+  const checklist = window.NoteChecklist?.($('note-checklist'), () => change());
   const progress = $('note-progress');
   function loading(on) { if (progress) { progress.hidden = !on; progress.setAttribute('aria-busy', String(on)); } }
   const viewButton = $('note-view');
@@ -29,7 +30,7 @@
   viewButton.addEventListener('click', () => { view = view === 'phone' ? 'desktop' : 'phone'; applyView(); });
   applyView();
   const message = value => {$('note-message').textContent = value;};
-  const disable = () => { for (const id of ['note-save','note-delete','note-new','note-title','note-text','note-pinned','note-history']) $(id).disabled = (!['note-title','note-text','note-pinned','note-folder'].includes(id) && busy) || !window.PortalAccount.state.authenticated; };
+  const disable = () => { checklist?.disabled(!window.PortalAccount.state.authenticated); for (const id of ['note-save','note-delete','note-new','note-title','note-text','note-pinned','note-history']) $(id).disabled = (!['note-title','note-text','note-pinned','note-folder'].includes(id) && busy) || !window.PortalAccount.state.authenticated; };
   const folders=()=>[...new Set(list.map(n=>n.folder||'').filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'));
   function renderFolders(){
     const el=$('note-folders');el.replaceChildren();
@@ -65,7 +66,7 @@
     list=r.notes;listLoaded=true;cachedPreview=false;storePreview();renderFolders();renderList();
   }
   function fill(n) {
-    selected = n; $('note-title').value = n?.title || ''; $('note-text').value = n?.text || ''; $('note-pinned').checked = n?.pinned || false; chooseFolder(n?.folder || ''); dirty = false;
+    selected = n; checklist?.load(n?.checklist || []); $('note-title').value = n?.title || ''; $('note-text').value = n?.text || ''; $('note-pinned').checked = n?.pinned || false; chooseFolder(n?.folder || ''); dirty = false;
     $('note-history').replaceChildren(new Option('Lịch sử sửa', ''));
     for (const [i,h] of (n?.history || []).entries()) $('note-history').add(new Option(new Date(h.updatedAt).toLocaleString('vi-VN'), String(i)));
     message(n ? 'Đã tải bản lưu ' + new Date(n.updatedAt).toLocaleString('vi-VN') : 'Note mới — nhập nội dung rồi lưu.');
@@ -79,12 +80,12 @@
     if (busy || !dirty || !window.PortalAccount.state.authenticated) return;
     busy = true; loading(true); disable(); message('Đang lưu…');
     try {
-      const snapshot = {title: $('note-title').value, text: $('note-text').value, pinned: $('note-pinned').checked, folder: folderValue()};
+      const snapshot = {title: $('note-title').value, text: $('note-text').value, pinned: $('note-pinned').checked, folder: folderValue(), ...(checklist ? {checklist:checklist.value()} : {})};
       const r = await api('/api/notes-save', {action: 'save', id: selected?.id, revision: selected?.revision, takeover: true, ...snapshot});
       if (!window.PortalAccount.state.authenticated) return;
-      if (snapshot.title === $('note-title').value && snapshot.text === $('note-text').value && snapshot.pinned === $('note-pinned').checked && snapshot.folder === folderValue()) fill(r); else {selected = r; dirty = true;}
+      if (snapshot.title === $('note-title').value && snapshot.text === $('note-text').value && snapshot.pinned === $('note-pinned').checked && snapshot.folder === folderValue() && JSON.stringify(snapshot.checklist || []) === JSON.stringify(checklist?.value() || [])) fill(r); else {selected = r; dirty = true;}
       message(dirty ? 'Đã lưu bản trước; bấm Lưu để lưu thay đổi mới.' : 'Đã lưu.');
-      list = [r, ...list.filter(n=>n.id!==r.id)]; list.sort((a,b)=>Number(b.pinned)-Number(a.pinned)||b.updatedAt.localeCompare(a.updatedAt)); storePreview(); renderFolders(); renderList();
+      list = [{...r, text:[r.text, ...(r.checklist || []).map(x => (x.checked ? '☑ ' : '☐ ') + x.text)].filter(Boolean).join('\n')}, ...list.filter(n=>n.id!==r.id)]; list.sort((a,b)=>Number(b.pinned)-Number(a.pinned)||b.updatedAt.localeCompare(a.updatedAt)); storePreview(); renderFolders(); renderList();
     } catch(e) {message(e.message + ' Nội dung đang nhập vẫn được giữ. Bấm Lưu để thử lại. Mã hỗ trợ: ' + (e.reference || 'N4-khong-co-phan-hoi') + '.');} finally {busy = false; loading(false); disable();}
   }
   function change() {dirty = true; message('Chưa lưu — bấm Lưu để lưu thay đổi.');}
@@ -119,14 +120,14 @@
 
     } catch(e) {message(e.message + ' Mã hỗ trợ: ' + (e.reference || 'N4-khong-co-phan-hoi') + '.');} finally {busy = false; disable();}
   });
-  $('note-copy').addEventListener('click', async () => { try {await navigator.clipboard.writeText($('note-text').value); message('Đã copy toàn bộ nội dung.');} catch { $('note-text').focus(); $('note-text').select(); message('Đã chọn toàn bộ — nhấn Ctrl+C hoặc chọn Sao chép.'); } });
+  $('note-copy').addEventListener('click', async () => { try {await navigator.clipboard.writeText([$('note-text').value, ...(checklist?.value() || []).map(x => (x.checked ? '[x] ' : '[ ] ') + x.text)].filter(Boolean).join('\n')); message('Đã copy toàn bộ nội dung.');} catch { $('note-text').focus(); $('note-text').select(); message('Đã chọn toàn bộ — nhấn Ctrl+C hoặc chọn Sao chép.'); } });
   $('note-search').addEventListener('input', renderList);
-  $('note-history').addEventListener('change', () => {const h = selected?.history?.[Number($('note-history').value)]; if ($('note-history').value === '' || !h) return; if (dirty && !confirm('Thay nội dung đang nhập bằng bản lịch sử?')) return; $('note-title').value = h.title; $('note-text').value = h.text; chooseFolder(h.folder || ''); change();});
+  $('note-history').addEventListener('change', () => {const h = selected?.history?.[Number($('note-history').value)]; if ($('note-history').value === '' || !h) return; if (dirty && !confirm('Thay nội dung đang nhập bằng bản lịch sử?')) return; $('note-title').value = h.title; $('note-text').value = h.text; checklist?.load(h.checklist || []); chooseFolder(h.folder || ''); change();});
   window.addEventListener('beforeunload', e => {if(dirty) {e.preventDefault(); e.returnValue = '';}});
   window.addEventListener('account-change', e => {
     disable(); $('notes-workspace').hidden = !e.detail.authenticated;
     if (e.detail.authenticated) {
-      if(wasExpired){selected=null;dirty=false;$('note-title').value='';$('note-text').value='';wasExpired=false;}
+      if(wasExpired){selected=null;dirty=false;$('note-title').value='';$('note-text').value='';checklist?.load([]);wasExpired=false;}
       if(listLoaded){renderFolders();renderList();}else restorePreview();
       if(!dirty && !selected){$('note-title').value='';$('note-text').value='';}
       loading(true);refresh().catch(e=>message(e.message)).finally(()=>loading(false));
@@ -134,7 +135,7 @@
       ++refreshSequence;++loadCounter;list=[];listLoaded=false;cachedPreview=false;
       $('note-list').replaceChildren();
       wasExpired=!!e.detail.expired;
-      if(!e.detail.expired){selected=null;dirty=false;$('note-title').value='';$('note-text').value='';$('note-history').replaceChildren();erasePreview();}
+      if(!e.detail.expired){selected=null;dirty=false;$('note-title').value='';$('note-text').value='';checklist?.load([]);$('note-history').replaceChildren();erasePreview();}
     }
   });
 

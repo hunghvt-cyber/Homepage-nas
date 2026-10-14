@@ -17,19 +17,20 @@ export function createPublicShare(deps={}){
    if(!share||share.value.revoked||share.value.type||typeof share.value.tokenHash!=='string'||!timingSafeEqual(Buffer.from(digest(secret),'hex'),Buffer.from(share.value.tokenHash,'hex')))throw new HttpError(404,'Liên kết đã hết hạn hoặc bị thu hồi.');
    const path='notes/'+share.value.noteId+'.json',note=await load(path);
    if(!note||note.value.deleted)throw new HttpError(404,'Note không còn tồn tại.');
-   if(req.method==='GET')return reply(res,200,{title:note.value.title,text:note.value.text,revision:note.etag,updatedAt:note.value.updatedAt});
+   if(req.method==='GET')return reply(res,200,{title:note.value.title,text:note.value.text,checklist:note.value.checklist||[],revision:note.etag,updatedAt:note.value.updatedAt});
    if(typeof b.revision!=='string'||b.revision!==note.etag)throw new HttpError(409,'Note đã thay đổi. Hãy tải lại trước khi lưu.');
-   const input=noteInput({title:b.title,text:b.text,pinned:note.value.pinned,folder:note.value.folder||''});
-   const history=[{title:note.value.title,text:note.value.text,folder:note.value.folder||'',updatedAt:note.value.updatedAt},...(note.value.history||[])].slice(0,5);
-   const updated={...note.value,title:input.title,text:input.text,updatedAt:new Date().toISOString(),history};
+   const input=noteInput({title:b.title,text:b.text,checklist:b.checklist??note.value.checklist??[],pinned:note.value.pinned,folder:note.value.folder||''});
+   const history=[{title:note.value.title,text:note.value.text,checklist:note.value.checklist||[],folder:note.value.folder||'',updatedAt:note.value.updatedAt},...(note.value.history||[])].slice(0,5);
+   const updated={...note.value,title:input.title,text:input.text,checklist:input.checklist,updatedAt:new Date().toISOString(),history};
    while(Buffer.byteLength(JSON.stringify(updated))>3000000&&history.length)history.pop();
    if(Buffer.byteLength(JSON.stringify(updated))>3000000)throw new HttpError(413,'Nội dung quá dài.');
    // Revalidate the capability before write to narrow the revoke race.
    const latest=await load('shares/'+id+'.json');
    if(!latest||latest.value.revoked)throw new HttpError(403,'Liên kết không còn hiệu lực.');
    const saved=await persist(path,updated,note.etag);
-   return reply(res,200,{title:updated.title,text:updated.text,revision:saved.etag,updatedAt:updated.updatedAt,expiresAt:share.value.expiresAt});
+   return reply(res,200,{title:updated.title,text:updated.text,checklist:updated.checklist,revision:saved.etag,updatedAt:updated.updatedAt,expiresAt:share.value.expiresAt});
   }catch(e){return fail(res,e);}
  };
 }
 export default createPublicShare();
+

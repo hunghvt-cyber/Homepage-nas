@@ -24,7 +24,7 @@ export function createNotesHandler(deps = {}) {
       if (req.query.id) { const r = await load('notes/' + validId(req.query.id) + '.json'); if (!r || r.value.deleted) throw new HttpError(404, 'Không tìm thấy note.'); return reply(res, 200, {...r.value, revision: r.etag}); }
       const names = await enumerate('notes/'); const notes = [];
       // Read in bounded groups of 15: reduce sequential round trips while bounding concurrency.
-      for (let i = 0; i < names.length; i += 15) { const rows = await Promise.all(names.slice(i, i + 15).map(load)); for (const r of rows) if (r && !r.value.deleted) { const {id, title, text = '', pinned, updatedAt, folder = ''} = r.value; notes.push({id, title, text, pinned, updatedAt, folder}); } }
+      for (let i = 0; i < names.length; i += 15) { const rows = await Promise.all(names.slice(i, i + 15).map(load)); for (const r of rows) if (r && !r.value.deleted) { const {id, title, text = '', pinned, updatedAt, folder = '', checklist = []} = r.value; notes.push({id, title, text: [text, ...checklist.map(x => (x.checked ? '☑ ' : '☐ ') + x.text)].filter(Boolean).join('\n'), pinned, updatedAt, folder}); } }
       notes.sort((a,b) => Number(b.pinned) - Number(a.pinned) || b.updatedAt.localeCompare(a.updatedAt)); return reply(res, 200, {notes});
     }
     if (req.method !== 'POST') throw new HttpError(405, 'Phương thức không hỗ trợ.');
@@ -63,8 +63,8 @@ export function createNotesHandler(deps = {}) {
       report(200); return reply(res, 200, {deleted: true});
     }
     if (current?.value.deleted) throw new HttpError(409, 'Note đã bị xóa trên thiết bị khác.');
-    const input = noteInput(b);
-    const history = current ? [{title: current.value.title, text: current.value.text, folder: current.value.folder || '', updatedAt: current.value.updatedAt}, ...(current.value.history || [])].slice(0,5) : [];
+    const input = noteInput({...b, checklist:b.checklist ?? current?.value.checklist ?? []});
+    const history = current ? [{title: current.value.title, text: current.value.text, checklist:current.value.checklist || [], folder: current.value.folder || '', updatedAt: current.value.updatedAt}, ...(current.value.history || [])].slice(0,5) : [];
     const value = {id, ...input, updatedAt: new Date().toISOString(), history};
     while (Buffer.byteLength(JSON.stringify(value)) > 3000000 && history.length) history.pop();
     if (Buffer.byteLength(JSON.stringify(value)) > 3000000) throw new HttpError(413, 'Nội dung sau mã hóa quá dài để lưu.');
@@ -75,4 +75,5 @@ export function createNotesHandler(deps = {}) {
 
 }
 export default createNotesHandler();
+
 

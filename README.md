@@ -51,3 +51,10 @@ Cài dependency Node: `npm ci --ignore-scripts`. Kiểm tra API: `npm test`.
 ## Chat Gemini
 
 Trong Notes chọn **Mở chat Gemini**, hoặc mở `/gemini/`. Dùng mật khẩu chung và kết nối Apps Script của trang Chi tiêu; không thêm khóa Gemini vào Homepage. [Kiến trúc và giới hạn](docs/GEMINI-CHAT-20261011.md).
+
+
+## Checklist trong Notes
+
+Chọn **Chèn checklist** để thêm mục bên cạnh nội dung chữ; Enter thêm mục tiếp theo, Shift+Enter xuống dòng trong một mục. Tick chuyển mục xuống phần **Đã hoàn thành**, bỏ tick đưa trở lại phía trên. Bấm **Lưu** để lưu cả nội dung và checklist; Copy toàn bộ kèm ký hiệu `[ ]` / `[x]`.
+
+Checklist có tối đa 200 mục, 2.000 ký tự/mục và tính vào giới hạn nội dung Note 1 MB. Hỗ trợ Note riêng, link Note, thư mục chia sẻ và lịch sử khôi phục. Note cũ mặc định không có checklist; trang cũ không gửi trường checklist sẽ giữ checklist đã có trên máy chủ.

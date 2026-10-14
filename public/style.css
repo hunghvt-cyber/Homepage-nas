@@ -70,3 +70,6 @@ html.gemini-embedded #chat-form label{margin:0 0 4px}
 html.gemini-embedded #chat-input{display:block;height:72px;min-height:60px;max-height:120px;margin-bottom:6px}
 html.gemini-embedded #chat-status{flex:none;margin:0;font-size:.85rem}
 html.gemini-embedded #chat-workspace small{flex:none;font-size:.75rem;line-height:1.35}
+
+.note-checklist{margin:12px 0}.note-checklist>button{margin-bottom:8px}.checklist-row{display:flex;align-items:flex-start;gap:8px;margin:6px 0;min-width:0}.checklist-row input[type=checkbox]{flex:none;width:20px;height:20px;margin:10px 0;accent-color:#254c3c}.checklist-row textarea{flex:1;min-width:0;min-height:40px;resize:vertical;white-space:pre-wrap;overflow-wrap:anywhere}.checklist-row button{flex:none;padding:6px 10px}.checklist-row.completed textarea{color:#59685e;text-decoration:line-through;background:#f7faf5}
+body:has(#note-checklist .checklist-row) #note-text:placeholder-shown{min-height:110px;height:110px}
