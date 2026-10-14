@@ -139,21 +139,27 @@
   });
 
   const shareMessage=s=>{$('note-share-message').textContent=s;};
+  const shareStatus=link=>link.revoked?'Đã ngừng chia sẻ · Link cũ không còn dùng được':'Đang chia sẻ · Không hết hạn';
+  function sharingSummary(container,links){
+    if(links.some(link=>!link.revoked))return;
+    const status=document.createElement('p');status.textContent='Hiện không chia sẻ';container.append(status);
+  }
   async function listShares(){
     $('note-share-list').replaceChildren();
     if(!selected?.id)return;
     try{
       const r=await api('/api/note-share?noteId='+encodeURIComponent(selected.id));
+      sharingSummary($('note-share-list'),r.links);
       for(const link of r.links){
         const row=document.createElement('div');
         const label=document.createElement('span');
-        label.textContent=(link.revoked?'Đã thu hồi · ':(link.expiresAt&&Date.parse(link.expiresAt)<=Date.now())?'Hết hạn · ':'Đang hoạt động · ')+(link.expiresAt?new Date(link.expiresAt).toLocaleDateString('vi-VN'):'Không hết hạn')+' ';
+        label.textContent=shareStatus(link)+' ';
         row.append(label);
-        if(!link.revoked&&(!link.expiresAt||Date.parse(link.expiresAt)>Date.now())){
-          const revoke=document.createElement('button');revoke.type='button';revoke.textContent='Thu hồi';
+        if(!link.revoked){
+          const revoke=document.createElement('button');revoke.type='button';revoke.textContent='Ngừng chia sẻ';
           revoke.addEventListener('click',async()=>{
-            if(!confirm('Thu hồi link này ngay?'))return;
-            try{await api('/api/note-share',{action:'revoke',noteId:selected.id,id:link.id});shareMessage('Đã thu hồi liên kết.');await listShares();}
+            if(!confirm('Ngừng chia sẻ Note này? Link cũ sẽ không còn dùng được.'))return;
+            try{await api('/api/note-share',{action:'revoke',noteId:selected.id,id:link.id});shareMessage('Đã ngừng chia sẻ. Link cũ không còn dùng được.');await listShares();}
             catch(e){shareMessage(e.message);}
           });row.append(revoke);
         }
@@ -189,11 +195,12 @@
     if(!folder)return;
     try{
       const r=await api('/api/note-share?folder='+encodeURIComponent(folder));
+      sharingSummary(el,r.links);
       for(const link of r.links){
         const line=document.createElement('div'),label=document.createElement('span');
-        label.textContent=(link.revoked?'Đã thu hồi':link.expiresAt&&Date.parse(link.expiresAt)<=Date.now()?'Hết hạn':'Đang hoạt động')+' · '+(link.expiresAt?new Date(link.expiresAt).toLocaleDateString('vi-VN'):'Không hết hạn')+' ';
+        label.textContent=shareStatus(link)+' ';
         line.append(label);
-        if(!link.revoked&&(!link.expiresAt||Date.parse(link.expiresAt)>Date.now())){
+        if(!link.revoked){
           const button=document.createElement('button');button.type='button';button.textContent='Ngừng chia sẻ';
           button.addEventListener('click',async()=>{
             if(!confirm('Ngừng chia sẻ thư mục? Link cũ sẽ không thể dùng lại.'))return;
