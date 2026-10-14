@@ -1,0 +1,11 @@
+{
+  "run_id": 38482597215,
+  "run_url": "https://github.com/hunghvt-cyber/my-backup-gdrive-koofr/actions/runs/38482597215",
+  "status": "success",
+  "transferred_gib": 20.834,
+  "speed_mib_s": 6.901,
+  "ignored_count": 28,
+  "new_ignored_count": 0,
+  "finished_at": "2026-10-14T00:56:52Z",
+  "warning": "Có shortcut Google Drive bị hỏng; 28 file đang được bỏ qua."
+}
