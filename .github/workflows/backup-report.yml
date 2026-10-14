@@ -1,7 +1,5 @@
 name: Refresh backup homepage report
 on:
-  schedule:
-    - cron: '20 * * * *'
   workflow_dispatch:
 permissions:
   contents: write
