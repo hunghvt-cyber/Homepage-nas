@@ -47,3 +47,26 @@ html.gemini-embedded .account{margin:8px}
 /* Wrap long Note text within the editor without changing saved content. */
 #note-text,#shared-text,#workspace-text{min-width:0;max-width:100%;white-space:pre-wrap;overflow-wrap:anywhere}
 body:has(#notes-workspace) .notes-layout>section{min-width:0}
+
+/* Let the embedded Gemini conversation fill its card. */
+.home-gemini>.body{padding:0}
+.home-gemini iframe{display:block;width:100%;height:clamp(540px,75svh,760px);border:0}
+.home-gemini>.body>p{margin:0;padding:10px 14px;border-top:1px solid #d5dfd6}
+html.gemini-embedded,html.gemini-embedded body{height:100%;overflow:hidden}
+html.gemini-embedded main{height:100%;display:flex;flex-direction:column;min-width:0}
+html.gemini-embedded .account{flex:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0;padding:10px 12px;border:0;border-bottom:1px solid #d5dfd6}
+html.gemini-embedded .account-actions{margin:0}
+html.gemini-embedded #password-form{width:100%}
+html.gemini-embedded #account-message{width:100%;margin:0}
+html.gemini-embedded #account-message:empty,html.gemini-embedded #chat-status:empty{display:none}
+html.gemini-embedded #chat-workspace{flex:1;min-height:0;flex-direction:column}
+html.gemini-embedded #chat-workspace:not([hidden]){display:flex}
+html.gemini-embedded #chat-workspace>.bar{display:none}
+html.gemini-embedded #chat-workspace>.body{flex:1;min-height:0;display:flex;flex-direction:column;padding:10px 12px;gap:8px}
+html.gemini-embedded #chat-workspace .editor-actions{flex:none;margin:0}
+html.gemini-embedded #chat-log{flex:1;min-height:0;max-height:none;overflow:auto}
+html.gemini-embedded #chat-form{flex:none}
+html.gemini-embedded #chat-form label{margin:0 0 4px}
+html.gemini-embedded #chat-input{display:block;height:72px;min-height:60px;max-height:120px;margin-bottom:6px}
+html.gemini-embedded #chat-status{flex:none;margin:0;font-size:.85rem}
+html.gemini-embedded #chat-workspace small{flex:none;font-size:.75rem;line-height:1.35}
