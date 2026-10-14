@@ -5,6 +5,21 @@ import { JSDOM } from 'jsdom';
 import { execFileSync } from 'node:child_process';
 execFileSync('python3',['scripts/build.py'],{env:{...process.env,PORTAL_BASE_URL:''}});
 const flush = async () => {for(let i=0;i<5;i++) await new Promise(r=>setImmediate(r));};
+test('Notes navigation preserves an unsaved draft, toggles folders and returns after delete',async()=>{
+ const dom=new JSDOM(readFileSync('dist/notes/index.html','utf8'),{url:'https://homepage-nas.vercel.app/notes/',runScripts:'outside-only'}),w=dom.window,$=id=>w.document.getElementById(id);
+ const note={id:'demo',title:'Saved',text:'Original',folder:'Family',revision:'1',updatedAt:'2026-10-14T00:00:00Z',history:[]};
+ w.confirm=()=>true;
+ w.PortalAccount={state:{authenticated:true},api:async(url,b)=>b?{deleted:true}:url.includes('?id=')?note:{notes:[note]}};
+ w.eval(readFileSync('public/notes.js','utf8'));w.dispatchEvent(new w.CustomEvent('account-change',{detail:{authenticated:true}}));await flush();
+ $('note-folders-toggle').click();assert.equal($('note-folders-toggle').getAttribute('aria-expanded'),'true');
+ $('note-list').querySelector('button').click();await flush();
+ assert.equal($('notes-workspace').classList.contains('notes-editing'),true);assert.equal($('note-folders-toggle').getAttribute('aria-expanded'),'false');
+ $('note-text').value='Unsaved draft';$('note-text').dispatchEvent(new w.Event('input'));$('note-back').click();
+ assert.equal($('notes-workspace').classList.contains('notes-editing'),false);assert.equal($('note-text').value,'Unsaved draft');
+ assert.match($('notes-status').textContent,/Chưa lưu/);
+ $('note-delete').click();await flush();assert.equal($('notes-workspace').classList.contains('notes-editing'),false);assert.equal($('note-list').querySelector('button'),null);
+ $('note-new').click();assert.equal($('notes-workspace').classList.contains('notes-editing'),true);assert.equal($('note-text').value,'');dom.window.close();
+});
 test('Notes remains hidden for guest; owner can create, copy code and recover history', async () => {
   const dom = new JSDOM(readFileSync('dist/notes/index.html','utf8'),{url:'https://homepage-nas.vercel.app/notes/',runScripts:'outside-only'});
   const w=dom.window; const $=id=>w.document.getElementById(id); const state={authenticated:false}; let saved, copied;
@@ -79,3 +94,4 @@ test('failed Delete preserves the editor and card and displays its support refer
  $('note-list').querySelector('button').click();await flush();$('note-text').value='local draft';$('note-text').dispatchEvent(new w.Event('input'));$('note-delete').click();await flush();
  assert.match($('note-message').textContent,/Kho lưu chưa cập nhật.*N4-1234abcd/);assert.equal($('note-text').value,'local draft');assert.equal($('note-list').querySelector('.note-card-title').textContent,note.title);assert.equal($('note-delete').disabled,false);dom.window.close();
 });
+

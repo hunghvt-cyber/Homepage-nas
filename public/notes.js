@@ -2,7 +2,6 @@
   const $ = id => document.getElementById(id);
   const api = (...args) => window.PortalAccount.api(...args);
   let activeFolder = '', list = [], selected = null, dirty = false, busy = false, loadCounter = 0;
-  let view = 'auto';
   let listLoaded = false, cachedPreview = false, refreshSequence = 0, wasExpired = false;
   const CACHE_KEY='homepage-notes-preview-v1';
   function storePreview(){
@@ -21,15 +20,26 @@
   const checklist = window.NoteChecklist?.($('note-checklist'), () => change());
   const progress = $('note-progress');
   function loading(on) { if (progress) { progress.hidden = !on; progress.setAttribute('aria-busy', String(on)); } }
-  const viewButton = $('note-view');
-  function applyView() {
-    $('notes-workspace').classList.toggle('notes-phone-view', view === 'phone');
-    viewButton.textContent = view === 'phone' ? 'Giao diện máy tính' : 'Giao diện điện thoại';
-    viewButton.setAttribute('aria-pressed', String(view === 'phone'));
+  const workspace = $('notes-workspace');
+  const folderToggle = $('note-folders-toggle');
+  function closeFolders() {
+    workspace.classList.remove('notes-folders-open');
+    folderToggle.setAttribute('aria-expanded', 'false');
   }
-  viewButton.addEventListener('click', () => { view = view === 'phone' ? 'desktop' : 'phone'; applyView(); });
-  applyView();
-  const message = value => {$('note-message').textContent = value;};
+  function showEditor() {
+    workspace.classList.add('notes-editing');
+    closeFolders();
+  }
+  folderToggle.addEventListener('click', () => {
+    const expanded = workspace.classList.toggle('notes-folders-open');
+    folderToggle.setAttribute('aria-expanded', String(expanded));
+  });
+  $('note-back').addEventListener('click', () => {
+    // Returning to the list preserves unsaved content in this editor.
+    workspace.classList.remove('notes-editing');
+    $('note-new').focus();
+  });
+  const message = value => {$('note-message').textContent = value; $('notes-status').textContent = value;};
   const disable = () => { checklist?.disabled(!window.PortalAccount.state.authenticated); for (const id of ['note-save','note-delete','note-new','note-title','note-text','note-pinned','note-history']) $(id).disabled = (!['note-title','note-text','note-pinned','note-folder'].includes(id) && busy) || !window.PortalAccount.state.authenticated; };
   const folders=()=>[...new Set(list.map(n=>n.folder||'').filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'));
   function renderFolders(){
@@ -37,7 +47,7 @@
     for(const name of ['',...folders()]){
       const button=document.createElement('button');button.type='button';button.textContent=name||'Tất cả';
       button.className='note-folder-button';button.setAttribute('aria-pressed',String(activeFolder===name));
-      button.addEventListener('click',()=>{activeFolder=name;renderFolders();renderList();});el.append(button);
+      button.addEventListener('click',()=>{activeFolder=name;renderFolders();renderList();closeFolders();});el.append(button);
     }
     const manage=$('folder-manage-select'),oldManage=manage.value;
     manage.replaceChildren(new Option('Chọn thư mục…',''),...folders().map(name=>new Option(name,name)));
@@ -54,8 +64,9 @@
   }
   function renderList() {
     const q = $('note-search').value.toLocaleLowerCase(); $('note-list').replaceChildren();
+    $('notes-list-heading').textContent = activeFolder || 'Tất cả ghi chú';
     for (const n of list.filter(n => (!activeFolder || n.folder === activeFolder) && [n.title,n.text,n.folder].some(value => String(value||'').toLocaleLowerCase().includes(q)))) {
-      const button = document.createElement('button'); button.type = 'button'; button.className = 'note-card'; const heading = document.createElement('strong'); heading.className='note-card-title'; heading.textContent=(n.pinned ? '📌 ' : '') + (n.title || 'Không tiêu đề'); const preview=document.createElement('span'); preview.className='note-card-preview'; preview.textContent=n.text || ''; button.append(heading,preview); button.addEventListener('click', () => open(n.id)); $('note-list').append(button);
+      const button = document.createElement('button'); button.type = 'button'; button.className = 'note-card'; button.setAttribute('aria-pressed', String(selected?.id === n.id)); const heading = document.createElement('strong'); heading.className='note-card-title'; heading.textContent=(n.pinned ? '📌 ' : '') + (n.title || 'Không tiêu đề'); const preview=document.createElement('span'); preview.className='note-card-preview'; preview.textContent=n.text || ''; button.append(heading,preview); button.addEventListener('click', () => open(n.id)); $('note-list').append(button);
     }
     if (!list.length) $('note-list').textContent = 'Chưa có note. Bấm “Note mới” để bắt đầu.';
     if(cachedPreview)message('Đang hiển thị bản xem trước trên thiết bị; đang cập nhật từ máy chủ.');
@@ -67,6 +78,7 @@
   }
   function fill(n) {
     selected = n; checklist?.load(n?.checklist || []); $('note-title').value = n?.title || ''; $('note-text').value = n?.text || ''; $('note-pinned').checked = n?.pinned || false; chooseFolder(n?.folder || ''); dirty = false;
+    renderList();
     $('note-history').replaceChildren(new Option('Lịch sử sửa', ''));
     for (const [i,h] of (n?.history || []).entries()) $('note-history').add(new Option(new Date(h.updatedAt).toLocaleString('vi-VN'), String(i)));
     message(n ? 'Đã tải bản lưu ' + new Date(n.updatedAt).toLocaleString('vi-VN') : 'Note mới — nhập nội dung rồi lưu.');
@@ -74,7 +86,7 @@
   async function open(id) {
     if (busy || dirty && !confirm('Nội dung chưa lưu. Bỏ thay đổi để mở note khác?')) return;
     const sequence = ++loadCounter; busy = true; loading(true); disable();
-    try {const r = await api('/api/notes?id=' + encodeURIComponent(id)); if(sequence === loadCounter) fill(r);} catch(e) {message(e.message);} finally {busy = false; loading(false); disable();}
+    try {const r = await api('/api/notes?id=' + encodeURIComponent(id)); if(sequence === loadCounter && window.PortalAccount.state.authenticated) {fill(r); showEditor();}} catch(e) {message(e.message);} finally {busy = false; loading(false); disable();}
   }
   async function save() {
     if (busy || !dirty || !window.PortalAccount.state.authenticated) return;
@@ -110,13 +122,13 @@
     finally{busy=false;loading(false);disable();$('folder-remove').disabled=!$('folder-manage-select').value;}
   });
   $('note-save').addEventListener('click', save);
-  $('note-new').addEventListener('click', () => {if (busy || dirty && !confirm('Bỏ nội dung chưa lưu để tạo note mới?')) return; ++loadCounter; fill(null); $('note-title').focus();});
+  $('note-new').addEventListener('click', () => {if (busy || dirty && !confirm('Bỏ nội dung chưa lưu để tạo note mới?')) return; ++loadCounter; fill(null); showEditor(); $('note-title').focus();});
   $('note-delete').addEventListener('click', async () => {
     if (!selected || busy || !confirm('Xóa note “' + selected.title + '”?')) return; busy = true; loading(true); disable();
     try {
       const id = selected.id;
       await api('/api/notes', {action: 'delete', id});
-      list = list.filter(n => n.id !== id); storePreview(); fill(null); renderFolders(); renderList(); message('Đã xóa note.');
+      list = list.filter(n => n.id !== id); storePreview(); fill(null); workspace.classList.remove('notes-editing'); renderFolders(); renderList(); message('Đã xóa note.');
 
     } catch(e) {message(e.message + ' Mã hỗ trợ: ' + (e.reference || 'N4-khong-co-phan-hoi') + '.');} finally {busy = false; disable();}
   });
@@ -132,6 +144,7 @@
       if(!dirty && !selected){$('note-title').value='';$('note-text').value='';}
       loading(true);refresh().catch(e=>message(e.message)).finally(()=>loading(false));
     } else {
+      workspace.classList.remove('notes-editing');closeFolders();
       ++refreshSequence;++loadCounter;list=[];listLoaded=false;cachedPreview=false;
       $('note-list').replaceChildren();
       wasExpired=!!e.detail.expired;
@@ -233,5 +246,6 @@
   });
   disable();
 })();
+
 
 
