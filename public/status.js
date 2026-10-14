@@ -22,8 +22,9 @@ async function refresh(){
         const measured=time(item.measured_at);
         detail.textContent=measured?'Kết quả gần nhất · '+measured:'Chưa có thời điểm kết quả';
       }else {
-        const label=labels[item.state]||labels.unknown;
-        el.textContent=label;
+        const label=key==='nas'?({ok:'Đủ chỗ',pass:'Đủ chỗ',warn:'Sắp đầy',fail:'Cần kiểm tra dung lượng',unknown:'Chưa xác minh'}[item.state]||labels.unknown):(labels[item.state]||labels.unknown);
+        const free=key==='nas'&&snapshotTime?bytesGiB(data.health?.vol1?.available_bytes):null;
+        el.textContent=label+(free?' · Còn trống '+free:'');
       }
     }
     stamp.textContent=snapshotTime?'Báo cáo gần nhất: '+snapshotTime+(stale?' · Chưa nhận được báo cáo mới.':''):'Chưa có thời gian báo cáo';
@@ -45,3 +46,4 @@ async function refresh(){
 }
 refresh();
 setInterval(refresh,300000);
+

@@ -196,7 +196,7 @@
         if(!link.revoked&&(!link.expiresAt||Date.parse(link.expiresAt)>Date.now())){
           const button=document.createElement('button');button.type='button';button.textContent='Ngừng chia sẻ';
           button.addEventListener('click',async()=>{
-            if(!confirm('Ngừng chia sẻ workspace? Link cũ sẽ không thể dùng lại.'))return;
+            if(!confirm('Ngừng chia sẻ thư mục? Link cũ sẽ không thể dùng lại.'))return;
             try{await api('/api/note-share',{action:'revoke',folder,id:link.id});$('folder-share-message').textContent='Đã ngừng chia sẻ.';await folderShares();}
             catch(e){$('folder-share-message').textContent=e.message;}
           });line.append(button);
@@ -214,7 +214,7 @@
     try{
       const r=await api('/api/note-share',{action:'create',folder});
       $('folder-share-link').value=location.origin+'/workspace/?token='+r.token;
-      $('folder-share-message').textContent='Đã tạo link workspace không hết hạn.';
+      $('folder-share-message').textContent='Đã tạo link chia sẻ thư mục không hết hạn.';
       await folderShares();
     }catch(e){$('folder-share-message').textContent=e.message;}
   });
@@ -225,4 +225,5 @@
   });
   disable();
 })();
+
 
