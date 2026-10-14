@@ -1,1 +1,39 @@
-(async()=>{const put=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};try{const r=await fetch('/backup-latest.json',{cache:'no-store'});if(!r.ok)throw Error('HTTP');const d=await r.json();put('backup-state',({success:'Đồng bộ thành công',paused:'Tạm dừng theo giới hạn 5 giờ',failure:'Đồng bộ thất bại'})[d.status]||'Chưa xác minh');put('backup-bytes',d.transferred_gib==null?'Chưa có dữ liệu':d.transferred_gib.toFixed(3)+' GiB');put('backup-speed',d.speed_mib_s==null?'Chưa có dữ liệu':d.speed_mib_s.toFixed(3)+' MiB/s');put('backup-ignored',d.ignored_count??'Chưa có dữ liệu');put('backup-time',d.finished_at?new Date(d.finished_at).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}):'Chưa có dữ liệu');put('backup-note',(d.new_ignored_count?'File mới bị bỏ qua: '+d.new_ignored_count+'. ':'')+(d.warning||'Số liệu theo lượt chạy gần nhất; các file bỏ qua không được backup.'));if(/^https:\/\/github\.com\/hunghvt-cyber\/my-backup-gdrive-koofr\/actions\/runs\/\d+$/.test(d.run_url||''))document.getElementById('backup-link').href=d.run_url;}catch{put('backup-state','Chưa tải được báo cáo backup');}})();
+/* Public, read-only, versioned backup reports. No GitHub credentials in browser. */
+(async()=>{
+  const put=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=String(value)};
+  const base=window.BACKUP_REPORTS_BASE_URL||'';
+  const when=v=>v?new Date(v).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}):'Chưa có dữ liệu';
+  const val=v=>v==null?'Chưa có dữ liệu':v;
+  const sources=[
+    {file:'gdrive-backup-latest.json',source:'gdrive-koofr',prefix:'backup',repo:'my-backup-gdrive-koofr'},
+    {file:'gphotos-backup-latest.json',source:'gphotos-koofr',prefix:'photos',repo:'google-photos-koofr'}
+  ];
+  for(const item of sources){
+    const p=item.prefix;
+    if(!base){put(p+'-state','Chưa cấu hình nguồn báo cáo Vercel Blob');continue;}
+    try{
+      const response=await fetch(base+'/'+item.file,{cache:'no-store'});
+      if(!response.ok)throw new Error('HTTP '+response.status);
+      const data=await response.json();
+      if(data.schema_version!==1||data.source!==item.source||!data.metrics||typeof data.metrics!=='object')throw new Error('Schema mismatch');
+      const states={success:'Backup thành công',paused:'Tạm dừng theo giới hạn thời gian',failure:'Backup thất bại',unknown:'Chưa xác minh'};
+      put(p+'-state',states[data.status]||states.unknown);
+      put(p+'-time',when(data.finished_at));
+      if(p==='backup'){
+        put('backup-bytes',data.metrics.transferred_gib==null?'Chưa có dữ liệu':Number(data.metrics.transferred_gib).toFixed(3)+' GiB');
+        put('backup-speed',data.metrics.speed_mib_s==null?'Chưa có dữ liệu':Number(data.metrics.speed_mib_s).toFixed(3)+' MiB/s');
+        put('backup-ignored',val(data.metrics.ignored_count));
+      }else{
+        put('photos-uploaded',val(data.metrics.uploaded));
+        put('photos-skipped',val(data.metrics.skipped));
+        put('photos-errors',val(data.metrics.errors));
+      }
+      const warning=Array.isArray(data.warnings)?data.warnings.filter(x=>typeof x==='string').join(' '):'';
+      put(p+'-note',warning||'Số liệu của lần chạy gần nhất.');
+      const expected='https://github.com/hunghvt-cyber/'+item.repo+'/actions/runs/';
+      if(Number.isInteger(data.run_id)&&data.run_id>0&&data.run_url===expected+data.run_id){
+        document.getElementById(p+'-link').href=data.run_url;
+      }
+    }catch(err){put(p+'-state','Chưa tải được báo cáo; kiểm tra nguồn Blob');}
+  }
+})();
