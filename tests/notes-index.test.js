@@ -27,11 +27,11 @@ test('checklist previews contain real line breaks',async()=>{
  const h=harness();h.values['notes/a.json'].value.checklist=[{text:'todo',checked:false},{text:'done',checked:true}];
  assert.equal((await h.get()).notes[0].text,'body A\n☐ todo\n☑ done');
 });
-test('mutation during rebuild prevents publishing the index',async()=>{
+test('mutation during first rebuild retries with fresh metadata',async()=>{
  let listings=0,writes=0,result;
  const h=createNotesHandler({authorize:async()=>{},listMetadata:async()=>[entry('a',++listings===1?'old':'new')],load:async()=>note('a','A'),loadIndex:async()=>null,saveIndex:async()=>{writes++;}});
  await h({method:'GET',query:{}},{setHeader(){},status(n){assert.equal(n,200);return this;},json(v){result=v;}});
- assert.equal(listings,2);assert.equal(writes,0);assert.equal(result.notes[0].title,'A');
+ assert.equal(listings,4);assert.equal(writes,1);assert.equal(result.notes[0].title,'A');
 });
 test('old builder cannot overwrite a newer index (conditional write)',async()=>{
  let current={value:{version:1,stamp:'old',notes:[]},etag:'old-etag'},writes=0,result;

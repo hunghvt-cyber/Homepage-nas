@@ -28,6 +28,38 @@
   }
   function erasePreview(){try{localStorage.removeItem(CACHE_KEY);}catch{}}
 
+  // Full content stays in this authenticated tab only; never in LocalStorage.
+  const contentCache = new Map(), pendingDetails = new Map();
+  let cacheEpoch = 0, lastSync = 0;
+  function remember(n) {
+    if (!n?.id || !n.revision) return;
+    const size = JSON.stringify(n).length * 2;
+    if (size > 3000000) return;
+    contentCache.delete(n.id);
+    contentCache.set(n.id, {note:n, size});
+    while (contentCache.size > 5 || [...contentCache.values()].reduce((sum,c)=>sum+c.size,0) > 6000000) contentCache.delete(contentCache.keys().next().value);
+  }
+  async function detail(id) {
+    if (pendingDetails.has(id)) return pendingDetails.get(id);
+    const epoch=cacheEpoch, cached=contentCache.get(id)?.note;
+    const task=(async()=>{
+      try {
+        const r=await api('/api/notes?id='+encodeURIComponent(id)+(cached?.revision?'&revision='+encodeURIComponent(cached.revision):''));
+        const n=r.notModified ? cached : r;
+        if (!n) throw new Error('Không có bản lưu trong bộ nhớ. Hãy mở lại Note.');
+        if (epoch===cacheEpoch && window.PortalAccount.state.authenticated) remember(n);
+        return n;
+      } catch(e) { if(e.status===404)contentCache.delete(id); throw e; }
+    })();
+    pendingDetails.set(id,task);
+    try { return await task; } finally { if(pendingDetails.get(id)===task)pendingDetails.delete(id); }
+  }
+  async function preload(sequence) {
+    for(const n of list.slice(0,2)) {
+      if(sequence!==refreshSequence || busy || dirty || !window.PortalAccount.state.authenticated)break;
+      if(n.revision && !contentCache.has(n.id)) {try{await detail(n.id);}catch{}}
+    }
+  }
   const checklist = window.NoteChecklist?.($('note-checklist'), () => change());
   const progress = $('note-progress');
   function loading(on) { if (progress) { progress.hidden = !on; progress.setAttribute('aria-busy', String(on)); } }
@@ -86,10 +118,21 @@
     if(cachedPreview)message('Đang hiển thị bản xem trước trên thiết bị; đang cập nhật từ máy chủ.');
   }
   async function refresh() {
-    const seq=++refreshSequence,r=await api('/api/notes');
-    if(seq!==refreshSequence)return;
-    list=r.notes;selectedIds.forEach(id=>{if(!list.some(n=>n.id===id))selectedIds.delete(id);});listLoaded=true;cachedPreview=false;storePreview();renderFolders();renderList();
+    const seq=++refreshSequence;
+    const known=JSON.stringify(list.map(n=>[n.id,n.revision||'']));
+    const encoded=encodeURIComponent(known);
+    const r=await api(encoded.length<=6000?'/api/notes?known='+encoded:'/api/notes');
+    if(seq!==refreshSequence || !window.PortalAccount.state.authenticated)return;
+    if(r.delta){const removed=new Set(r.removed);const updates=new Map(r.notes.map(n=>[n.id,n]));list=[...list.filter(n=>!removed.has(n.id)&&!updates.has(n.id)),...r.notes];}
+    else list=r.notes;
+    list.sort((a,b)=>Number(b.pinned)-Number(a.pinned)||b.updatedAt.localeCompare(a.updatedAt));
+    for(const [id,cached] of contentCache){if(!list.some(n=>n.id===id&&n.revision===cached.note.revision))contentCache.delete(id);}
+    selectedIds.forEach(id=>{if(!list.some(n=>n.id===id))selectedIds.delete(id);});
+    listLoaded=true;cachedPreview=false;lastSync=Date.now();storePreview();renderFolders();renderList();
+    if(!dirty&&!selected)message('Đã cập nhật danh sách.');
+    void preload(seq);
   }
+  function beginMutation(){++refreshSequence;++loadCounter;++cacheEpoch;pendingDetails.clear();}
   function fill(n) {
     selected = n; checklist?.load(n?.checklist || []); $('note-title').value = n?.title || ''; $('note-text').value = n?.text || ''; $('note-pinned').checked = n?.pinned || false; chooseFolder(n?.folder || ''); dirty = false;
     renderList();
@@ -98,22 +141,31 @@
     message(n ? 'Đã tải bản lưu ' + new Date(n.updatedAt).toLocaleString('vi-VN') : 'Note mới — nhập nội dung rồi lưu.');
   }
   async function open(id) {
-    if (!busy && selected?.id === id) {showEditor(); return;}
+    if (!busy && selected?.id === id && dirty) {showEditor(); return;}
     if (busy || dirty && !confirm('Nội dung chưa lưu. Bỏ thay đổi để mở note khác?')) return;
-    const sequence = ++loadCounter; busy = true; loading(true); disable();
-    try {const r = await api('/api/notes?id=' + encodeURIComponent(id)); if(sequence === loadCounter && window.PortalAccount.state.authenticated) {fill(r); showEditor();}} catch(e) {message(e.message);} finally {busy = false; loading(false); disable();}
+    const sequence=++loadCounter, cached=contentCache.get(id)?.note;
+    busy=!cached;loading(true);disable();
+    if(cached){fill(cached);showEditor();message('Đã mở bản trong bộ nhớ; đang kiểm tra cập nhật.');}
+    try {
+      const r=await detail(id);
+      if(sequence!==loadCounter || !window.PortalAccount.state.authenticated)return;
+      if(!dirty){fill(r);showEditor();}
+      else if(selected?.revision!==r.revision)message('Note đã thay đổi trên thiết bị khác. Bản đang nhập vẫn được giữ.');
+    }catch(e){if(sequence===loadCounter)message(e.message);}
+    finally{if(sequence===loadCounter){busy=false;loading(false);disable();}}
   }
   async function save() {
     if (busy || !dirty || !window.PortalAccount.state.authenticated) return;
-    busy = true; loading(true); disable(); message('Đang lưu…');
+    beginMutation();busy = true; loading(true); disable(); message('Đang lưu…');
     try {
       const snapshot = {title: $('note-title').value, text: $('note-text').value, pinned: $('note-pinned').checked, folder: folderValue(), ...(checklist ? {checklist:checklist.value()} : {})};
-      const r = await api('/api/notes-save', {action: 'save', id: selected?.id, revision: selected?.revision, takeover: true, ...snapshot});
+      const r = await api('/api/notes-save', {action: 'save', id: selected?.id, revision: selected?.revision, ...snapshot});
       if (!window.PortalAccount.state.authenticated) return;
+      ++loadCounter;remember(r);
       if (snapshot.title === $('note-title').value && snapshot.text === $('note-text').value && snapshot.pinned === $('note-pinned').checked && snapshot.folder === folderValue() && JSON.stringify(snapshot.checklist || []) === JSON.stringify(checklist?.value() || [])) fill(r); else {selected = r; dirty = true;}
       message(dirty ? 'Đã lưu bản trước; bấm Lưu để lưu thay đổi mới.' : 'Đã lưu.');
       list = [{...r, text:[r.text, ...(r.checklist || []).map(x => (x.checked ? '☑ ' : '☐ ') + x.text)].filter(Boolean).join('\n')}, ...list.filter(n=>n.id!==r.id)]; list.sort((a,b)=>Number(b.pinned)-Number(a.pinned)||b.updatedAt.localeCompare(a.updatedAt)); storePreview(); renderFolders(); renderList();
-    } catch(e) {message(e.message + ' Nội dung đang nhập vẫn được giữ. Bấm Lưu để thử lại. Mã hỗ trợ: ' + (e.reference || 'N4-khong-co-phan-hoi') + '.');} finally {busy = false; loading(false); disable();}
+    } catch(e) {message(e.message + (e.status===409 ? ' Hãy sao chép bản nháp trước khi mở lại Note để đối chiếu.' : ' Nội dung đang nhập vẫn được giữ. Bấm Lưu để thử lại.') + ' Mã hỗ trợ: ' + (e.reference || 'N4-khong-co-phan-hoi') + '.');} finally {busy = false; loading(false); disable();}
   }
   function change() {dirty = true; message('Chưa lưu — bấm Lưu để lưu thay đổi.');}
   for (const id of ['note-title','note-text','note-pinned','note-folder']) $(id).addEventListener('input', change);
@@ -126,7 +178,7 @@
     const count=list.filter(n=>n.folder===folder).length;
     const warning=deleteNotes?'XÓA '+count+' NOTE trong thư mục “'+folder+'”. Bạn chắc chắn?':'Xóa thư mục “'+folder+'”, GIỮ '+count+' Note và chuyển về chưa phân loại?';
     if(!confirm(warning))return;
-    busy=true;loading(true);disable();$('folder-remove').disabled=true;
+    beginMutation();busy=true;loading(true);disable();$('folder-remove').disabled=true;
     try{
       const r=await api('/api/notes',{action:'folderDelete',folder,deleteNotes});
       if(selected?.folder===folder)fill(null);
@@ -143,23 +195,23 @@
     if(dirty){message('Lưu hoặc bỏ thay đổi đang nhập trước khi xóa nhiều Note.');return;}
     const ids=[...selectedIds];
     if(!confirm('Xóa vĩnh viễn '+ids.length+' Note đã chọn?'))return;
-    busy=true;loading(true);disable();updateMultiActions();let deleted=0;
+    beginMutation();busy=true;loading(true);disable();updateMultiActions();let deleted=0;
     try{
-      for(const id of ids){await api('/api/notes',{action:'delete',id});deleted++;selectedIds.delete(id);list=list.filter(n=>n.id!==id);if(selected?.id===id){fill(null);$('note-resume').hidden=true;workspace.classList.remove('notes-editing');}}
+      for(const id of ids){await api('/api/notes',{action:'delete',id});deleted++;contentCache.delete(id);selectedIds.delete(id);list=list.filter(n=>n.id!==id);if(selected?.id===id){fill(null);$('note-resume').hidden=true;workspace.classList.remove('notes-editing');}}
       message('Đã xóa '+deleted+' Note.');
     }catch(e){message('Đã xóa '+deleted+'/'+ids.length+' Note; thao tác dừng do lỗi: '+e.message+'. Kiểm tra danh sách trước khi thử lại.');}
     finally{storePreview();try{await refresh();}catch(e){message('Không tải lại được danh sách: '+e.message);}busy=false;loading(false);disable();renderFolders();renderList();}
   });
   $('note-save').addEventListener('click', save);
-  $('note-new').addEventListener('click', () => {if (busy || dirty && !confirm('Bỏ nội dung chưa lưu để tạo note mới?')) return; ++loadCounter; fill(null); showEditor(); $('note-title').focus();});
+  $('note-new').addEventListener('click', () => {if (busy || dirty && !confirm('Bỏ nội dung chưa lưu để tạo note mới?')) return; ++loadCounter; loading(false);fill(null); showEditor(); $('note-title').focus();});
   $('note-delete').addEventListener('click', async () => {
-    if (!selected || busy || !confirm('Xóa note “' + selected.title + '”?')) return; busy = true; loading(true); disable();
+    if (!selected || busy || !confirm('Xóa note “' + selected.title + '”?')) return; beginMutation();busy = true; loading(true); disable();
     try {
       const id = selected.id;
       await api('/api/notes', {action: 'delete', id});
-      list = list.filter(n => n.id !== id); storePreview(); fill(null); $('note-resume').hidden=true; workspace.classList.remove('notes-editing'); renderFolders(); renderList(); message('Đã xóa note.');
+      contentCache.delete(id);list = list.filter(n => n.id !== id); storePreview(); fill(null); $('note-resume').hidden=true; workspace.classList.remove('notes-editing'); renderFolders(); renderList(); message('Đã xóa note.');
 
-    } catch(e) {message(e.message + ' Mã hỗ trợ: ' + (e.reference || 'N4-khong-co-phan-hoi') + '.');} finally {busy = false; disable();}
+    } catch(e) {message(e.message + ' Mã hỗ trợ: ' + (e.reference || 'N4-khong-co-phan-hoi') + '.');} finally {busy = false; loading(false); disable();}
   });
   $('note-copy').addEventListener('click', async () => { try {await navigator.clipboard.writeText([$('note-text').value, ...(checklist?.value() || []).map(x => (x.checked ? '[x] ' : '[ ] ') + x.text)].filter(Boolean).join('\n')); message('Đã copy toàn bộ nội dung.');} catch { $('note-text').focus(); $('note-text').select(); message('Đã chọn toàn bộ — nhấn Ctrl+C hoặc chọn Sao chép.'); } });
   $('note-search').addEventListener('input', renderList);
@@ -174,12 +226,19 @@
       loading(true);refresh().catch(e=>message(e.message)).finally(()=>loading(false));
     } else {
       $('note-resume').hidden=true;workspace.classList.remove('notes-editing');closeFolders();
+      ++cacheEpoch;contentCache.clear();pendingDetails.clear();
       ++refreshSequence;++loadCounter;list=[];listLoaded=false;cachedPreview=false;multiSelect=false;selectedIds.clear();updateMultiActions();
       $('note-list').replaceChildren();
       wasExpired=!!e.detail.expired;
       if(!e.detail.expired){selected=null;dirty=false;$('note-title').value='';$('note-text').value='';checklist?.load([]);$('note-history').replaceChildren();erasePreview();}
     }
   });
+
+  function resumeSync(){
+    if(window.PortalAccount.state.authenticated&&!busy&&Date.now()-lastSync>10000)refresh().catch(e=>message(e.message));
+  }
+  window.addEventListener('focus',resumeSync);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')resumeSync();});
 
   const shareMessage=s=>{$('note-share-message').textContent=s;};
   const shareStatus=link=>link.revoked?'Đã ngừng chia sẻ · Link cũ không còn dùng được':'Đang chia sẻ · Không hết hạn';
