@@ -26,4 +26,13 @@ No NAS service, configuration, tunnel or storage was changed. No private Note co
 
 ### Production ETag follow-up
 
-The first v2 deployment returned a retryable list error in live smoke verification because raw equality between management-list ETags and HTTP response ETags rejected differing representations. The follow-up normalizes HTTP quoting for content comparisons (actual conditional writes continue using the original server ETag). If representations still cannot be matched while the metadata listing is stable, it serves freshly read source summaries without publishing a cache. This preserves availability without trusting an unverified index. Aggregate cache mode, source-read count and server duration are logged without IDs, paths, ETags or Note content. Two additional regression tests cover quoted and incompatible representations.
+The first v2 deployment returned a retryable list error in live smoke verification because raw equality between management-list ETags and HTTP response ETags rejected differing representations. The follow-up normalizes HTTP quoting for content comparisons (conditional writes use the canonical management token, as corrected below). If representations still cannot be matched while the metadata listing is stable, it serves freshly read source summaries without publishing a cache. This preserves availability without trusting an unverified index. Aggregate cache mode, source-read count and server duration are logged without IDs, paths, ETags or Note content. Two additional regression tests cover quoted and incompatible representations.
+
+
+### Save incident N4-905fcf86
+
+The request passed owner revision validation but Blob rejected the conditional write (`stage=persist`, 409). A separate synthetic Note could be created and edited, but reopening a long Note and updating it reproduced the same rejection. The HTTP read path and Blob management write path can represent one content ETag differently, including HTTP quoting/weak prefixes after compression.
+
+The storage adapter now canonicalizes the token for management `ifMatch`, and owner/shared/workspace revision comparisons use that same content identity. HTTP conditional reads keep their HTTP representation. Real changes still fail revision checks or atomic Blob preconditions. No unconditional overwrite or automatic replacement of a draft is introduced. Existing editor pages can retry Save without reloading after the server fix.
+
+A regression test uses the real SDK with isolated HTTP mocks: reopen with `W/"token"`, save with the canonical management token, save again using the management response revision, then reject a truly stale client. The live smoke flow uses only a disposable synthetic Note; existing user Notes are not edited.

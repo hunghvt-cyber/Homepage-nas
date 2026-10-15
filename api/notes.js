@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { owner, sameOrigin, body, reply, fail, HttpError } from '../lib/security.js';
 import { read, paths, write } from '../lib/storage.js';
 import { validId, noteInput } from '../lib/validation.js';
+import {sameEtag} from '../lib/etag.js';
 import {notesList, listResponse} from '../lib/notes-list.js';
 export function createNotesHandler(deps = {}) {
  const {authorize = owner, load = read, enumerate = paths, saveOnly = false,
@@ -75,7 +76,7 @@ export function createNotesHandler(deps = {}) {
       report(200); return reply(res, 200, {deleted: true});
     }
     if (current?.value.deleted) throw new HttpError(409, 'Note đã bị xóa trên thiết bị khác.');
-    if (current && (typeof b.revision !== 'string' || b.revision !== current.etag)) throw new HttpError(409, 'Note đã thay đổi trên thiết bị khác. Bản đang nhập vẫn được giữ; tải lại bản mới trước khi lưu.');
+    if (current && (typeof b.revision !== 'string' || !sameEtag(b.revision, current.etag))) throw new HttpError(409, 'Note đã thay đổi trên thiết bị khác. Bản đang nhập vẫn được giữ; tải lại bản mới trước khi lưu.');
     const input = noteInput({...b, checklist:b.checklist ?? current?.value.checklist ?? []});
     const history = current ? [{title: current.value.title, text: current.value.text, checklist:current.value.checklist || [], folder: current.value.folder || '', updatedAt: current.value.updatedAt}, ...(current.value.history || [])].slice(0,5) : [];
     const value = {id, ...input, updatedAt: new Date().toISOString(), history};
