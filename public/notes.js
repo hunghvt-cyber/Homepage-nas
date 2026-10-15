@@ -3,7 +3,7 @@
   const api = (...args) => window.PortalAccount.api(...args);
   let activeFolder = '', list = [], selected = null, dirty = false, busy = false, loadCounter = 0;
   let listLoaded = false, cachedPreview = false, refreshSequence = 0, wasExpired = false;
-  let multiSelect = false;
+  let multiSelect = false, contentUndo = null;
   const selectedIds = new Set();
   const visibleNotes = () => list.filter(n => (!activeFolder || n.folder === activeFolder) && [n.title,n.text,n.folder].some(v => String(v||'').toLocaleLowerCase().includes($('note-search').value.toLocaleLowerCase())));
   function updateMultiActions(){
@@ -85,7 +85,7 @@
     $('note-new').focus();
   });
   const message = value => {$('note-message').textContent = value; $('notes-status').textContent = value;};
-  const disable = () => { checklist?.disabled(!window.PortalAccount.state.authenticated); for (const id of ['note-save','note-delete','note-new','note-title','note-text','note-pinned','note-history']) $(id).disabled = (!['note-title','note-text','note-pinned','note-folder'].includes(id) && busy) || !window.PortalAccount.state.authenticated; };
+  const disable = () => { checklist?.disabled(!window.PortalAccount.state.authenticated); for (const id of ['note-save','note-clear','note-undo','note-delete','note-new','note-title','note-text','note-pinned','note-history']) $(id).disabled = (!['note-title','note-text','note-pinned','note-folder'].includes(id) && busy) || !window.PortalAccount.state.authenticated; $('note-undo').disabled ||= !contentUndo; };
   const folders=()=>[...new Set(list.map(n=>n.folder||'').filter(Boolean))].sort((a,b)=>a.localeCompare(b,'vi'));
   function renderFolders(){
     const el=$('note-folders');el.replaceChildren();
@@ -133,7 +133,9 @@
     void preload(seq);
   }
   function beginMutation(){++refreshSequence;++loadCounter;++cacheEpoch;pendingDetails.clear();}
-  function fill(n) {
+  function fill(n, preserveUndo = false) {
+    if (!preserveUndo) contentUndo = null;
+    disable();
     selected = n; checklist?.load(n?.checklist || []); $('note-title').value = n?.title || ''; $('note-text').value = n?.text || ''; $('note-pinned').checked = n?.pinned || false; chooseFolder(n?.folder || ''); dirty = false;
     renderList();
     $('note-history').replaceChildren(new Option('Lịch sử sửa', ''));
@@ -162,7 +164,7 @@
       const r = await api('/api/notes-save', {action: 'save', id: selected?.id, revision: selected?.revision, ...snapshot});
       if (!window.PortalAccount.state.authenticated) return;
       ++loadCounter;remember(r);
-      if (snapshot.title === $('note-title').value && snapshot.text === $('note-text').value && snapshot.pinned === $('note-pinned').checked && snapshot.folder === folderValue() && JSON.stringify(snapshot.checklist || []) === JSON.stringify(checklist?.value() || [])) fill(r); else {selected = r; dirty = true;}
+      if (snapshot.title === $('note-title').value && snapshot.text === $('note-text').value && snapshot.pinned === $('note-pinned').checked && snapshot.folder === folderValue() && JSON.stringify(snapshot.checklist || []) === JSON.stringify(checklist?.value() || [])) fill(r, true); else {selected = r; dirty = true;}
       message(dirty ? 'Đã lưu bản trước; bấm Lưu để lưu thay đổi mới.' : 'Đã lưu.');
       list = [{...r, text:[r.text, ...(r.checklist || []).map(x => (x.checked ? '☑ ' : '☐ ') + x.text)].filter(Boolean).join('\n')}, ...list.filter(n=>n.id!==r.id)]; list.sort((a,b)=>Number(b.pinned)-Number(a.pinned)||b.updatedAt.localeCompare(a.updatedAt)); storePreview(); renderFolders(); renderList();
     } catch(e) {message(e.message + (e.status===409 ? ' Hãy sao chép bản nháp trước khi mở lại Note để đối chiếu.' : ' Nội dung đang nhập vẫn được giữ. Bấm Lưu để thử lại.') + ' Mã hỗ trợ: ' + (e.reference || 'N4-khong-co-phan-hoi') + '.');} finally {busy = false; loading(false); disable();}
@@ -213,6 +215,22 @@
 
     } catch(e) {message(e.message + ' Mã hỗ trợ: ' + (e.reference || 'N4-khong-co-phan-hoi') + '.');} finally {busy = false; loading(false); disable();}
   });
+  $('note-clear').addEventListener('click', () => {
+    if (busy || !window.PortalAccount.state.authenticated) return;
+    const items = checklist?.value() || [];
+    if (!$('note-text').value && !items.length) return;
+    contentUndo = {text:$('note-text').value, checklist:items};
+    $('note-text').value = ''; checklist?.load([]); change(); disable();
+    message('Đã xóa nội dung đang soạn — chưa lưu. Bấm Hoàn tác để khôi phục.');
+    $('note-text').focus();
+  });
+  $('note-undo').addEventListener('click', () => {
+    if (busy || !contentUndo || !window.PortalAccount.state.authenticated) return;
+    $('note-text').value = contentUndo.text; checklist?.load(contentUndo.checklist);
+    contentUndo = null; change(); disable();
+    message('Đã hoàn tác xóa nội dung — bấm Lưu để lưu thay đổi.');
+    $('note-text').focus();
+  });
   $('note-copy').addEventListener('click', async () => { try {await navigator.clipboard.writeText([$('note-text').value, ...(checklist?.value() || []).map(x => (x.checked ? '[x] ' : '[ ] ') + x.text)].filter(Boolean).join('\n')); message('Đã copy toàn bộ nội dung.');} catch { $('note-text').focus(); $('note-text').select(); message('Đã chọn toàn bộ — nhấn Ctrl+C hoặc chọn Sao chép.'); } });
   $('note-search').addEventListener('input', renderList);
   $('note-history').addEventListener('change', () => {const h = selected?.history?.[Number($('note-history').value)]; if ($('note-history').value === '' || !h) return; if (dirty && !confirm('Thay nội dung đang nhập bằng bản lịch sử?')) return; $('note-title').value = h.title; $('note-text').value = h.text; checklist?.load(h.checklist || []); chooseFolder(h.folder || ''); change();});
@@ -225,6 +243,7 @@
       if(!dirty && !selected){$('note-title').value='';$('note-text').value='';}
       loading(true);refresh().catch(e=>message(e.message)).finally(()=>loading(false));
     } else {
+      contentUndo=null;disable();
       $('note-resume').hidden=true;workspace.classList.remove('notes-editing');closeFolders();
       ++cacheEpoch;contentCache.clear();pendingDetails.clear();
       ++refreshSequence;++loadCounter;list=[];listLoaded=false;cachedPreview=false;multiSelect=false;selectedIds.clear();updateMultiActions();
