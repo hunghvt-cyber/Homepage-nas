@@ -1,7 +1,13 @@
 import { randomUUID } from 'node:crypto';
 import { owner, sameOrigin, body, reply, fail, HttpError } from '../lib/security.js';
-import { read, paths, overwriteNote } from '../lib/storage.js';
+import { read, paths, overwriteNote, listMetadata, write } from '../lib/storage.js';
 import { validId, noteInput } from '../lib/validation.js';
+const INDEX_PATH = 'indexes/notes-list-v1.json';
+const signature = entries => JSON.stringify(entries.map(e => [e.pathname, String(e.uploadedAt), e.size]).sort((a,b)=>a[0].localeCompare(b[0])));
+const summarize = value => {
+ const {id, title, text = '', pinned, updatedAt, folder = '', checklist = []} = value;
+ return {id, title, text:[text,...checklist.map(x => (x.checked ? '☑ ' : '☐ ') + x.text)].filter(Boolean).join('\n'), pinned, updatedAt, folder};
+};
 export function createNotesHandler(deps = {}) {
  const {authorize = owner, load = read, enumerate = paths, saveOnly = false,
    observe = event => console.info('notes', JSON.stringify(event))} = deps;
@@ -22,10 +28,29 @@ export function createNotesHandler(deps = {}) {
     if (req.method === 'GET') {
       stage = 'read';
       if (req.query.id) { const r = await load('notes/' + validId(req.query.id) + '.json'); if (!r || r.value.deleted) throw new HttpError(404, 'Không tìm thấy note.'); return reply(res, 200, {...r.value, revision: r.etag}); }
-      const names = await enumerate('notes/'); const notes = [];
-      // Read in bounded groups of 15: reduce sequential round trips while bounding concurrency.
-      for (let i = 0; i < names.length; i += 15) { const rows = await Promise.all(names.slice(i, i + 15).map(load)); for (const r of rows) if (r && !r.value.deleted) { const {id, title, text = '', pinned, updatedAt, folder = '', checklist = []} = r.value; notes.push({id, title, text: [text, ...checklist.map(x => (x.checked ? '☑ ' : '☐ ') + x.text)].filter(Boolean).join('\n'), pinned, updatedAt, folder}); } }
-      notes.sort((a,b) => Number(b.pinned) - Number(a.pinned) || b.updatedAt.localeCompare(a.updatedAt)); return reply(res, 200, {notes});
+      // Validate the private index against the authoritative Blob listing on EVERY read.
+      // Missing, stale or malformed indexes fall back to the original note reads.
+      const metadata = deps.listMetadata || (deps.enumerate ? async prefix => (await enumerate(prefix)).map(pathname => ({pathname, uploadedAt:'test', size:0})) : listMetadata);
+      const entries = await metadata('notes/');
+      const stamp = signature(entries);
+      let index;
+      try { index = await (deps.loadIndex || (deps.enumerate ? async () => null : read))(INDEX_PATH); } catch { /* fallback */ }
+      if (index?.value?.version === 1 && index.value.stamp === stamp && Array.isArray(index.value.notes) && index.value.notes.every(n => n && typeof n.id === 'string' && typeof n.title === 'string' && typeof n.text === 'string' && typeof n.updatedAt === 'string' && typeof n.folder === 'string')) {
+        return reply(res, 200, {notes:index.value.notes});
+      }
+      const names = entries.map(e => e.pathname), notes = [];
+      for (let i = 0; i < names.length; i += 15) {
+        const rows = await Promise.all(names.slice(i, i + 15).map(load));
+        for (const r of rows) if (r && !r.value.deleted) notes.push(summarize(r.value));
+      }
+      notes.sort((a,b) => Number(b.pinned) - Number(a.pinned) || b.updatedAt.localeCompare(a.updatedAt));
+      // Recheck after rebuilding: do not publish a list assembled across mutations.
+      const after = await metadata('notes/');
+      if (signature(after) !== stamp) return reply(res, 200, {notes});
+      // CAS prevents an older builder from replacing an index published after its read.
+      // A missing index is create-only. Failure leaves source Notes untouched.
+      try { await (deps.saveIndex || (deps.enumerate ? async () => {} : write))(INDEX_PATH, {version:1, stamp, notes}, index?.etag); } catch { /* disposable cache */ }
+      return reply(res, 200, {notes});
     }
     if (req.method !== 'POST') throw new HttpError(405, 'Phương thức không hỗ trợ.');
     stage = 'validate'; sameOrigin(req); const b = body(req);
