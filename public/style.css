@@ -116,3 +116,10 @@ body:has(#notes-workspace) #note-text{width:100%;min-height:45dvh;overflow-x:hid
   #note-editor .editor-actions{position:sticky;bottom:0;padding:8px 0;background:white;z-index:1}
 }
 
+
+/* Keep the composer collapsed until New Note, a note card or Resume is opened. */
+body:has(#notes-workspace) #note-editor{display:none}
+body:has(#notes-workspace) .notes-editing #note-editor{display:block}
+body:has(#notes-workspace) .notes-editing #note-back{display:inline-block}
+body:has(#notes-workspace) #note-resume:not([hidden]){display:inline-block}
+.note-select-checkbox{font-size:1.25rem;line-height:1;align-self:flex-end}
