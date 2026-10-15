@@ -42,3 +42,13 @@ test('missing metadata ETags bypass cached summaries and read authoritative bodi
  const deps={listMetadata:async()=>[{pathname:'notes/a.json',uploadedAt:'same time',size:120}],loadIndex:async()=>index,load:async()=>{reads++;return row('a',version,{text:version});},saveIndex:async(_p,value)=>{index={value,etag:'index'};}};
  assert.equal((await notesList(deps))[0].text,'v1');version='v2';assert.equal((await notesList(deps))[0].text,'v2');assert.equal(reads,2);
 });
+test('management and HTTP ETag quote differences still permit a verified cache',async()=>{
+ let index=null,reads=0;
+ const deps={listMetadata:async()=>[entry('a','abc')],loadIndex:async()=>index,load:async()=>{reads++;return row('a','"abc"');},saveIndex:async(_p,value)=>{index={value,etag:'index'};}};
+ assert.equal((await notesList(deps))[0].revision,'"abc"');assert.equal((await notesList(deps))[0].revision,'"abc"');assert.equal(reads,1);
+});
+test('incompatible provider ETags serve fresh bodies without publishing a cache',async()=>{
+ let writes=0,reads=0;
+ const result=await notesList({listMetadata:async()=>[entry('a','management-tag')],loadIndex:async()=>null,load:async()=>{reads++;return row('a','http-tag');},saveIndex:async()=>{writes++;}});
+ assert.equal(result[0].revision,'http-tag');assert.equal(writes,0);assert.equal(reads,1);
+});
