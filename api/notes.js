@@ -43,7 +43,7 @@ export function createNotesHandler(deps = {}) {
         for (const r of rows) if (r && !r.value.deleted) notes.push(summarize(r.value));
       }
       notes.sort((a,b) => Number(b.pinned) - Number(a.pinned) || b.updatedAt.localeCompare(a.updatedAt));
-      // Index is only an acceleration layer. A failed write never affects Notes.
+      // A concurrent write during rebuilding must never publish an inconsistent index.\n      const after = await (deps.listMetadata || listMetadata)('notes/');\n      if (signature(after) !== stamp) return reply(res, 200, {notes});\n      // Index is only an acceleration layer. A failed write never affects Notes.
       // Concurrent updates are detected by the listing signature on the next read.
       try { await (deps.saveIndex || write)(INDEX_PATH, {version:1, stamp, notes}, undefined, {overwrite:true}); } catch { /* fallback remains safe */ }
       return reply(res, 200, {notes});
