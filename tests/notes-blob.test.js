@@ -49,3 +49,20 @@ test('detail revalidation sends If-None-Match and a 304 skips the content body',
   assert.deepEqual(await read(path,'same-etag'),{notModified:true,etag:'same-etag'});agent.assertNoPendingInterceptors();
  }finally{setGlobalDispatcher(previous);await agent.close();}
 });
+test('real SDK roundtrip after reopening compressed content uses canonical CAS tokens and rejects a truly stale writer',async()=>{
+ const previous=getGlobalDispatcher(),agent=new MockAgent();agent.disableNetConnect();setGlobalDispatcher(agent);
+ let current={id,title:'Long note',text:'original long text',history:[],updatedAt:'2026-10-15T00:00:00Z'},version='original',writes=0;
+ try{
+  agent.get('https://teststore.private.blob.vercel-storage.com').intercept({path:'/'+path+'?cache=0',method:'GET'}).reply(()=>({statusCode:200,data:JSON.stringify(current),responseOptions:{headers:{etag:'W/"'+version+'"','content-type':'application/json'}}})).times(3);
+  agent.get('https://vercel.com').intercept({path:'/api/blob/?pathname='+encodeURIComponent(path),method:'PUT'}).reply(200,options=>{
+   const h=new Headers(options.headers);assert.equal(h.get('x-if-match'),version);assert.equal(h.get('x-allow-overwrite'),'1');
+   current=JSON.parse(options.body);version='saved-'+(++writes);
+   return {url:'https://teststore.private.blob.vercel-storage.com/'+path,pathname:path,etag:version,contentType:'application/json'};
+  }).times(2);
+  const handler=createNotesHandler({authorize:async()=>{},observe:()=>{}});
+  const first=await request(handler,{action:'save',id,revision:'W/"original"',title:'Long note',text:'first update'});assert.equal(first.code,200,JSON.stringify(first.value));
+  const next=await request(handler,{action:'save',id,revision:first.value.revision,title:'Long note',text:'second update'});assert.equal(next.code,200,JSON.stringify(next.value));
+  const stale=await request(handler,{action:'save',id,revision:'W/"original"',title:'Stale',text:'must not overwrite'});assert.equal(stale.code,409);
+  assert.equal(writes,2);assert.equal(current.text,'second update');assert.equal(current.history[0].text,'first update');agent.assertNoPendingInterceptors();
+ }finally{setGlobalDispatcher(previous);await agent.close();}
+});

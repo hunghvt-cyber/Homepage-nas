@@ -2,6 +2,7 @@ import {randomUUID} from 'node:crypto';
 import {read,write,paths} from '../lib/storage.js';
 import {sameOrigin,body,reply,fail,HttpError} from '../lib/security.js';
 import {validId,noteInput} from '../lib/validation.js';
+import {sameEtag} from '../lib/etag.js';
 import {capability} from '../lib/note-sharing.js';
 export function createWorkspace(deps={}){
  const load=deps.load||read,persist=deps.persist||write,enumerate=deps.enumerate||paths;
@@ -24,7 +25,7 @@ export function createWorkspace(deps={}){
    if(id&&(!current||current.value.deleted||current.value.folder!==folder))throw new HttpError(404,'Note không thuộc workspace.');
    if(req.method==='GET')return reply(res,200,{id,title:current.value.title,text:current.value.text,checklist:current.value.checklist||[],revision:current.etag,updatedAt:current.value.updatedAt});
    if(b.action!=='save')throw new HttpError(400,'Thao tác không hợp lệ.');
-   if(id&&b.revision!==current.etag)throw new HttpError(409,'Note đã được sửa. Tải lại trước khi lưu.');
+   if(id&&!sameEtag(b.revision,current.etag))throw new HttpError(409,'Note đã được sửa. Tải lại trước khi lưu.');
    const input=noteInput({title:b.title,text:b.text,checklist:b.checklist??current?.value.checklist??[],pinned:current?.value.pinned||false,folder});
    const history=current?[{title:current.value.title,text:current.value.text,checklist:current.value.checklist||[],folder,updatedAt:current.value.updatedAt},...(current.value.history||[])].slice(0,5):[];
    const newId=id||randomUUID(),updated={...(current?.value||{}),id:newId,...input,updatedAt:new Date().toISOString(),history};

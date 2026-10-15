@@ -2,6 +2,7 @@ import { createHash, timingSafeEqual } from 'node:crypto';
 import { read, write } from '../lib/storage.js';
 import { sameOrigin, body, reply, fail, HttpError } from '../lib/security.js';
 import { noteInput } from '../lib/validation.js';
+import {sameEtag} from '../lib/etag.js';
 const digest=s=>createHash('sha256').update(s).digest('hex');
 export function createPublicShare(deps={}){
  const load=deps.load||read,persist=deps.persist||write;
@@ -18,7 +19,7 @@ export function createPublicShare(deps={}){
    const path='notes/'+share.value.noteId+'.json',note=await load(path);
    if(!note||note.value.deleted)throw new HttpError(404,'Note không còn tồn tại.');
    if(req.method==='GET')return reply(res,200,{title:note.value.title,text:note.value.text,checklist:note.value.checklist||[],revision:note.etag,updatedAt:note.value.updatedAt});
-   if(typeof b.revision!=='string'||b.revision!==note.etag)throw new HttpError(409,'Note đã thay đổi. Hãy tải lại trước khi lưu.');
+   if(typeof b.revision!=='string'||!sameEtag(b.revision,note.etag))throw new HttpError(409,'Note đã thay đổi. Hãy tải lại trước khi lưu.');
    const input=noteInput({title:b.title,text:b.text,checklist:b.checklist??note.value.checklist??[],pinned:note.value.pinned,folder:note.value.folder||''});
    const history=[{title:note.value.title,text:note.value.text,checklist:note.value.checklist||[],folder:note.value.folder||'',updatedAt:note.value.updatedAt},...(note.value.history||[])].slice(0,5);
    const updated={...note.value,title:input.title,text:input.text,checklist:input.checklist,updatedAt:new Date().toISOString(),history};
