@@ -3,6 +3,17 @@
   const api = (...args) => window.PortalAccount.api(...args);
   let activeFolder = '', list = [], selected = null, dirty = false, busy = false, loadCounter = 0;
   let listLoaded = false, cachedPreview = false, refreshSequence = 0, wasExpired = false;
+  let multiSelect = false;
+  const selectedIds = new Set();
+  const visibleNotes = () => list.filter(n => (!activeFolder || n.folder === activeFolder) && [n.title,n.text,n.folder].some(v => String(v||'').toLocaleLowerCase().includes($('note-search').value.toLocaleLowerCase())));
+  function updateMultiActions(){
+    $('note-select').textContent = multiSelect ? 'Hủy chọn' : 'Chọn';
+    $('note-select').setAttribute('aria-pressed', String(multiSelect));
+    $('note-select-all').hidden = !multiSelect;
+    $('note-delete-selected').hidden = !multiSelect;
+    $('note-delete-selected').textContent = 'Xóa (' + selectedIds.size + ')';
+    $('note-delete-selected').disabled = busy || !selectedIds.size;
+  }
   const CACHE_KEY='homepage-notes-preview-v1';
   function storePreview(){
     try{localStorage.setItem(CACHE_KEY,JSON.stringify({savedAt:Date.now(),notes:list.map(n=>({id:n.id,title:String(n.title||'').slice(0,200),text:String(n.text||'').slice(0,180),folder:String(n.folder||'').slice(0,80),pinned:!!n.pinned,updatedAt:n.updatedAt}))}));}catch{}
@@ -65,10 +76,11 @@
     else{$('note-folder-existing').value=name||'';$('note-folder').value='';$('note-folder').hidden=true;}
   }
   function renderList() {
-    const q = $('note-search').value.toLocaleLowerCase(); $('note-list').replaceChildren();
+    $('note-list').replaceChildren();
+    updateMultiActions();
     $('notes-list-heading').textContent = activeFolder || 'Tất cả ghi chú';
-    for (const n of list.filter(n => (!activeFolder || n.folder === activeFolder) && [n.title,n.text,n.folder].some(value => String(value||'').toLocaleLowerCase().includes(q)))) {
-      const button = document.createElement('button'); button.type = 'button'; button.className = 'note-card'; button.setAttribute('aria-pressed', String(selected?.id === n.id)); const heading = document.createElement('strong'); heading.className='note-card-title'; heading.textContent=(n.pinned ? '📌 ' : '') + (n.title || 'Không tiêu đề'); const preview=document.createElement('span'); preview.className='note-card-preview'; preview.textContent=n.text || ''; button.append(heading,preview); button.addEventListener('click', () => open(n.id)); $('note-list').append(button);
+    for (const n of visibleNotes()) {
+      const button = document.createElement('button'); button.type = 'button'; button.className = 'note-card'; button.setAttribute('aria-pressed', String(selected?.id === n.id)); const heading = document.createElement('strong'); heading.className='note-card-title'; heading.textContent=(n.pinned ? '📌 ' : '') + (n.title || 'Không tiêu đề'); const preview=document.createElement('span'); preview.className='note-card-preview'; preview.textContent=n.text || ''; if(multiSelect){const check=document.createElement('input');check.type='checkbox';check.className='note-select-checkbox';check.checked=selectedIds.has(n.id);check.tabIndex=-1;check.setAttribute('aria-label','Chọn '+(n.title||'Không tiêu đề'));button.append(check);button.setAttribute('aria-pressed',String(check.checked));} button.append(heading,preview); button.addEventListener('click', () => {if(multiSelect){if(selectedIds.has(n.id))selectedIds.delete(n.id);else selectedIds.add(n.id);renderList();}else open(n.id);}); $('note-list').append(button);
     }
     if (!list.length) $('note-list').textContent = 'Chưa có note. Bấm “Note mới” để bắt đầu.';
     if(cachedPreview)message('Đang hiển thị bản xem trước trên thiết bị; đang cập nhật từ máy chủ.');
@@ -76,7 +88,7 @@
   async function refresh() {
     const seq=++refreshSequence,r=await api('/api/notes');
     if(seq!==refreshSequence)return;
-    list=r.notes;listLoaded=true;cachedPreview=false;storePreview();renderFolders();renderList();
+    list=r.notes;selectedIds.forEach(id=>{if(!list.some(n=>n.id===id))selectedIds.delete(id);});listLoaded=true;cachedPreview=false;storePreview();renderFolders();renderList();
   }
   function fill(n) {
     selected = n; checklist?.load(n?.checklist || []); $('note-title').value = n?.title || ''; $('note-text').value = n?.text || ''; $('note-pinned').checked = n?.pinned || false; chooseFolder(n?.folder || ''); dirty = false;
@@ -124,6 +136,20 @@
     }catch(e){message('Thao tác thư mục chưa hoàn tất: '+e.message+'. Có thể đã xử lý một phần; kiểm tra danh sách trước khi thử lại.');try{await refresh();}catch{}}
     finally{busy=false;loading(false);disable();$('folder-remove').disabled=!$('folder-manage-select').value;}
   });
+  $('note-select').addEventListener('click',()=>{if(busy)return;multiSelect=!multiSelect;selectedIds.clear();renderList();});
+  $('note-select-all').addEventListener('click',()=>{const ids=visibleNotes().map(n=>n.id);const all=ids.every(id=>selectedIds.has(id));ids.forEach(id=>all?selectedIds.delete(id):selectedIds.add(id));renderList();});
+  $('note-delete-selected').addEventListener('click',async()=>{
+    if(busy||!selectedIds.size||!window.PortalAccount.state.authenticated)return;
+    if(dirty){message('Lưu hoặc bỏ thay đổi đang nhập trước khi xóa nhiều Note.');return;}
+    const ids=[...selectedIds];
+    if(!confirm('Xóa vĩnh viễn '+ids.length+' Note đã chọn?'))return;
+    busy=true;loading(true);disable();updateMultiActions();let deleted=0;
+    try{
+      for(const id of ids){await api('/api/notes',{action:'delete',id});deleted++;selectedIds.delete(id);list=list.filter(n=>n.id!==id);if(selected?.id===id){fill(null);$('note-resume').hidden=true;workspace.classList.remove('notes-editing');}}
+      message('Đã xóa '+deleted+' Note.');
+    }catch(e){message('Đã xóa '+deleted+'/'+ids.length+' Note; thao tác dừng do lỗi: '+e.message+'. Kiểm tra danh sách trước khi thử lại.');}
+    finally{storePreview();try{await refresh();}catch(e){message('Không tải lại được danh sách: '+e.message);}busy=false;loading(false);disable();renderFolders();renderList();}
+  });
   $('note-save').addEventListener('click', save);
   $('note-new').addEventListener('click', () => {if (busy || dirty && !confirm('Bỏ nội dung chưa lưu để tạo note mới?')) return; ++loadCounter; fill(null); showEditor(); $('note-title').focus();});
   $('note-delete').addEventListener('click', async () => {
@@ -148,7 +174,7 @@
       loading(true);refresh().catch(e=>message(e.message)).finally(()=>loading(false));
     } else {
       $('note-resume').hidden=true;workspace.classList.remove('notes-editing');closeFolders();
-      ++refreshSequence;++loadCounter;list=[];listLoaded=false;cachedPreview=false;
+      ++refreshSequence;++loadCounter;list=[];listLoaded=false;cachedPreview=false;multiSelect=false;selectedIds.clear();updateMultiActions();
       $('note-list').replaceChildren();
       wasExpired=!!e.detail.expired;
       if(!e.detail.expired){selected=null;dirty=false;$('note-title').value='';$('note-text').value='';checklist?.load([]);$('note-history').replaceChildren();erasePreview();}
@@ -247,7 +273,7 @@
     try{await navigator.clipboard.writeText(value);$('folder-share-message').textContent='Đã sao chép link.';}
     catch{$('folder-share-link').select();$('folder-share-message').textContent='Đã chọn link để sao chép.';}
   });
-  disable();
+  disable();updateMultiActions();
 })();
 
 
