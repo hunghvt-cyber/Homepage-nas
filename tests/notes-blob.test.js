@@ -1,53 +1,51 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { MockAgent, setGlobalDispatcher, getGlobalDispatcher } from 'undici';
-import { createNotesHandler } from '../api/notes.js';
-const response=()=>({headers:{},setHeader(k,v){this.headers[k]=v;},status(code){this.code=code;return this;},json(value){this.value=value;return this;}});
-const id='12345678-1234-1234-1234-123456789abc', path='notes/'+id+'.json';
-process.env.PORTAL_BASE_URL='https://homepage-nas.vercel.app';
-// This is a fake test credential. MockAgent blocks every real network request.
+import {MockAgent,setGlobalDispatcher,getGlobalDispatcher} from 'undici';
+import {createNotesHandler} from '../api/notes.js';
+const id='12345678-1234-1234-1234-123456789abc',path='notes/'+id+'.json';
+const headers={origin:'https://homepage-nas.vercel.app','content-type':'application/json'};
+process.env.PORTAL_BASE_URL=headers.origin;
 process.env.PORTAL_PRIVATE_BLOB_TOKEN='vercel_blob_rw_teststore_fake';
-test('real Blob SDK sends unconditional private writes for two stale manual clients',async()=>{
+const response=()=>({headers:{},setHeader(k,v){this.headers[k]=v;},status(n){this.code=n;return this;},json(v){this.value=v;return this;}});
+const request=async(h,b)=>{const r=response();await h({method:'POST',headers,query:{},body:b},r);return r;};
+test('real SDK conditionally saves: stale and missing revisions never write, takeover cannot bypass',async()=>{
  const previous=getGlobalDispatcher(),agent=new MockAgent();agent.disableNetConnect();setGlobalDispatcher(agent);
- let current={etag:'old',value:{id,title:'server',text:'original',history:[],updatedAt:'2026-10-10T00:00:00Z'}}, writes=0;
+ let current={etag:'old',value:{id,title:'server',text:'original',updatedAt:'2026-10-10T00:00:00Z'}},writes=0;
  try{
   agent.get('https://vercel.com').intercept({path:'/api/blob/?pathname='+encodeURIComponent(path),method:'PUT'}).reply(200,options=>{
-   const h=new Headers(options.headers);assert.equal(h.get('x-allow-overwrite'),'1');assert.equal(h.get('x-vercel-blob-access'),'private');assert.equal(h.has('x-if-match'),false);assert.equal(h.has('if-match'),false);assert.equal(h.has('if-none-match'),false);
-   const value=JSON.parse(options.body);current={value,etag:'version-'+(++writes)};
-   return {url:'https://teststore.private.blob.vercel-storage.com/'+path,pathname:path,etag:current.etag,contentType:'application/json'};
-  }).times(2);
-  const h=createNotesHandler({authorize:async()=>{},saveOnly:true,load:async()=>structuredClone(current)});
-  for(const text of ['device A','device B']){const r=response();await h({method:'POST',headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},query:{},body:{action:'save',id,revision:'stale-revision',title:'note',text}},r);assert.equal(r.code,200,JSON.stringify(r.value));assert.equal(r.headers['X-Notes-Writer'],'manual-v4');assert.equal(r.value.text,text);}
-  assert.equal(current.value.history[0].text,'device A');assert.equal(writes,2);agent.assertNoPendingInterceptors();
+   const h=new Headers(options.headers);assert.equal(h.get('x-if-match'),'old');assert.equal(h.get('x-allow-overwrite'),'1');assert.equal(h.get('x-vercel-blob-access'),'private');
+   current={value:JSON.parse(options.body),etag:'new'};writes++;
+   return {url:'https://teststore.private.blob.vercel-storage.com/'+path,pathname:path,etag:'new',contentType:'application/json'};
+  });
+  const h=createNotesHandler({authorize:async()=>{},load:async()=>structuredClone(current),observe:()=>{}});
+  assert.equal((await request(h,{action:'save',id,revision:'old',title:'A',text:'device A'})).code,200);
+  for(const revision of ['old',undefined])assert.equal((await request(h,{action:'save',id,revision,takeover:true,title:'B',text:'device B'})).code,409);
+  assert.equal(current.value.text,'device A');assert.equal(current.value.history[0].text,'original');assert.equal(writes,1);agent.assertNoPendingInterceptors();
  }finally{setGlobalDispatcher(previous);await agent.close();}
 });
-test('Blob rejects an unconditional write: return storage error, never blame another device',async()=>{
+test('atomic SDK precondition failure returns 409 if another device wins between read and write',async()=>{
  const previous=getGlobalDispatcher(),agent=new MockAgent();agent.disableNetConnect();setGlobalDispatcher(agent);
  try{
   agent.get('https://vercel.com').intercept({path:'/api/blob/?pathname='+encodeURIComponent(path),method:'PUT'}).reply(412,{error:{code:'precondition_failed',message:'precondition'}});
-  const h=createNotesHandler({authorize:async()=>{},saveOnly:true,load:async()=>null}),r=response();await h({method:'POST',headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},query:{},body:{action:'save',id,title:'note',text:'keep draft'}},r);assert.equal(r.code,503);assert.match(r.value.error,/NOTE_STORE_REJECTED/);assert.doesNotMatch(r.value.error,/thiết bị khác/);agent.assertNoPendingInterceptors();
+  const h=createNotesHandler({authorize:async()=>{},load:async()=>({etag:'old',value:{id,title:'old',text:'old',updatedAt:'2026-10-10T00:00:00Z'}}),observe:()=>{}});
+  const r=await request(h,{action:'save',id,revision:'old',title:'B',text:'draft'});assert.equal(r.code,409);agent.assertNoPendingInterceptors();
  }finally{setGlobalDispatcher(previous);await agent.close();}
 });
-
-test('stale Delete uses real Blob unconditional writes, preserves the latest copy and retries safely',async()=>{
+test('soft-delete uses CAS on latest server copy, retries without writing and never revives',async()=>{
+ let current={etag:'latest',value:{id,title:'latest',text:'latest server',updatedAt:'2026-10-10T00:00:00Z'}},writes=0;
+ const h=createNotesHandler({authorize:async()=>{},load:async()=>structuredClone(current),enumerate:async()=>[path],persistNote:async(_p,value,etag)=>{assert.equal(etag,'latest');current={value,etag:'deleted'};writes++;return current;},observe:()=>{}});
+ for(let i=0;i<2;i++)assert.equal((await request(h,{action:'delete',id})).code,200);
+ assert.equal(writes,1);assert.equal(current.value.text,'latest server');assert.equal(current.value.deleted,true);
+ assert.equal((await request(h,{action:'save',id,revision:'latest',title:'revive',text:'draft'})).code,409);
+});
+test('detail revalidation sends If-None-Match and a 304 skips the content body',async()=>{
+ const {read}=await import('../lib/storage.js');
  const previous=getGlobalDispatcher(),agent=new MockAgent();agent.disableNetConnect();setGlobalDispatcher(agent);
- const original={id,title:'latest server title',text:'latest server content',pinned:true,history:[{title:'before',text:'older content',updatedAt:'2026-10-09T00:00:00Z'}],updatedAt:'2026-10-10T00:00:00Z'};
- let current={etag:'latest-etag',value:structuredClone(original)},writes=0;
  try{
-  agent.get('https://vercel.com').intercept({path:'/api/blob/?pathname='+encodeURIComponent(path),method:'PUT'}).reply(200,options=>{
-   const h=new Headers(options.headers);assert.equal(h.get('x-allow-overwrite'),'1');assert.equal(h.get('x-vercel-blob-access'),'private');
-   for(const name of ['x-if-match','if-match','if-none-match'])assert.equal(h.has(name),false);
-   current={value:JSON.parse(options.body),etag:'deleted-etag'};writes++;
-   return {url:'https://teststore.private.blob.vercel-storage.com/'+path,pathname:path,etag:current.etag,contentType:'application/json'};
+  agent.get('https://teststore.private.blob.vercel-storage.com').intercept({path:'/'+path+'?cache=0',method:'GET'}).reply(options=>{
+   const h=new Headers(options.headers);assert.equal(h.get('if-none-match'),'same-etag');
+   return {statusCode:304,data:'',responseOptions:{headers:{etag:'same-etag'}}};
   });
-  const h=createNotesHandler({authorize:async()=>{},load:async()=>structuredClone(current),enumerate:async()=>[path],observe:()=>{}});
-  const run=async body=>{const r=response();await h({method:'POST',headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},query:{},body},r);return r;};
-  const deleted=await run({action:'delete',id,revision:'stale-device-etag'});assert.equal(deleted.code,200,JSON.stringify(deleted.value));assert.deepEqual(deleted.value,{deleted:true});
-  assert.equal(current.value.deleted,true);assert.equal(current.value.text,original.text);assert.equal(current.value.title,original.title);assert.deepEqual(current.value.history,original.history);
-  assert.equal((await run({action:'delete',id,revision:'stale-device-etag'})).code,200);assert.equal(writes,1);
-  const detail=response();await h({method:'GET',query:{id}},detail);assert.equal(detail.code,404);
-  const list=response();await h({method:'GET',query:{}},list);assert.deepEqual(list.value,{notes:[]});
-  assert.equal((await run({action:'save',id,revision:'stale-device-etag',title:'old editor',text:'must not revive'})).code,409);assert.equal(writes,1);
-  agent.assertNoPendingInterceptors();
+  assert.deepEqual(await read(path,'same-etag'),{notModified:true,etag:'same-etag'});agent.assertNoPendingInterceptors();
  }finally{setGlobalDispatcher(previous);await agent.close();}
 });

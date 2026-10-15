@@ -20,7 +20,7 @@ test('checklist limits reject malformed records and count Unicode bytes',()=>{
 test('owner save roundtrips checklist, history and older-client saves preserve it',async()=>{
  process.env.PORTAL_BASE_URL=headers.origin;const db=new Map();let version=0;
  const handler=createNotesHandler({authorize:async()=>{},load:async p=>db.get(p),enumerate:async()=>[...db.keys()],persistNote:async(p,value)=>{const row={value,etag:String(++version)};db.set(p,row);return row;},observe:()=>{}});
- const call=async body=>{const r=res();await handler({method:'POST',headers,body:{action:'save',id,title:'N',text:'Text',...body}},r);assert.equal(r.code,200);return r.data;};
+ const call=async body=>{const r=res();await handler({method:'POST',headers,body:{action:'save',id,revision:db.get('notes/'+id+'.json')?.etag,title:'N',text:'Text',...body}},r);assert.equal(r.code,200);return r.data;};
  await call({checklist:[item]});let saved=await call({checklist:[{...item,checked:true}]});assert.equal(saved.checklist[0].checked,true);assert.equal(saved.history[0].checklist[0].checked,false);
  saved=await call({text:'Older client'});assert.equal(saved.checklist[0].checked,true);
  saved=await call({checklist:[]});assert.deepEqual(saved.checklist,[]);
