@@ -7,6 +7,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -17,9 +18,9 @@ jobs:
         with:
           python-version: '3.12'
       - run: npm ci --ignore-scripts
-      - run: npm test
-      - run: node --check public/notes.js && node --check api/notes.js && node --check lib/validation.js
       - run: python -m pip install -r requirements.txt
       - run: python scripts/build.py
+      - run: npm test
+      - run: node --check public/notes.js && node --check api/notes.js && node --check lib/validation.js
       - run: test -f dist/notes/index.html && test -f dist/gemini/index.html
       - run: grep -q 'note-folders' dist/notes/index.html && grep -q 'home-gemini' dist/index.html
