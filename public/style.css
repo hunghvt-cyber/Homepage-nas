@@ -94,7 +94,9 @@ body:has(#notes-workspace) #note-text{width:100%;min-height:45dvh;overflow-x:hid
   #note-editor{grid-column:1/-1}
 }
 @media(min-width:701px) and (max-width:1199px){
-  body:has(#notes-workspace) .notes-layout{grid-template-columns:260px minmax(0,1fr)}
+  body:has(#notes-workspace) .notes-layout{grid-template-columns:minmax(0,1fr)}
+  body:has(#notes-workspace) #note-list{grid-template-columns:repeat(auto-fit,minmax(175px,1fr));max-height:none;overflow:visible}
+  #note-editor{grid-column:1/-1}
   .notes-sidebar{display:none;grid-column:1/-1}
   #note-folders-toggle{display:inline-block}
   .notes-folders-open .notes-sidebar{display:block}
