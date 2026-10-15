@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createNotesHandler} from '../api/notes.js';
-const entry=(name,time='2026-10-15T00:00:00Z')=>({pathname:'notes/'+name+'.json',uploadedAt:time,size:120});
-const note=(id,title)=>({value:{id,title,text:'body '+title,updatedAt:'2026-10-15T00:00:00Z',folder:'',checklist:[]}});
+const entry=(name,time='2026-10-15T00:00:00Z')=>({pathname:'notes/'+name+'.json',uploadedAt:time,size:120,etag:name});
+const note=(id,title)=>({etag:id,value:{id,title,text:'body '+title,updatedAt:'2026-10-15T00:00:00Z',folder:'',checklist:[]}});
 function harness(){
  let entries=[entry('a')], index=null, reads=0, writes=0;
  const values={'notes/a.json':note('a','A')};

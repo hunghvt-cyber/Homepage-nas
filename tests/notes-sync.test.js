@@ -37,3 +37,8 @@ test('two simultaneous owner saves from one revision: exactly one wins',async()=
  const run=async text=>{const r={setHeader(){},status(n){this.code=n;return this;},json(v){this.value=v;}};await handler({method:'POST',headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},body:{action:'save',id,revision:'r1',title:'N',text}},r);return r;};
  const results=await Promise.all([run('A'),run('B')]);assert.deepEqual(results.map(r=>r.code).sort(),[200,409]);assert.equal(writes,1);assert.equal(current.value.history[0].text,'body');
 });
+test('missing metadata ETags bypass cached summaries and read authoritative bodies each time',async()=>{
+ let index=null,version='v1',reads=0;
+ const deps={listMetadata:async()=>[{pathname:'notes/a.json',uploadedAt:'same time',size:120}],loadIndex:async()=>index,load:async()=>{reads++;return row('a',version,{text:version});},saveIndex:async(_p,value)=>{index={value,etag:'index'};}};
+ assert.equal((await notesList(deps))[0].text,'v1');version='v2';assert.equal((await notesList(deps))[0].text,'v2');assert.equal(reads,2);
+});
