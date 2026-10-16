@@ -15,7 +15,9 @@ async function call(op,payload={},token) {
 }
 let error;
 try {
-  assert.equal((await call('list')).notes.length,0,'Refusing nonempty store');
+  const initial=await call('list');
+  assert.equal(initial.notes.length,0,'Refusing nonempty store');
+  assert.equal(initial.revision,'0','Refusing previously used store, including hidden tombstones/shares');
   for(let i=0;i<100;i++)notes.push(await call('save',{id:randomUUID(),title:'SYNTHETIC '+i,text:('Tiếng Việt 日本語 🧡 dòng mới\n').repeat(100),folder:i<50?'Workspace thử':'Folder khác',checklist:[{id:'a',text:'Kiểm tra',checked:false}]}));
   const listed=await call('list');assert.equal(listed.notes.length,100);
   for(let i=0;i<20;i++)await call('list');
