@@ -76,3 +76,7 @@ Nguồn chính thức:
 3. Xác minh backup/recovery và hoạt động PC/iPad/điện thoại; nếu không đạt, đối chiếu D1/Firestore.
 4. Sau khi quyết định kiến trúc chung, viết báo cáo backend/publisher thử riêng và kiểm schema/out-of-order/đồng bộ/cache/quota. Chưa đổi NAS services, backup workflows hoặc production source.
 5. Thiết kế OAuth deployment từ GitHub riêng. Mọi cutover/migration/dọn Blob vẫn cần phê duyệt mới.
+
+### Bổ sung: yêu cầu cấp quyền một lần
+
+Đã viết updater REST và job source-update (mặc định tắt) cùng [hướng dẫn OAuth trên iPad](NOTES-GAS-ONE-TIME-AUTH.md). Thay vì chép Server.gs tiếp, ưu tiên cấu hình OAuth này rồi pipeline tự đồng bộ. Phần trên mô tả trạng thái trước bổ sung; hiện code updater đã có nhưng credential/live deployment vẫn chưa thiết lập. Mọi hứa hẹn tự deploy chỉ có hiệu lực sau rehearsal thành công.

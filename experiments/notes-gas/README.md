@@ -2,6 +2,7 @@
 
 **Trạng thái: thử nghiệm, CHƯA đủ điều kiện chuyển production.** Không migration dữ liệu thật. Không thay hoặc xóa Blob. Mã này không kết nối chi tiêu/Gemini, không dùng NAS.
 
+- [Cấp quyền một lần, tự cập nhật từ GitHub](../../docs/NOTES-GAS-ONE-TIME-AUTH.md)
 - [Quản lý chung Homepage và logging](../../docs/NOTES-GAS-HOMEPAGE-OPERATIONS.md)
 - [Audit, quota và quyết định kiến trúc](../../docs/NOTES-GAS-AUDIT-20261016.md)
 - [Cấp quyền, triển khai thử, backup và rollback](../../docs/NOTES-GAS-RUNBOOK.md)

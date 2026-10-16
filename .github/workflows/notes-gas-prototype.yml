@@ -20,8 +20,8 @@ jobs:
       - run: find experiments/notes-gas -name '*.js' -o -name '*.mjs' | xargs -n1 node --check
 # Simulation needs no secrets. Optional operational probe below is read-only; no deployment or migration.
   operational-probe:
-    if: github.event_name == 'push'
-    needs: simulation
+    if: always() && github.event_name == 'push' && needs.simulation.result == 'success' && (needs.source-update.result == 'success' || needs.source-update.result == 'skipped')
+    needs: [simulation, source-update]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -44,3 +44,37 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 # Probe only runs on the authorized prototype branch push, never on fork pull_request.
+
+  source-update:
+    if: github.event_name == 'push' && vars.NOTES_GAS_AUTODEPLOY == 'true'
+    needs: simulation
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: notes-google-prototype-source
+      cancel-in-progress: false
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Update only pinned Google prototype after tests
+        env:
+          NOTES_GAS_AUTODEPLOY: ${{ vars.NOTES_GAS_AUTODEPLOY }}
+          NOTES_GAS_SCRIPT_ID: ${{ vars.NOTES_GAS_SCRIPT_ID }}
+          NOTES_GAS_DEPLOYMENT_ID: ${{ vars.NOTES_GAS_DEPLOYMENT_ID }}
+          GAS_OAUTH_CLIENT_ID: ${{ secrets.GAS_OAUTH_CLIENT_ID }}
+          GAS_OAUTH_CLIENT_SECRET: ${{ secrets.GAS_OAUTH_CLIENT_SECRET }}
+          GAS_OAUTH_REFRESH_TOKEN: ${{ secrets.GAS_OAUTH_REFRESH_TOKEN }}
+          NOTES_GAS_URL: ${{ secrets.NOTES_GAS_URL }}
+          NOTES_GAS_HMAC_KEY: ${{ secrets.NOTES_GAS_HMAC_KEY }}
+        run: node experiments/notes-gas/scripts/deploy.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: notes-prototype-deployment-metadata
+          path: experiments/notes-gas/deployment-result.local.json
+          if-no-files-found: ignore
+          retention-days: 7

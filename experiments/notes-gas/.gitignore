@@ -5,3 +5,5 @@ benchmark-result.local.json
 *.backup.json
 
 ops-result.local.json
+
+deployment-result.local.json
