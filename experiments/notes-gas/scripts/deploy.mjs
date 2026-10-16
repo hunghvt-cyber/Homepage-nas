@@ -19,12 +19,24 @@ export async function deploy({env,files,fetcher=fetch,verify=async()=>true}) {
   let access;
   try {
     const response=await fetcher('https://oauth2.googleapis.com/token',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({client_id:env.GAS_OAUTH_CLIENT_ID,client_secret:env.GAS_OAUTH_CLIENT_SECRET,refresh_token:env.GAS_OAUTH_REFRESH_TOKEN,grant_type:'refresh_token'}),redirect:'error',signal:AbortSignal.timeout(20000)});
-    if(!response.ok)fail('OAUTH_REFRESH_FAILED');
+    if(!response.ok){
+      let reason;try{reason=(await response.json()).error;}catch{}
+      const code={invalid_grant:'OAUTH_INVALID_GRANT',invalid_client:'OAUTH_INVALID_CLIENT',unauthorized_client:'OAUTH_CLIENT_NOT_AUTHORIZED'}[reason];
+      fail(code||'OAUTH_REFRESH_FAILED');
+    }
     const token=await response.json();if(typeof token.access_token!=='string'||!token.access_token)fail('OAUTH_REFRESH_FAILED');access=token.access_token;
     const base='https://script.googleapis.com/v1/projects/'+id;
     async function api(path,method='GET',value) {
       const r=await fetcher(base+path,{method,headers:{Authorization:'Bearer '+access,...(value?{'Content-Type':'application/json'}:{})},...(value?{body:JSON.stringify(value)}:{}),redirect:'error',signal:AbortSignal.timeout(20000)});
-      if(!r.ok)fail('GOOGLE_API_'+r.status);return r.json();
+      if(!r.ok){
+        let body;try{body=await r.json();}catch{}
+        const error=body?.error;
+        if(/user has not enabled.*Apps Script API|script\.google\.com\/home\/usersettings/i.test(String(error?.message||'')))fail('USER_APPS_SCRIPT_API_DISABLED');
+        const reasons=(Array.isArray(error?.details)?error.details:[]).map(x=>x?.reason);
+        if(reasons.includes('SERVICE_DISABLED'))fail('CLOUD_APPS_SCRIPT_API_DISABLED');
+        if(reasons.includes('ACCESS_TOKEN_SCOPE_INSUFFICIENT'))fail('OAUTH_SCOPES_INSUFFICIENT');
+        fail('GOOGLE_API_'+r.status);
+      }return r.json();
     }
     report.phase='target';const project=await api('');if(project.scriptId!==id||project.title!=='Homepage Notes Prototype')fail('TARGET_MISMATCH');
     const initial=(await api('/content')).files;

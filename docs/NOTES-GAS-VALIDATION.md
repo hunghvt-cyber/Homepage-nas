@@ -10,7 +10,7 @@ Ngày 16/10/2026. Base main: `a09b63b2c520312a70c8e13b645537f62fb7711a`.
 | Python hiện có | `python3 -m unittest discover -s tests -p 'test_*.py'`: 12/12 pass |
 | Syntax và liên kết | Tất cả JS/MJS parse được; HTML nội bộ không có resource hỏng |
 | Build | `python3 scripts/build.py`: 6 guides, QR enabled |
-| Prototype | `node --test experiments/notes-gas/test/*.test.mjs`: 24/24 pass (mô phỏng, gồm logging/health/operations và source/deployment updater) |
+| Prototype | `node --test experiments/notes-gas/test/*.test.mjs`: 26/26 pass (mô phỏng, gồm logging/health/operations và source/deployment updater) |
 | Google triển khai | CHƯA — cần tạo project và consent Google |
 | Benchmark Google thật | CHƯA — không có p50/p95 mạng được xác minh |
 | Vercel Preview end-to-end | CHƯA — adapter hiện là template không deploy |

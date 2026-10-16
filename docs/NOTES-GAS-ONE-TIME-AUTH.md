@@ -81,3 +81,9 @@ Nguồn chính thức:
 - https://developers.google.com/apps-script/guides/clasp
 - https://developers.google.com/oauthplayground/
 - https://developers.google.com/identity/protocols/oauth2#expiration
+
+## Activation after credentials confirmed
+
+The user confirmed three OAuth repository secrets were saved on 16/10/2026 at 14:43 VN. The workflow now pins the exact user-supplied, non-secret Script ID `1vASoUHTYVL1pP4oeAbrh0ueOCdo5cWwpUiwUkTleziWgKRod17Pa68cs` in the reviewed branch configuration and enables prototype source sync on push after simulation. The user no longer needs to manually create SCRIPT_ID/AUTODEPLOY variables to complete this step. Set repository Variable NOTES_GAS_AUTODEPLOY=false to disable future automatic sync. This supersedes the earlier default-disabled setup table for this one authorized prototype.
+
+Deployment ID remains unset until the initial /exec deployment is configured. The first live job only reads target metadata/content, synchronizes known source files and verifies the hash; it does not initialize a store, edit Properties, create a web deployment, migrate Notes, or access production Blob. Runtime secrets remain absent unless explicitly configured separately. API setup failures and expired/wrong OAuth credentials return fixed diagnostic codes without echoing response bodies or token values.

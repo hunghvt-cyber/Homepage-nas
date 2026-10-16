@@ -46,7 +46,7 @@ jobs:
 # Probe only runs on the authorized prototype branch push, never on fork pull_request.
 
   source-update:
-    if: github.event_name == 'push' && vars.NOTES_GAS_AUTODEPLOY == 'true'
+    if: github.event_name == 'push' && vars.NOTES_GAS_AUTODEPLOY != 'false'
     needs: simulation
     runs-on: ubuntu-latest
     permissions:
@@ -62,8 +62,8 @@ jobs:
           node-version: '24'
       - name: Update only pinned Google prototype after tests
         env:
-          NOTES_GAS_AUTODEPLOY: ${{ vars.NOTES_GAS_AUTODEPLOY }}
-          NOTES_GAS_SCRIPT_ID: ${{ vars.NOTES_GAS_SCRIPT_ID }}
+          NOTES_GAS_AUTODEPLOY: 'true'
+          NOTES_GAS_SCRIPT_ID: '1vASoUHTYVL1pP4oeAbrh0ueOCdo5cWwpUiwUkTleziWgKRod17Pa68cs'
           NOTES_GAS_DEPLOYMENT_ID: ${{ vars.NOTES_GAS_DEPLOYMENT_ID }}
           GAS_OAUTH_CLIENT_ID: ${{ secrets.GAS_OAUTH_CLIENT_ID }}
           GAS_OAUTH_CLIENT_SECRET: ${{ secrets.GAS_OAUTH_CLIENT_SECRET }}

@@ -46,3 +46,13 @@ test('source-only update requires no deployment and runtime scope broadening is 
 test('OAuth errors contain no API response or credentials',async()=>{
  await assert.rejects(deploy({env,files,fetcher:async()=>new Response('DO_NOT_LOG_REFRESH_TOKEN',{status:400})}),e=>{assert.equal(e.message,'OAUTH_REFRESH_FAILED');assert.equal(JSON.stringify(e.report).includes('DO_NOT_LOG'),false);return true;});
 });
+
+test('OAuth invalid_grant uses fixed diagnostic code and never logs response secrets',async()=>{
+ await assert.rejects(deploy({env,files,fetcher:async()=>Response.json({error:'invalid_grant',error_description:'DO_NOT_LOG_REFRESH_TOKEN'},{status:400})}),e=>{assert.equal(e.message,'OAUTH_INVALID_GRANT');assert.equal(JSON.stringify(e.report).includes('DO_NOT_LOG'),false);return true;});
+});
+test('Apps Script API setup errors are safely distinguished before source writes',async()=>{
+ for(const [body,code] of [[{error:{message:'User has not enabled the Apps Script API. See script.google.com/home/usersettings'}},'USER_APPS_SCRIPT_API_DISABLED'],[{error:{details:[{reason:'SERVICE_DISABLED'}]}},'CLOUD_APPS_SCRIPT_API_DISABLED'],[{error:{details:[{reason:'ACCESS_TOKEN_SCOPE_INSUFFICIENT'}]}},'OAUTH_SCOPES_INSUFFICIENT']]){
+  let writes=0;const fetcher=async(url,o)=>{if(url.includes('oauth2.googleapis.com'))return Response.json({access_token:'fake'});if(o.method==='PUT')writes++;return Response.json(body,{status:403});};
+  await assert.rejects(deploy({env,files,fetcher}),e=>{assert.equal(e.message,code);return true;});assert.equal(writes,0);
+ }
+});
