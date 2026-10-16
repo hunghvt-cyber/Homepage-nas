@@ -4,8 +4,8 @@ import {deploy} from '../scripts/deploy.mjs';
 const id='test_script_id_123456789012345',dep='test_deployment_123456789012345';
 const files=[{name:'Core',type:'SERVER_JS',source:'var NotesCore={};'},{name:'Server',type:'SERVER_JS',source:'function doPost(){}'},{name:'appsscript',type:'JSON',source:JSON.stringify({oauthScopes:['https://www.googleapis.com/auth/drive'],webapp:{executeAs:'USER_DEPLOYING',access:'ANYONE_ANONYMOUS'}})}];
 const env={NOTES_GAS_AUTODEPLOY:'true',GITHUB_REF:'refs/heads/prototype/notes-apps-script-drive-20261016',GITHUB_SHA:'a'.repeat(40),NOTES_GAS_SCRIPT_ID:id,NOTES_GAS_DEPLOYMENT_ID:dep,GAS_OAUTH_CLIENT_ID:'fake',GAS_OAUTH_CLIENT_SECRET:'DO_NOT_LOG_CLIENT_SECRET',GAS_OAUTH_REFRESH_TOKEN:'DO_NOT_LOG_REFRESH_TOKEN'};
-function fake({extra=false,title='Homepage Notes Prototype',lost=false,changed=false}={}){
- let source=files.map(f=>({...f,source:f.name==='Core'?'old source':f.source})),version=1,puts=0,contentReads=0;const calls=[];
+function fake({extra=false,title='Homepage Notes Prototype',lost=false,changed=false,staleRead=false}={}){
+ let source=files.map(f=>({...f,source:f.name==='Core'?'old source':f.source})),version=1,puts=0,contentReads=0,staleShown=false;const calls=[];
  const fetcher=async(url,o={})=>{
   calls.push({url,method:o.method||'GET'});
   if(url==='https://oauth2.googleapis.com/token')return Response.json({access_token:'DO_NOT_LOG_ACCESS_TOKEN'});
@@ -17,6 +17,7 @@ function fake({extra=false,title='Homepage Notes Prototype',lost=false,changed=f
   if(path==='/versions')return Response.json({versionNumber:2});
   if(path==='/content?versionNumber=2')return Response.json({files:source});
   if(path==='/deployments/'+dep&&o.method==='PUT'){version=JSON.parse(o.body).deploymentConfig.versionNumber;puts++;if(lost&&puts===1)throw Error('network lost');return Response.json({});}
+  if(path==='/deployments/'+dep&&staleRead&&puts===1&&!staleShown){staleShown=true;return Response.json({deploymentId:dep,deploymentConfig:{versionNumber:1}});}
   if(path==='/deployments/'+dep)return Response.json({deploymentId:dep,deploymentConfig:{scriptId:id,versionNumber:version,manifestFileName:'appsscript',description:'old'}});
   throw Error('Unexpected path '+path);
  };
@@ -84,3 +85,5 @@ test('bootstrap creates a versioned endpoint once and records metadata on failed
  };
  await assert.rejects(deploy({env:{...env,NOTES_GAS_DEPLOYMENT_ID:'',NOTES_GAS_BOOTSTRAP:'true'},files,fetcher,verify:async()=>false}),e=>{assert.equal(e.message,'BOOTSTRAP_HEALTH_FAILED');assert.equal(e.report.deploymentId,dep);return true;});assert.equal(creates,1);
 });
+
+test('deployment readback tolerates a stale old version before convergence',async()=>{const f=fake({staleRead:true});const r=await deploy({env,files,fetcher:f.fetcher});assert.equal(r.phase,'verified');assert.equal(f.puts(),1);});

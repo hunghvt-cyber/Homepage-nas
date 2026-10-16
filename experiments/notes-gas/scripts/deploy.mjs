@@ -27,7 +27,7 @@ export async function deploy({env,files,fetcher=fetch,verify=async()=>true}) {
     const token=await response.json();if(typeof token.access_token!=='string'||!token.access_token)fail('OAUTH_REFRESH_FAILED');access=token.access_token;
     const base='https://script.googleapis.com/v1/projects/'+id;
     async function api(path,method='GET',value) {
-      const r=await fetcher(base+path,{method,headers:{Authorization:'Bearer '+access,...(value?{'Content-Type':'application/json'}:{})},...(value?{body:JSON.stringify(value)}:{}),redirect:'error',signal:AbortSignal.timeout(20000)});
+      const r=await fetcher(base+path,{method,headers:{Authorization:'Bearer '+access,'Cache-Control':'no-cache',...(value?{'Content-Type':'application/json'}:{})},...(value?{body:JSON.stringify(value)}:{}),redirect:'error',signal:AbortSignal.timeout(20000)});
       if(!r.ok){
         let body;try{body=await r.json();}catch{}
         const error=body?.error;
@@ -105,7 +105,13 @@ export async function deploy({env,files,fetcher=fetch,verify=async()=>true}) {
     report.phase='deploy';
     try {
       await api('/deployments/'+dep,'PUT',{deploymentConfig:{scriptId:id,versionNumber:version.versionNumber,manifestFileName:'appsscript',description}});
-      const after=await api('/deployments/'+dep);
+      let after;
+      for(let attempt=0;attempt<8;attempt++){
+        after=await api('/deployments/'+dep);
+        if(after.deploymentConfig.versionNumber===version.versionNumber)break;
+        if(after.deploymentConfig.versionNumber!==report.previousVersion)fail('DEPLOYMENT_CHANGED');
+        if(attempt<7)await new Promise(resolve=>setTimeout(resolve,1500));
+      }
       if(after.deploymentConfig.versionNumber!==version.versionNumber)fail('DEPLOY_VERIFY_FAILED');
       report.deployed=true;report.phase='health';if(!await verify())fail('POST_DEPLOY_HEALTH_FAILED');
       report.phase='verified';return report;
