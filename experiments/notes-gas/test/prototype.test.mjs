@@ -199,3 +199,38 @@ test('transport profiling emits attempt stages without payload or URLs and obser
  assert.equal(result.pong,true);assert.equal(attempts.length,1);assert.equal(attempts[0].ok,true);assert.ok(attempts[0].postMs>=0);assert.ok(attempts[0].bodyMs>=0);assert.equal(JSON.stringify(attempts).includes('http'),false);assert.equal(JSON.stringify(attempts).includes(key),false);
  await createGasClient({url:'https://script.google.com/macros/s/fake/exec',key,onAttempt:()=>{throw Error('observer');},fetcher:async(_,o)=>new Response(h.context.doPost({postData:{contents:o.body}}),{headers:{'content-type':'application/json'}})})(newRequest('ping'));
 });
+
+test('optimized owner index is keyed by current HEAD; eviction/corruption fail back and details read Drive',()=>{
+ const h=harness();ok(h.call('save',{...note(),optimized:true}));
+ let r=h.call('list',{optimized:true,profile:true});assert.equal(r.observability.timings.indexCacheHit,1);assert.equal(r.observability.timings.loadTotal,undefined);
+ h.cache.clear();r=h.call('list',{optimized:true,profile:true});assert.equal(r.observability.timings.indexCacheHit,0);assert.equal(r.result.notes.length,1);
+ const chunk=[...h.cache.keys()].find(k=>k.endsWith('-0'));h.cache.set(chunk,'broken');r=h.call('list',{optimized:true,profile:true});assert.equal(r.observability.timings.indexCacheHit,0);
+ const oldKeys=[...h.cache.keys()];ok(h.call('save',{...note(),optimized:true}));r=h.call('list',{optimized:true,profile:true});assert.equal(r.result.notes.length,2);
+ const head=JSON.parse(h.props.get('NOTES_HEAD'));h.files.get(head.id).data='corrupt';assert.equal(h.call('health').status,503);assert.equal(h.call('get',{id:r.result.notes[0].id,optimized:true}).status,503);
+ assert.ok(oldKeys.length>0);
+});
+test('rotating trial slots never overwrite current/previous or the immutable baseline; retry after ambiguous commit is idempotent',()=>{
+ const h=harness(),anchor=h.props.get('NOTES_HEAD'),anchorId=JSON.parse(anchor).id;
+ ok(h.call('preparePool'));const slots=JSON.parse(h.props.get('NOTES_POOL'));assert.equal(slots.length,3);
+ for(let i=0;i<8;i++){
+  const before=JSON.parse(h.props.get('NOTES_HEAD')),bytes=h.files.get(before.id).data,prev=before.previous&&h.files.get(before.previous)?.data;
+  ok(h.call('save',{...note(),optimized:true}));const after=JSON.parse(h.props.get('NOTES_HEAD'));
+  assert.notEqual(after.id,before.id);assert.notEqual(after.id,before.previous);assert.equal(h.files.get(before.id).data,bytes);if(prev)assert.equal(h.files.get(before.previous).data,prev);
+ }
+ assert.equal(h.files.get(anchorId).data,JSON.stringify(NotesCoreEmpty()));
+ const req=h.request('save',{...note(),optimized:true});h.setFailure('afterHead');assert.equal(h.send(req).ok,false);h.setFailure('');const revision=h.state().revision;ok(h.send(req));assert.equal(h.state().revision,revision);
+ function NotesCoreEmpty(){return {schema:1,revision:0,notes:{},shares:{},index:[],receipts:{}};}
+});
+test('pool overwrite/pre-publication faults preserve committed state; cache failure never changes save success',()=>{
+ for(const point of ['overwrite','afterOverwrite','beforeHead']){
+  const h=harness();ok(h.call('preparePool'));ok(h.call('save',{...note(),optimized:true}));const before=h.props.get('NOTES_HEAD'),data=h.files.get(JSON.parse(before).id).data;
+  const req=h.request('save',{...note(),optimized:true});h.setFailure(point);assert.equal(h.send(req).ok,false);assert.equal(h.props.get('NOTES_HEAD'),before);assert.equal(h.files.get(JSON.parse(before).id).data,data);
+  h.setFailure('');ok(h.send(req));assert.equal(Object.keys(h.state().notes).length,2);
+ }
+ const h=harness();h.setFailure('cache');ok(h.call('save',{...note(),optimized:true}));assert.equal(h.call('list',{optimized:true}).result.notes.length,1);
+});
+test('optimized list cannot bypass workspace ACL or show owner cached index to a shared actor',()=>{
+ const h=harness(),n=ok(h.call('save',{...note(),optimized:true})),secret=shared(h,{noteId:n.id});
+ assert.equal(h.call('list',{optimized:true,token:secret},'share').status,403);
+ const work=shared(h,{folder:n.folder});ok(h.call('shareRevoke',{shareId:work.split('.')[0],optimized:true}));assert.equal(h.call('list',{optimized:true,token:work},'share').status,404);
+});

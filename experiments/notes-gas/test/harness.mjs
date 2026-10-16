@@ -7,18 +7,18 @@ export const mac=s=>createHmac('sha256',key).update(s).digest('hex');
 export function harness() {
   let locked=false, fail='', clock=Date.now();
   const consoleRows=[];
-  const props=new Map([['NOTES_HMAC_KEY',key]]),files=new Map(),folders=new Set();
+  const props=new Map([['NOTES_HMAC_KEY',key]]),files=new Map(),folders=new Set(),cache=new Map();
   const iterator=a=>{let i=0;return {hasNext:()=>i<a.length,next:()=>a[i++]};};
   const blob=data=>({getBytes:()=>[...Buffer.from(data)],getDataAsString:()=>data});
   const folder=id=>({getId:()=>id,getSharingAccess:()=> 'PRIVATE',createFile:b=>{
     if(fail==='create')throw Error('injected');
     const fileId=randomUUID(),data=b.getDataAsString(),file={id:fileId,data,parent:id,trashed:false};files.set(fileId,file);return wrap(file);
   }});
-  const wrap=f=>({getId:()=>f.id,isTrashed:()=>f.trashed,getParents:()=>iterator([folder(f.parent)]),getBlob:()=>blob(f.data)});
+  const wrap=f=>({getId:()=>f.id,isTrashed:()=>f.trashed,getParents:()=>iterator([folder(f.parent)]),getBlob:()=>blob(f.data),setContent:data=>{if(fail==='overwrite')throw Error('injected');f.data=data;if(fail==='afterOverwrite')throw Error('injected');return wrap(f);}});
   const context=vm.createContext({console:{log:value=>consoleRows.push(value)},Date,JSON,Set,Map,Object,Number,Error,Utilities:{
     DigestAlgorithm:{SHA_256:1},Charset:{UTF_8:1},getUuid:randomUUID,
     computeDigest:(_,s)=>[...Buffer.from(hash(s),'hex')],computeHmacSha256Signature:(s,k)=>[...createHmac('sha256',k).update(s).digest()],newBlob:blob
-  },PropertiesService:{getScriptProperties:()=>({getProperty:k=>props.get(k)??null,setProperty:(k,v)=>{
+  },CacheService:{getScriptCache:()=>({get:k=>cache.get(k)??null,getAll:ks=>Object.fromEntries(ks.filter(k=>cache.has(k)).map(k=>[k,cache.get(k)])),putAll:values=>{if(fail==='cache')throw Error('cache failure');for(const [k,v] of Object.entries(values))cache.set(k,v);}})},PropertiesService:{getScriptProperties:()=>({getProperty:k=>props.get(k)??null,setProperty:(k,v)=>{
     if(k==='NOTES_OPS_LOG'&&fail==='audit')throw Error('audit quota');
     if(k==='NOTES_HEAD'&&fail==='beforeHead')throw Error('injected');
     props.set(k,v);if(k==='NOTES_HEAD'&&fail==='afterHead')throw Error('injected');
@@ -33,5 +33,5 @@ export function harness() {
   };
   const call=(op,payload={},actor='owner')=>send(request(op,payload,actor));
   const state=()=>JSON.parse(files.get(JSON.parse(props.get('NOTES_HEAD')).id).data);
-  return {context,props,files,call,send,request,state,consoleRows,setFailure:x=>{fail=x;},setLocked:x=>{locked=x;},key};
+  return {context,props,files,cache,call,send,request,state,consoleRows,setFailure:x=>{fail=x;},setLocked:x=>{locked=x;},key};
 }
