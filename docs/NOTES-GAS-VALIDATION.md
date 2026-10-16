@@ -10,9 +10,9 @@ Ngày 16/10/2026. Base main: `a09b63b2c520312a70c8e13b645537f62fb7711a`.
 | Python hiện có | `python3 -m unittest discover -s tests -p 'test_*.py'`: 12/12 pass |
 | Syntax và liên kết | Tất cả JS/MJS parse được; HTML nội bộ không có resource hỏng |
 | Build | `python3 scripts/build.py`: 6 guides, QR enabled |
-| Prototype | `node --test experiments/notes-gas/test/*.test.mjs`: 27/27 pass (mô phỏng, gồm logging/health/operations và source/deployment updater) |
-| Google triển khai | CHƯA — cần tạo project và consent Google |
-| Benchmark Google thật | CHƯA — không có p50/p95 mạng được xác minh |
+| Prototype | `node --test experiments/notes-gas/test/*.test.mjs`: 30/30 pass (mô phỏng, gồm logging/health/operations và source/deployment updater) |
+| Google triển khai | Đã xác minh endpoint, tự cập nhật version 5 và signed health/log |
+| Benchmark Google thật | FAIL một phần: 9 save xác nhận, p50 7.535 ms, p95 8.929 ms; lần 10 timeout, chưa đủ 100 Note |
 | Vercel Preview end-to-end | CHƯA — adapter hiện là template không deploy |
 | UI PC/iPad/điện thoại | CHƯA nối prototype; production UI giữ nguyên |
 | Private Blob Notes | CHƯA xác minh độc lập; không kết luận khóa/mất dữ liệu |
@@ -61,3 +61,57 @@ OAuth or Google mutations because Actions resolved `NOTES_GAS_HMAC_KEY` to empty
 No endpoint was created and no real benchmark ran. User must add the existing GAS
 runtime key as a repository **Actions secret**, not a variable or another GAS
 Script Property. No credential value was read or disclosed.
+
+### 2026-10-16 15:19 ICT — real endpoint and automatic update verified
+
+Runtime secret is now available to Actions (masked, never read by the agent).
+Retry of https://github.com/hunghvt-cyber/Homepage-nas/actions/runs/38871725839
+created a version-1 managed web app and verified its signed health response.
+Deployment ID:
+`AKfycbwnIO4-cED9dRdNH0ik4FR9os_9kM4XDXqaNdn0iorb5JoiNRIg8dgp0fWEJYurLWAwPA`.
+
+Follow-up update rehearsals exposed delayed deployment readback and a timed-out
+Google API request. Immediate readback was insufficient: an apparent old version
+was followed by the new version on a subsequent run. The updater now polls only
+old-to-desired convergence, refuses unexpected versions, allows 60 seconds per
+management API request, and retains fixed diagnostic codes. No Notes state was
+changed by these deployment operations. This is evidence of management-plane
+latency, not a measured Notes write latency.
+
+Commit `d861db2566ec1bc28f3cb29e678092bb6e80fd6a`, workflow
+https://github.com/hunghvt-cyber/Homepage-nas/actions/runs/38872811251:
+source/deployment job verified version 5 from previous version 4, same endpoint,
+canonical source hash unchanged. Separate signed health AND durable journal
+inspection passed: healthy=true, readVerified=true, revision=0, activeNotes=0,
+journalAvailable=true, errors=[]. Simulation: 30 tests. Synthetic 100-Note live
+benchmark was started in this run; its result is recorded separately when known.
+This is not approval to migrate Notes, modify reports, merge main or change
+production. Initial runtime credential setup is complete; routine source/version
+updates now use automatic OAuth refresh and the pinned deployment ID.
+
+### Live benchmark result — NO-GO for Notes cutover
+
+Completed 2026-10-16 15:20:49 ICT. Persisted evidence:
+`experiments/notes-gas/results/google-live-20261016.json`.
+The same workflow's benchmark failed after 9 confirmed saves out of 10 attempted
+saves, before reaching the required 100 synthetic Notes. Empty-store list: one
+sample, 4,896 ms (not a statistically useful list p95). Successful save sample:
+n=9, p50 7,535 ms, p95 8,929 ms. Tenth save failed with NETWORK_OR_TIMEOUT/503
+after 24,292 ms including adapter retries. The failed request may have committed;
+these numbers do not prove exactly nine records exist. Preserve the synthetic
+store and inspect metadata; do not reinitialize, delete snapshots or replay a
+fresh request with a different ID to resolve an ambiguous write.
+
+Measurement path: GitHub-hosted runner -> signed Node adapter -> GAS web app ->
+Drive. This is real Google performance, NOT a Vercel/iPad end-to-end benchmark.
+There was no attempt to tune away failures or increase runtime timeouts simply
+to label this run passed. Live checklist/workspace/sharing/concurrency/recovery
+stages were not reached. Those capabilities remain covered by simulation only.
+The adapter timeout does not cancel a server-side Drive commit. The next trial
+must persist request IDs/checkpoints if resumability is required.
+
+Decision: stop Google Notes rollout; no production/migration approval. This
+single partial sample cannot characterize all GAS implementations, but this
+snapshot prototype fails the project's responsiveness and completion criteria.
+Runtime access and automatic deployment succeeded; suitability of GAS as the
+Notes database did not. Reports/expenses/Gemini were not changed.

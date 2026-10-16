@@ -1,0 +1,84 @@
+{
+  "kind": "LIVE_GOOGLE_NOT_SIMULATION",
+  "at": "2026-10-16T08:20:49.185Z",
+  "passed": false,
+  "error": {
+    "code": "NETWORK_OR_TIMEOUT",
+    "status": 503
+  },
+  "summary": {
+    "list": {
+      "count": 1,
+      "success": 1,
+      "p50Ms": 4896,
+      "p95Ms": 4896,
+      "maxMs": 4896
+    },
+    "save": {
+      "count": 10,
+      "success": 9,
+      "p50Ms": 7535,
+      "p95Ms": 8929,
+      "maxMs": 8929
+    }
+  },
+  "samples": [
+    {
+      "operation": "list",
+      "ms": 4896.164932,
+      "ok": true
+    },
+    {
+      "operation": "save",
+      "ms": 5712.878332000001,
+      "ok": true
+    },
+    {
+      "operation": "save",
+      "ms": 6497.173927000002,
+      "ok": true
+    },
+    {
+      "operation": "save",
+      "ms": 6247.458122,
+      "ok": true
+    },
+    {
+      "operation": "save",
+      "ms": 8928.530073000002,
+      "ok": true
+    },
+    {
+      "operation": "save",
+      "ms": 8293.356541000001,
+      "ok": true
+    },
+    {
+      "operation": "save",
+      "ms": 7535.340024999998,
+      "ok": true
+    },
+    {
+      "operation": "save",
+      "ms": 8433.225692,
+      "ok": true
+    },
+    {
+      "operation": "save",
+      "ms": 7883.841837,
+      "ok": true
+    },
+    {
+      "operation": "save",
+      "ms": 5873.027540999996,
+      "ok": true
+    },
+    {
+      "operation": "save",
+      "ms": 24292.187940999996,
+      "ok": false,
+      "code": "NETWORK_OR_TIMEOUT"
+    }
+  ],
+  "caveat": "Expected conflict/revocation errors included. No Vercel/browser latency unless run inside isolated Vercel. Retained synthetic data; no cleanup of Drive snapshots."
+}
