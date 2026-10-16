@@ -1,5 +1,11 @@
 # Triển khai thử và vận hành Notes Google
 
+> Quyết định người dùng16/10/2026 lúc18:35 VN: dừng GAS cho Notes; Notes giữ
+> Vercel Blob. GAS/Drive chỉ dành cho báo cáo, chưa chuyển production. Mọi job
+> Google của workflow Notes đã tắt; không chạy lại trial/deploy theo hướng dẫn
+> lịch sử bên dưới. Giữ code/dữ liệu giả, không xóa. Xem
+> [quyết định backend](HOMEPAGE-BACKEND-DECISION-20261016.md).
+
 **Chỉ dữ liệu giả lập. Không merge main, không đổi production, không nhập Note thật.** Không dùng Apps Script hay thư mục của chi tiêu/Gemini. Đã xác minh kết nối Drive Primary; công cụ hiện tại chưa có Apps Script deployment API. Các bước Google dưới đây cần chủ tài khoản thực hiện; không gửi mật khẩu/OAuth token/secret vào chat.
 
 ## 1. Bước người dùng thực hiện trước

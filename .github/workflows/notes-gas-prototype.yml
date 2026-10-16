@@ -20,7 +20,7 @@ jobs:
       - run: find experiments/notes-gas -name '*.js' -o -name '*.mjs' | xargs -n1 node --check
 # Simulation needs no secrets. Optional operational probe below is read-only; no deployment or migration.
   operational-probe:
-    if: always() && github.event_name == 'push' && needs.simulation.result == 'success'
+    if: ${{ false }} # Notes GAS retired by owner; reports use a separate workflow.
     needs: [simulation, source-update]
     runs-on: ubuntu-latest
     permissions:
@@ -46,7 +46,7 @@ jobs:
 # Probe only runs on the authorized prototype branch push, never on fork pull_request.
 
   source-update:
-    if: github.event_name == 'push' && vars.NOTES_GAS_AUTODEPLOY != 'false'
+    if: ${{ false }} # Notes GAS retired by owner; reports use a separate workflow.
     needs: simulation
     runs-on: ubuntu-latest
     permissions:
@@ -81,7 +81,7 @@ jobs:
           retention-days: 7
 
   live-benchmark:
-    if: github.event_name == 'push' && contains(github.event.head_commit.message, '[live-benchmark]')
+    if: ${{ false }} # Notes GAS retired by owner; reports use a separate workflow.
     needs: [simulation, source-update]
     runs-on: ubuntu-latest
     permissions:
@@ -110,7 +110,7 @@ jobs:
           retention-days: 7
 
   stage-profile:
-    if: github.event_name == 'push' && contains(github.event.head_commit.message, '[stage-profile]')
+    if: ${{ false }} # Notes GAS retired by owner; reports use a separate workflow.
     needs: [simulation, source-update]
     runs-on: ubuntu-latest
     permissions:
@@ -139,7 +139,7 @@ jobs:
           retention-days: 7
 
   final-gas-trial:
-    if: github.event_name == 'push' && contains(github.event.head_commit.message, '[final-gas-trial]')
+    if: ${{ false }} # Notes GAS retired by owner; reports use a separate workflow.
     needs: [simulation, source-update]
     runs-on: ubuntu-latest
     permissions:
@@ -168,7 +168,7 @@ jobs:
           retention-days: 7
 
   final-integrity:
-    if: always() && github.event_name == 'push' && contains(github.event.head_commit.message, '[verify-final-gas]') && needs.simulation.result == 'success'
+    if: ${{ false }} # Notes GAS retired by owner; reports use a separate workflow.
     needs: [simulation, source-update]
     runs-on: ubuntu-latest
     permissions:
@@ -193,7 +193,7 @@ jobs:
           retention-days: 7
 
   per-note-trial:
-    if: github.event_name == 'push' && (contains(github.event.head_commit.message, '[per-note-trial]') || contains(github.event.head_commit.message, '[per-note-resume]'))
+    if: ${{ false }} # Notes GAS retired by owner; reports use a separate workflow.
     needs: [simulation, source-update, operational-probe]
     runs-on: ubuntu-latest
     permissions:
@@ -223,7 +223,7 @@ jobs:
           retention-days: 7
 
   per-note-integrity:
-    if: always() && github.event_name == 'push' && contains(github.event.head_commit.message, '[verify-per-note]') && needs.simulation.result == 'success'
+    if: ${{ false }} # Notes GAS retired by owner; reports use a separate workflow.
     needs: [simulation, source-update, operational-probe]
     runs-on: ubuntu-latest
     permissions:

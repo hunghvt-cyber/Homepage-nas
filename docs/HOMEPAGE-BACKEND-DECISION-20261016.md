@@ -1,16 +1,30 @@
-# Phương án chung Notes + NAS + backup Actions — 16/10/2026
+# Quyết định backend Homepage — 16/10/2026
 
-> Cập nhật phạm vi theo chỉ đạo tiếp theo của người dùng: chỉ xoay quanh hệ
-> thống hiện có; chưa mở nền tảng/ứng dụng quản lý mới. Các phần Workers/D1/
-> Firestore dưới đây chỉ giữ làm nghiên cứu đối chiếu, không phải hướng được
-> phép triển khai. Lượt đang thực hiện: GAS/Drive cache preview theo HEAD và
-> pool snapshot thử nghiệm, xem NOTES-GAS-FINAL-TRIAL-20261016.md. Không dùng
-> tài liệu này làm quyền tạo Cloudflare hoặc đổi production.
+## Quyết định của người dùng lúc18:35 VN
 
-Trạng thái: **đề xuất để thử nghiệm, chưa chọn backend production**. Ưu tiên
-Cloudflare Workers + D1; Drive làm bản sao/khôi phục độc lập. Không chuyển
-production, migration dữ liệu thật, sửa NAS, workflow backup hoặc Blob trong
-lượt nghiên cứu này. Google OAuth hiện có không cấp quyền Cloudflare.
+- **Notes tiếp tục dùng Vercel Blob private**, giữ API, session, ETag/conditional
+  writes, checklist, folder và chia sẻ hiện tại. Dừng nghiên cứu/rollout GAS cho Notes.
+- **GAS + Drive chỉ dành cho lưu báo cáo Homepage**: ba nhóm báo cáo NAS qua feed
+  nas-status.json và hai báo cáo backup gdrive-backup-latest.json,
+  gphotos-backup-latest.json. Không mở ứng dụng quản lý mới.
+- Đây là quyết định phạm vi, chưa phải chuyển nguồn báo cáo production. Backend
+  báo cáo GAS/Drive chưa triển khai/kiểm thử intake. Cần chuẩn bị và kiểm thử riêng;
+  giữ nhịp cập nhật NAS hiện có, generatedAt/độ mới dữ liệu và chống ghi báo cáo cũ.
+- Không migration/xóa Blob, không merge main/redeploy production, không sửa NAS,
+  workflow backup, chi tiêu hoặc Gemini trong bước chốt quyết định này.
+- Lưu prototype và dữ liệu giả làm bằng chứng; không xóa project/secret/folder/file.
+  Workflow Notes GAS tắt mọi job truy cập Google/deploy/benchmark; chỉ giữ simulation.
+  Reports sẽ dùng workflow riêng, không kích hoạt lại các Notes trial markers.
+- Usage/khóa store Notes private chưa được xác minh độc lập qua kết nối hiện tại;
+  giữ Blob không đồng nghĩa đã chứng minh store đang hoạt động hoặc còn quota.
+
+Bằng chứng thử Notes: NOTES-GAS-PER-NOTE-20261016.md. PR20 chỉ để review/lưu
+nghiên cứu, không được merge như một phương án thay backend Notes.
+
+## Nghiên cứu lịch sử, không phải kế hoạch triển khai hiện hành
+
+Các so sánh Workers/D1/Firestore và đề xuất backend chung dưới đây đã được thay
+thế bởi quyết định trên; không dùng chúng làm quyền tạo dịch vụ hoặc đổi production.
 
 ## Bằng chứng và phạm vi đã đọc
 

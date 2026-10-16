@@ -1,5 +1,11 @@
 # Bằng chứng kiểm thử Notes Google prototype
 
+> Quyết định người dùng16/10/2026 lúc18:35 VN: dừng GAS cho Notes; Notes giữ
+> Vercel Blob. GAS/Drive chỉ dành cho báo cáo, chưa chuyển production. Mọi job
+> Google của workflow Notes đã tắt; không chạy lại trial/deploy theo hướng dẫn
+> lịch sử bên dưới. Giữ code/dữ liệu giả, không xóa. Xem
+> [quyết định backend](HOMEPAGE-BACKEND-DECISION-20261016.md).
+
 Ngày 16/10/2026. Base main: `a09b63b2c520312a70c8e13b645537f62fb7711a`.
 
 **Trạng thái mới nhất (16/10,17:42 VN):**47/47 test mô phỏng pass, gồm mốc
