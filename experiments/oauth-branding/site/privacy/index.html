@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Homepage Automation: ứng dụng tự động hóa cá nhân, quản lý mã nguồn và triển khai Google Apps Script từ GitHub."><title>Chính sách riêng tư · Homepage Automation</title><link rel="stylesheet" href="/style.css"></head><body><main><header><div class="eyebrow">Tự động hóa cá nhân</div><h1>Chính sách riêng tư</h1><nav aria-label="Điều hướng"><a href="/">Giới thiệu</a><a href="/privacy/">Chính sách riêng tư</a><a href="/terms/">Điều khoản sử dụng</a></nav></header>
+<p>Chính sách này mô tả cách Homepage Automation sử dụng quyền Google cho công việc tự động hóa cá nhân. Việc cấp quyền chỉ dành cho các tài khoản được chủ ứng dụng lựa chọn.</p>
+<h2>Thông tin được truy cập</h2>
+<ul><li>Đối với quản lý triển khai: metadata project Apps Script, tệp mã nguồn, manifest, phiên bản và cấu hình deployment của project được chỉ định.</li><li>Đối với backend Notes thử nghiệm, khi được sử dụng: nội dung ghi chú, checklist, thư mục, lịch sử sửa đổi và thông tin quyền chia sẻ trong thư mục Drive riêng của bản thử.</li><li>Nhật ký vận hành chỉ ghi metadata như thời gian, thao tác, giai đoạn xử lý, mã lỗi và mã tra cứu; không ghi nội dung Note hoặc thông tin đăng nhập.</li></ul>
+<h2>Mục đích sử dụng</h2>
+<p>Dữ liệu chỉ phục vụ cập nhật mã theo chỉ dẫn của chủ tài khoản, kiểm tra hoạt động, lưu ghi chú khi tính năng được kích hoạt, khôi phục và chẩn đoán lỗi. Ứng dụng không triển khai chức năng quảng cáo, bán dữ liệu hay sử dụng dữ liệu Google để huấn luyện mô hình AI.</p>
+<h2>Lưu trữ và bên xử lý</h2>
+<p>Source được quản lý trong repository GitHub của chủ ứng dụng. Thông tin OAuth dùng cho pipeline được đặt trong GitHub Secrets, không commit vào source. Khóa runtime và con trỏ lưu trữ được đặt trong Script Properties của project Google. Snapshot thử nghiệm nằm trong thư mục Google Drive riêng; thư mục này không được công khai chỉ để phục vụ trang thông tin.</p>
+<p>Google, GitHub và Vercel xử lý dữ liệu cần thiết cho chức năng lưu trữ, thực thi hoặc lưu trữ website tương ứng, theo chính sách của từng nền tảng. Trang thông tin công khai này không nạp công cụ phân tích, quảng cáo hoặc mã theo dõi bên thứ ba.</p>
+<h2>Chia sẻ và nhật ký</h2>
+<p>Trang thông tin này không hiển thị Note, source riêng tư hay credential. Nếu chủ tài khoản tạo link chia sẻ Note hoặc thư mục trong ứng dụng, người có link sẽ có quyền theo chức năng chia sẻ được cấp, cho đến khi bị thu hồi. Thông tin vận hành xuất qua GitHub được lọc chỉ còn metadata, không có Note body hoặc token.</p>
+<h2>Thời gian lưu giữ và xóa</h2>
+<p>OAuth credential được giữ trong kho secret cho đến khi người quản lý thay hoặc xóa. Snapshot Drive được giữ để kiểm thử và khôi phục; hiện chưa có cơ chế tự động xóa toàn bộ snapshot cũ. Xóa Note theo cơ chế soft-delete không đồng nghĩa xóa vĩnh viễn các bản lịch sử hoặc backup.</p>
+<p>Nhật ký riêng của prototype giữ tối đa 30 sự kiện gần nhất trong Script Properties và một mục lỗi gần nhất. Artifact vận hành trên GitHub được cấu hình lưu 7 ngày; lịch sử workflow và log của nền tảng có thời hạn riêng. Source và cấu hình có thể tiếp tục nằm trong lịch sử GitHub sau khi sửa hoặc gỡ bản hiện tại.</p>
+<h2>Thu hồi quyền và kiểm soát dữ liệu</h2>
+<p>Chủ tài khoản có thể thu hồi quyền ứng dụng tại <a href="https://myaccount.google.com/connections">trang kết nối tài khoản Google</a>, xóa secret trong GitHub và dừng workflow. Thu hồi quyền ngăn các yêu cầu mới được xác thực nhưng không tự xóa dữ liệu đã lưu. Việc xóa dữ liệu Drive, snapshot và backup cần được thực hiện riêng sau khi xác định đúng phạm vi.</p>
+<h2>Liên hệ và cập nhật</h2>
+<p>Liên hệ người quản lý bằng User support email trên màn hình cấp quyền Google của Homepage Automation. Chính sách được cập nhật khi cách dùng quyền hoặc cách xử lý dữ liệu thay đổi; thay đổi quyền có thể cần chủ tài khoản đồng ý lại.</p>
+<footer>Homepage Automation · Cập nhật ngày 16/10/2026.<br>Đây là trang thông tin công khai. Trang này không có biểu mẫu đăng nhập, không yêu cầu khóa hoặc token.</footer></main></body></html>
