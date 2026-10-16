@@ -43,3 +43,11 @@ Bổ sung: journal giới hạn 30 event/8.000 byte; không lộ Note/secret; lo
 Updater: thêm 6 test mô phỏng cho enable/branch/target guard, exact source replace + readback/version/deploy, chặn wrong project/extra file/concurrent edit, rollback khi health fail hoặc update timeout đã commit, source-only và chặn scope expansion, OAuth error không lộ token. Chưa OAuth/live source sync hoặc deploy Google.
 
 Live OAuth source sync rehearsal: first run 38869304653 obtained access and read the target project, then correctly blocked TARGET_MISMATCH before source writes. Diagnostic run 38869465990 confirmed exact user-supplied Script ID and title with four leading spaces. Title comparison now trims only whitespace; Script ID and substantive title guard remain. No need to rename the project or reauthorize OAuth. Final source readback result recorded separately after retry.
+
+## Live source management verified — 16/10/2026 14:49 VN
+
+Workflow https://github.com/hunghvt-cyber/Homepage-nas/actions/runs/38869637124 completed simulation and source-update successfully. Authenticated Google metadata matched the exact Script ID supplied by the owner; leading title whitespace was normalized. Source was uploaded and read back with canonical source hash `17a6ee85ca4dbd1937b48f9dd5eeee905276c62ed0ab49ea2a36e989e08b2559`.
+
+Result phase: `source_verified_deployment_not_configured`, sourceUpdated=true, deployed=false. This is real Google OAuth/source read-write evidence, not a mock. No Script Properties, Notes Drive snapshots or production Blob were changed by source sync. Runtime web app deployment, health, CRUD benchmark and recovery are still unverified. The operational-probe job was green because runtime URL/key were absent and its script explicitly skipped; it is NOT evidence of live backend health.
+
+The three OAuth GitHub secrets are confirmed usable without revealing their values. Runtime HMAC secret is separate: owner must copy the existing Apps Script NOTES_HMAC_KEY into GitHub Secret NOTES_GAS_HMAC_KEY, not into chat. This is the remaining credential setup before live endpoint tests; no need to reauthorize OAuth or paste source files again.
