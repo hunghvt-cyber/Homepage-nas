@@ -38,7 +38,12 @@ export async function deploy({env,files,fetcher=fetch,verify=async()=>true}) {
         fail('GOOGLE_API_'+r.status);
       }return r.json();
     }
-    report.phase='target';const project=await api('');if(project.scriptId!==id||project.title!=='Homepage Notes Prototype')fail('TARGET_MISMATCH');
+    report.phase='target';const project=await api('');
+    report.target={scriptIdMatches:project.scriptId===id,title:String(project.title||'').slice(0,160)};
+    if(project.scriptId!==id||project.title!=='Homepage Notes Prototype'){
+      console.log(JSON.stringify({diagnostic:'TARGET_METADATA_ONLY',target:report.target}));
+      fail('TARGET_MISMATCH');
+    }
     const initial=(await api('/content')).files;
     if(!Array.isArray(initial)||initial.some(f=>!expected.includes(f.name)))fail('REMOTE_EXTRA_FILES');
     const before=digest(initial);let previous;
