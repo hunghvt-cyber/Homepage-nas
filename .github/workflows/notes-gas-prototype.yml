@@ -33,7 +33,7 @@ jobs:
           node-version: '24'
       - name: Read-only Google health and diagnostic metadata (skip when unconfigured)
         env:
-          NOTES_GAS_URL: ${{ secrets.NOTES_GAS_URL }}
+          NOTES_GAS_URL: 'https://script.google.com/macros/s/AKfycbwnIO4-cED9dRdNH0ik4FR9os_9kM4XDXqaNdn0iorb5JoiNRIg8dgp0fWEJYurLWAwPA/exec'
           NOTES_GAS_HMAC_KEY: ${{ secrets.NOTES_GAS_HMAC_KEY }}
         run: node experiments/notes-gas/scripts/operations.mjs
       - uses: actions/upload-artifact@v4
@@ -65,11 +65,11 @@ jobs:
           NOTES_GAS_AUTODEPLOY: 'true'
           NOTES_GAS_BOOTSTRAP: 'true'
           NOTES_GAS_SCRIPT_ID: '1vASoUHTYVL1pP4oeAbrh0ueOCdo5cWwpUiwUkTleziWgKRod17Pa68cs'
-          NOTES_GAS_DEPLOYMENT_ID: ${{ vars.NOTES_GAS_DEPLOYMENT_ID }}
+          NOTES_GAS_DEPLOYMENT_ID: 'AKfycbwnIO4-cED9dRdNH0ik4FR9os_9kM4XDXqaNdn0iorb5JoiNRIg8dgp0fWEJYurLWAwPA'
           GAS_OAUTH_CLIENT_ID: ${{ secrets.GAS_OAUTH_CLIENT_ID }}
           GAS_OAUTH_CLIENT_SECRET: ${{ secrets.GAS_OAUTH_CLIENT_SECRET }}
           GAS_OAUTH_REFRESH_TOKEN: ${{ secrets.GAS_OAUTH_REFRESH_TOKEN }}
-          NOTES_GAS_URL: ${{ secrets.NOTES_GAS_URL }}
+          NOTES_GAS_URL: 'https://script.google.com/macros/s/AKfycbwnIO4-cED9dRdNH0ik4FR9os_9kM4XDXqaNdn0iorb5JoiNRIg8dgp0fWEJYurLWAwPA/exec'
           NOTES_GAS_HMAC_KEY: ${{ secrets.NOTES_GAS_HMAC_KEY }}
         run: node experiments/notes-gas/scripts/deploy.mjs
       - uses: actions/upload-artifact@v4
@@ -77,5 +77,34 @@ jobs:
         with:
           name: notes-prototype-deployment-metadata
           path: experiments/notes-gas/deployment-result.local.json
+          if-no-files-found: ignore
+          retention-days: 7
+
+  live-benchmark:
+    if: github.event_name == 'push' && contains(github.event.head_commit.message, '[live-benchmark]')
+    needs: [simulation, source-update]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: notes-google-prototype-source
+      cancel-in-progress: false
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Synthetic data only, refuse previously used store
+        env:
+          NOTES_GAS_TEST_ONLY: SYNTHETIC_EMPTY_PROJECT
+          NOTES_GAS_URL: 'https://script.google.com/macros/s/AKfycbwnIO4-cED9dRdNH0ik4FR9os_9kM4XDXqaNdn0iorb5JoiNRIg8dgp0fWEJYurLWAwPA/exec'
+          NOTES_GAS_HMAC_KEY: ${{ secrets.NOTES_GAS_HMAC_KEY }}
+        run: node experiments/notes-gas/scripts/benchmark.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: notes-prototype-live-benchmark
+          path: experiments/notes-gas/benchmark-result.local.json
           if-no-files-found: ignore
           retention-days: 7
