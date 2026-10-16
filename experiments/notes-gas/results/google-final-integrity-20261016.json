@@ -1,0 +1,25 @@
+{
+  "kind": "READ_ONLY_SYNTHETIC_INTEGRITY_NOT_BENCHMARK",
+  "at": "2026-10-16T09:56:11.805Z",
+  "passed": true,
+  "errors": [],
+  "health": {
+    "build": "notes-gas-cache-only-v4",
+    "revision": 119,
+    "activeNotes": 100,
+    "readVerified": true
+  },
+  "export": {
+    "records": 100,
+    "active": 100,
+    "indexRows": 100,
+    "unicodeNotes": 99,
+    "checkedItems": 18,
+    "bytes": 588983,
+    "sha256": "f0006e44411836cab31f9d01fe14723580dca96a345e4ee7d855ad61c56a52d4"
+  },
+  "journal": {
+    "count": 30,
+    "hasMetadata": true
+  }
+}

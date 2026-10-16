@@ -126,3 +126,26 @@ Không tiếp tục ghi pool chỉ để có đủ functional test khi hiệu n�
 Báo cáo NAS/backup là workload nhỏ khác, chưa có bản triển khai/test intake trong
 lượt này và chưa được phép chuyển production. Không mở Cloudflare/Firebase;
 phạm vi hệ thống hiện có được giữ nguyên.
+
+## Xác minh cuối — 100 Notes còn nguyên cấu trúc
+
+Workflow https://github.com/hunghvt-cyber/Homepage-nas/actions/runs/38883757927
+ở commit `24683d535ed9459f70a7d4609085de55c83990ce`: simulation, source-update,
+operational-probe và final-integrity đều pass. Google version9, build
+`notes-gas-cache-only-v4`, source hash
+`a571fb4b2c56051f599fd7da8b4df6a708807668187ceeabb67e2ff96b062f0c`.
+
+Read-only verifier xác minh Drive thật và export tại revision119: 100 records,
+100 active, 100 index rows khớp ID/revision/folder; checklist ID không trùng,
+history trong giới hạn; 99 Notes có Unicode và 18 checklist items đã tick.
+Export 588.983 bytes, SHA256
+`f0006e44411836cab31f9d01fe14723580dca96a345e4ee7d855ad61c56a52d4`.
+Journal có30 event metadata. Bản ghi không chứa nội dung Note ở
+`experiments/notes-gas/results/google-final-integrity-20261016.json`, artifact
+12038726182. Đây là kiểm tra cấu trúc/index và khả năng đọc sau lỗi mạng,
+không phải đối chiếu toàn bộ nội dung với fixture độc lập, benchmark latency,
+full-store restore hoặc hoàn thành functional suite live đã bị ngắt.
+
+Không cần người dùng cấp quyền thêm cho việc cập nhật prototype hiện tại.
+Giữ draft PR để review; không merge main, không nối API production, không
+migration/xóa Blob. Không tiếp tục benchmark mutation trên store này.

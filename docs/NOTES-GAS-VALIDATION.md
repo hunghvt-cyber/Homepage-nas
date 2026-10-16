@@ -2,6 +2,14 @@
 
 Ngày 16/10/2026. Base main: `a09b63b2c520312a70c8e13b645537f62fb7711a`.
 
+**Trạng thái cuối ngày:** 40/40 test mô phỏng pass. Google version9 đã tự cập
+nhật và read-only integrity pass cho100 Note giả/revision119. Cache list p50
+1.694→1.127ms; pool save p50 4.128→6.297ms, nên pool bị loại khỏi optimized
+mặc định. Live workload bị timeout trước functional phase; chưa đủ điều kiện
+Notes production. Chi tiết và evidence:
+[NOTES-GAS-FINAL-TRIAL-20261016.md](NOTES-GAS-FINAL-TRIAL-20261016.md).
+Các bảng/ghi chú bên dưới ghi lại từng mốc trước đó, không thay thế kết luận cuối.
+
 ## Kết quả cục bộ
 
 | Hạng mục | Kết quả |
