@@ -85,7 +85,7 @@ function ngRepository_(props,timings,options) {
   };
 }
 // Bounded operational journal; independent of Drive/HEAD so corruption remains diagnosable.
-var NG_BUILD_ = 'notes-gas-per-note-v5';
+var NG_BUILD_ = 'notes-gas-per-note-v6';
 function ngAuditRead_(props) {
   var raw=props.getProperty('NOTES_OPS_LOG');
   if(!raw)return {schema:1,events:[]};

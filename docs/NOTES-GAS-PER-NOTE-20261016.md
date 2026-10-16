@@ -106,3 +106,26 @@ Correction: trial waits for operational-probe completion, then requires two sign
 health responses with expected runtime build before shardInit. Diagnostic readiness
 failures remain in evidence; they are not benchmark successes. Retrying this attempt
 is safe because artifact proves no initialization or Note mutation was attempted.
+
+### Second live attempt and bounded continuation
+
+Commit4ee7b18/run38887066554: signed runtime readinessv5 succeeded twice. Two
+synthetic Notes created (10.46s and7.28s observed). Same-note race: one commit,
+one409 after BUSY retry; committed writer lost two responses, then same request
+replayed with core2ms/no shardCommit. Different-note race: A confirmed, B received
+BUSY then UPSTREAM_HTTP after32.76s; workload stopped, without assuming B failed
+or was lost. Original snapshot still119/100. No100-Note latency samples yet.
+Raw evidence: results/google-per-note-attempt2-20261016.json, artifact12040016577.
+
+Continuation is separately gated [per-note-resume]: read-only export MUST find
+exactly2 records, revision4or5, no shares, exact expected synthetic titles before
+new work. Inspect retained state/receipts to reconcile ambiguous B; never reset,
+blind-rerun initialization or replay with guessed identity. Then new conditional
+race tests run from observed current revisions. Every new mutation request is
+checkpointed before sending (capability secret omitted; only synthetic content).
+Diagnostic retries of503 or UPSTREAM_HTTP retain individual failures in output and
+reuse request IDs. Primary benchmark budget is unchanged. Readiness now expectsv6.
+
+Security follow-up: recovery namespace is owner-only even when a restored old
+backup contains a formerly valid share token. Shared actors cannot select it as
+an alternate route. Test includes a revoked capability in portable restore.

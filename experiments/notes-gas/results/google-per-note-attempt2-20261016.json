@@ -1,0 +1,463 @@
+{
+  "kind": "LIVE_GOOGLE_PER_NOTE_NOT_VERCEL_OR_IPAD",
+  "at": "2026-10-16T10:26:13.416Z",
+  "completed": false,
+  "calls": [
+    {
+      "label": "readiness-0",
+      "ok": true,
+      "ms": 2535.926034,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2284.019876,
+          "redirectMs": 246.20517800000016,
+          "bodyMs": 4.9865649999997,
+          "verifyMs": 0.17836299999999028,
+          "durationMs": 2535.416583
+        }
+      ]
+    },
+    {
+      "label": "readiness-1",
+      "ok": true,
+      "ms": 2353.338342,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2222.6255029999993,
+          "redirectMs": 128.82316300000002,
+          "bodyMs": 1.7645429999993212,
+          "verifyMs": 0.06814799999938259,
+          "durationMs": 2353.2868959999996
+        }
+      ]
+    },
+    {
+      "label": "shard-init",
+      "ok": true,
+      "ms": 4799.132248999999,
+      "timings": {
+        "auth": 100,
+        "lockWait": 148,
+        "auditStart": 146,
+        "manifestWrite": 2340,
+        "shardPublish": 261,
+        "auditEnd": 228,
+        "serverTotal": 3985
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4660.891130999999,
+          "redirectMs": 136.71257399999922,
+          "bodyMs": 1.4090120000000752,
+          "verifyMs": 0.09504700000070443,
+          "durationMs": 4799.113815
+        }
+      ]
+    },
+    {
+      "label": "functional-create-a",
+      "ok": true,
+      "ms": 10457.661086,
+      "timings": {
+        "auth": 59,
+        "lockWait": 78,
+        "auditStart": 127,
+        "manifestRead": 782,
+        "shardLoad": 831,
+        "core": 148,
+        "noteWrite": 1612,
+        "manifestWrite": 1807,
+        "shardPublish": 105,
+        "shardCommit": 3575,
+        "auditEnd": 120,
+        "serverTotal": 5330
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 10196.985496000001,
+          "redirectMs": 258.9663279999986,
+          "bodyMs": 1.500090999998065,
+          "verifyMs": 0.15375800000037998,
+          "durationMs": 10457.612154999999
+        }
+      ]
+    },
+    {
+      "label": "functional-create-b",
+      "ok": true,
+      "ms": 7277.711456999998,
+      "timings": {
+        "auth": 51,
+        "lockWait": 152,
+        "auditStart": 135,
+        "manifestRead": 808,
+        "shardLoad": 855,
+        "core": 33,
+        "noteWrite": 2215,
+        "manifestWrite": 2305,
+        "shardPublish": 120,
+        "shardCommit": 4722,
+        "auditEnd": 143,
+        "serverTotal": 6413
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 7146.651618,
+          "redirectMs": 129.5485460000018,
+          "bodyMs": 1.3582960000021558,
+          "verifyMs": 0.09612900000138325,
+          "durationMs": 7277.660591
+        }
+      ]
+    },
+    {
+      "label": "same-note-1-attempt-0",
+      "ok": false,
+      "ms": 2568.9484800000027,
+      "code": "BUSY",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "verify",
+          "ok": false,
+          "postMs": 2451.890938000004,
+          "redirectMs": 114.8922390000007,
+          "bodyMs": 1.9020710000040708,
+          "durationMs": 2568.872307999998,
+          "code": "BUSY"
+        }
+      ]
+    },
+    {
+      "label": "same-note-1-attempt-1",
+      "ok": false,
+      "ms": 2625.1690489999964,
+      "code": "BUSY",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "verify",
+          "ok": false,
+          "postMs": 2514.901571000002,
+          "redirectMs": 108.69563299999572,
+          "bodyMs": 1.3332589999990887,
+          "durationMs": 2625.0600049999994,
+          "code": "BUSY"
+        }
+      ]
+    },
+    {
+      "label": "same-note-1-attempt-2",
+      "ok": false,
+      "ms": 3273.7197369999994,
+      "code": "REVISION_CONFLICT",
+      "status": 409,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "verify",
+          "ok": false,
+          "postMs": 3146.835207999997,
+          "redirectMs": 125.63852400000178,
+          "bodyMs": 1.096746000002895,
+          "durationMs": 3273.6697429999986,
+          "code": "REVISION_CONFLICT"
+        }
+      ]
+    },
+    {
+      "label": "same-note-0-attempt-0",
+      "ok": false,
+      "ms": 18327.413099999998,
+      "code": "NETWORK_OR_TIMEOUT",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 7177.071713999998,
+          "durationMs": 18327.33814,
+          "code": "NETWORK_OR_TIMEOUT"
+        }
+      ]
+    },
+    {
+      "label": "same-note-0-attempt-1",
+      "ok": false,
+      "ms": 11403.07793,
+      "code": "NETWORK_OR_TIMEOUT",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 3156.104131999993,
+          "durationMs": 11402.999934,
+          "code": "NETWORK_OR_TIMEOUT"
+        }
+      ]
+    },
+    {
+      "label": "same-note-0-attempt-2",
+      "ok": true,
+      "ms": 3444.703075999998,
+      "timings": {
+        "auth": 46,
+        "lockWait": 158,
+        "auditStart": 164,
+        "manifestRead": 756,
+        "noteRead": 707,
+        "shardLoad": 1503,
+        "core": 2,
+        "auditEnd": 175,
+        "serverTotal": 2384
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3305.5860150000008,
+          "redirectMs": 137.58440900000278,
+          "bodyMs": 1.26623500000278,
+          "verifyMs": 0.19867099999828497,
+          "durationMs": 3444.650217000002
+        }
+      ]
+    },
+    {
+      "label": "after-same-note",
+      "ok": true,
+      "ms": 2954.695400000004,
+      "timings": {
+        "auth": 16,
+        "lockWait": 62,
+        "auditStart": 37,
+        "manifestRead": 1259,
+        "noteRead": 569,
+        "shardLoad": 1839,
+        "core": 1,
+        "auditEnd": 34,
+        "serverTotal": 2129
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2878.5653620000085,
+          "redirectMs": 74.77241299999878,
+          "bodyMs": 1.2270109999954002,
+          "verifyMs": 0.11040600000706036,
+          "durationMs": 2954.679470999996
+        }
+      ]
+    },
+    {
+      "label": "different-note-1-attempt-0",
+      "ok": false,
+      "ms": 2540.018007999999,
+      "code": "BUSY",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "verify",
+          "ok": false,
+          "postMs": 2432.388512000005,
+          "redirectMs": 105.97683899999538,
+          "bodyMs": 1.4145120000030147,
+          "durationMs": 2539.921577000001,
+          "code": "BUSY"
+        }
+      ]
+    },
+    {
+      "label": "different-note-0-attempt-0",
+      "ok": true,
+      "ms": 5745.0098480000015,
+      "timings": {
+        "auth": 51,
+        "lockWait": 67,
+        "auditStart": 89,
+        "manifestRead": 550,
+        "noteRead": 625,
+        "shardLoad": 1211,
+        "core": 25,
+        "noteWrite": 1552,
+        "manifestWrite": 1594,
+        "shardPublish": 99,
+        "shardCommit": 3295,
+        "auditEnd": 110,
+        "serverTotal": 5021
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5614.752718999996,
+          "redirectMs": 128.56994800000393,
+          "bodyMs": 1.4122169999900507,
+          "verifyMs": 0.21100399999704678,
+          "durationMs": 5744.950145999988
+        }
+      ]
+    },
+    {
+      "label": "different-note-1-attempt-1",
+      "ok": false,
+      "ms": 32760.718165,
+      "code": "UPSTREAM_HTTP",
+      "status": 502,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "body",
+          "ok": false,
+          "postMs": 2317.847416999997,
+          "redirectMs": 30442.75037200001,
+          "durationMs": 32760.650448,
+          "code": "UPSTREAM_HTTP"
+        }
+      ]
+    },
+    {
+      "label": "original-health-after",
+      "ok": true,
+      "ms": 2153.0065239999967,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2042.026748999997,
+          "redirectMs": 108.74051400000462,
+          "bodyMs": 2.077268000008189,
+          "verifyMs": 0.1453719999990426,
+          "durationMs": 2152.9945020000014
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "sameNoteOneWinner": true,
+    "originalUnchanged": true
+  },
+  "errors": [
+    {
+      "code": "ASSERTION_OR_REQUEST_FAILED",
+      "status": null
+    }
+  ],
+  "readinessBuilds": [
+    "notes-gas-per-note-v5",
+    "notes-gas-per-note-v5"
+  ],
+  "originalBefore": {
+    "service": "notes-prototype",
+    "build": "notes-gas-per-note-v5",
+    "schema": 1,
+    "revision": 119,
+    "activeNotes": 100,
+    "records": 100,
+    "readVerified": true,
+    "journalAvailable": true,
+    "lastError": {
+      "at": "2026-10-16T08:39:56.611Z",
+      "reference": "GAS-85bfd3de",
+      "build": "notes-gas-profile-v2",
+      "operation": "save",
+      "stage": "validate",
+      "status": 409,
+      "code": "REVISION_CONFLICT",
+      "durationMs": 1155,
+      "timings": {
+        "auth": 67,
+        "lockWait": 76,
+        "auditStart": 129,
+        "headRead": 30,
+        "fileLookup": 115,
+        "fileValidation": 388,
+        "snapshotRead": 220,
+        "loadTotal": 770,
+        "core": 31
+      }
+    }
+  },
+  "originalAfter": {
+    "service": "notes-prototype",
+    "build": "notes-gas-per-note-v5",
+    "schema": 1,
+    "revision": 119,
+    "activeNotes": 100,
+    "records": 100,
+    "readVerified": true,
+    "journalAvailable": true,
+    "lastError": {
+      "at": "2026-10-16T10:26:52.470Z",
+      "reference": "GAS-d150ca9d",
+      "build": "notes-gas-per-note-v5",
+      "operation": "save",
+      "stage": "read",
+      "status": 409,
+      "code": "REVISION_CONFLICT",
+      "durationMs": 2312,
+      "timings": {
+        "auth": 43,
+        "lockWait": 780,
+        "auditStart": 128,
+        "core": 2,
+        "manifestRead": 667,
+        "noteRead": 514,
+        "shardLoad": 1221
+      }
+    }
+  },
+  "summary": {
+    "ping": {
+      "attempted": 0,
+      "success": 0,
+      "p50": null,
+      "p95": null
+    },
+    "list-100": {
+      "attempted": 0,
+      "success": 0,
+      "p50": null,
+      "p95": null
+    },
+    "get-100": {
+      "attempted": 0,
+      "success": 0,
+      "p50": null,
+      "p95": null
+    },
+    "save-100": {
+      "attempted": 0,
+      "success": 0,
+      "p50": null,
+      "p95": null
+    }
+  },
+  "live500": "NOT_RUN: first validate n100; no automatic stress escalation"
+}

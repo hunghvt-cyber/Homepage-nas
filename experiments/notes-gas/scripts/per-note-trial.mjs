@@ -1,18 +1,21 @@
 /* Synthetic new namespace only. Never reset/replay an old mutation workload. */
 import assert from 'node:assert/strict';
-import {writeFile} from 'node:fs/promises';
+import {writeFile,rename} from 'node:fs/promises';
 import {createHash,randomUUID} from 'node:crypto';
 import {createGasClient,newRequest,prepareRequest} from '../adapter.mjs';
 if(process.env.NOTES_GAS_PER_NOTE_TRIAL!=='ISOLATED_SYNTHETIC_ONLY')throw Error('TRIAL_DISABLED');
 const path=new URL('../per-note-result.local.json',import.meta.url);
 const report={kind:'LIVE_GOOGLE_PER_NOTE_NOT_VERCEL_OR_IPAD',at:new Date().toISOString(),completed:false,calls:[],checks:{},errors:[]};
-const save=()=>writeFile(path,JSON.stringify(report,null,2)+'\n');
-function make(timeoutMs,attempts){let last;const tries=[];const call=createGasClient({url:process.env.NOTES_GAS_URL,key:process.env.NOTES_GAS_HMAC_KEY,timeoutMs,attempts,observe:x=>{last=x;},onAttempt:x=>tries.push(x)});return async(req,label)=>{last=null;tries.length=0;const start=performance.now();try{const data=await call(req);report.calls.push({label,ok:true,ms:performance.now()-start,timings:last?.timings,attempts:structuredClone(tries)});await save();return data;}catch(e){report.calls.push({label,ok:false,ms:performance.now()-start,code:e.message,status:e.status,attempts:structuredClone(tries)});await save();throw e;}};}
+let saveChain=Promise.resolve();
+const save=()=>{const data=JSON.stringify(report,null,2)+'\n';saveChain=saveChain.then(async()=>{const temporary=new URL('../per-note-result.local.json.tmp',import.meta.url);await writeFile(temporary,data);await rename(temporary,path);});return saveChain;};
+const transient=e=>e.status===503||e.status===502&&e.message==='UPSTREAM_HTTP';
+const checkpointIds=new Set();
+function make(timeoutMs,attempts){let last;const tries=[];const call=createGasClient({url:process.env.NOTES_GAS_URL,key:process.env.NOTES_GAS_HMAC_KEY,timeoutMs,attempts,observe:x=>{last=x;},onAttempt:x=>tries.push(x)});return async(req,label)=>{if(!['get','list','search','health','logs','ping','shardExport'].includes(req.op)&&!checkpointIds.has(req.requestId)){const checkpoint=structuredClone(req);if(checkpoint.payload)delete checkpoint.payload.token;(report.checkpoints??=[]).push(checkpoint);checkpointIds.add(req.requestId);await save();}last=null;tries.length=0;const start=performance.now();try{const data=await call(req);report.calls.push({label,ok:true,ms:performance.now()-start,timings:last?.timings,attempts:structuredClone(tries)});await save();return data;}catch(e){report.calls.push({label,ok:false,ms:performance.now()-start,code:e.message,status:e.status,attempts:structuredClone(tries)});await save();throw e;}};}
 // Concurrent calls use separate client metrics buffers.
-const diagnostic=(req,label)=>make(180000,1)(req,label);
+const diagnostic=async(req,label)=>{for(let i=0;i<3;i++){try{return await make(180000,1)(req,label+(i?'-retry-'+i:''));}catch(e){if(!transient(e)||i===2)throw e;await new Promise(r=>setTimeout(r,400));}}};
 const live=(req,label)=>make(12000,2)(req,label);
 const request=(op,payload={},actor='owner')=>newRequest(op,{...payload,perNote:true,profile:true},actor);
-async function confirmed(req,label){try{return await live(req,label);}catch(e){if(e.status!==503)throw e;return diagnostic(req,label+'-diagnostic-same-id');}}
+async function confirmed(req,label){try{return await live(req,label);}catch(e){if(!transient(e))throw e;return diagnostic(req,label+'-diagnostic-same-id');}}
 const fixture=(id=randomUUID(),folder='trial-workspace')=>({id,title:'SYNTHETIC per-note '+id.slice(0,8),text:'Tiếng Việt 日本語 😀\n'+'Nội dung thử nghiệm. '.repeat(80),folder,pinned:false,checklist:[{id:'one',text:'Việc đã xong ✅',checked:true},{id:'two',text:'Việc tiếp theo',checked:false}]});
 async function expectStatus(req,status,label){try{await diagnostic(req,label);assert.fail('EXPECTED_ERROR');}catch(e){assert.equal(e.status,status);}}
 try{
@@ -20,13 +23,21 @@ try{
  // until two independent signed responses identify the expected build.
  let stable=0;
  for(let attempt=0;attempt<12&&stable<2;attempt++){
-  try{const h=await make(30000,1)(newRequest('health'),'readiness-'+attempt);assert.equal(h.revision,119);assert.equal(h.activeNotes,100);report.readinessBuilds??=[];report.readinessBuilds.push(h.build);if(h.build==='notes-gas-per-note-v5'){stable++;report.originalBefore=h;}else stable=0;}catch(e){stable=0;if(e.status&&e.status!==503)throw e;}
+  try{const h=await make(30000,1)(newRequest('health'),'readiness-'+attempt);assert.equal(h.revision,119);assert.equal(h.activeNotes,100);report.readinessBuilds??=[];report.readinessBuilds.push(h.build);if(h.build==='notes-gas-per-note-v6'){stable++;report.originalBefore=h;}else stable=0;}catch(e){stable=0;if(e.status&&e.status!==503)throw e;}
   if(stable<2)await new Promise(r=>setTimeout(r,3000));
  }
  if(stable<2)throw Error('RUNTIME_BUILD_NOT_READY');
- const init=await diagnostic(request('shardInit'),'shard-init');assert.equal(init.existing,false,'REFUSE_USED_SHARD_NAMESPACE');
- let a=await confirmed(request('save',fixture()),'functional-create-a');let b=await confirmed(request('save',fixture()),'functional-create-b');
- async function raced(req,label){for(let attempt=0;attempt<5;attempt++){try{return await diagnostic(req,label+'-attempt-'+attempt);}catch(e){if(e.status!==503||attempt===4)throw e;await new Promise(r=>setTimeout(r,300));}}}
+ let a,b;
+ if(process.env.NOTES_GAS_PER_NOTE_RESUME==='EXACT_TWO_NOTE_RECONCILIATION'){
+  const retained=await diagnostic(request('shardExport'),'reconcile-retained-two');
+  assert.equal(retained.index.length,2);assert.equal(Object.keys(retained.notes).length,2);assert.ok([4,5].includes(retained.revision));assert.equal(Object.keys(retained.shares).length,0);
+  const notes=Object.values(retained.notes);a=notes.find(n=>n.title==='SYNTHETIC different A');assert.ok(a);b=notes.find(n=>n.id!==a.id);assert.ok(b.title==='SYNTHETIC different B'||b.title.startsWith('SYNTHETIC per-note '));
+  report.reconciliation={revision:retained.revision,records:2,bothPriorTitlesPresent:b.title==='SYNTHETIC different B',receiptCount:Object.keys(retained.receipts).length};
+ }else{
+  const init=await diagnostic(request('shardInit'),'shard-init');assert.equal(init.existing,false,'REFUSE_USED_SHARD_NAMESPACE');
+  a=await confirmed(request('save',fixture()),'functional-create-a');b=await confirmed(request('save',fixture()),'functional-create-b');
+ }
+ async function raced(req,label){for(let attempt=0;attempt<5;attempt++){try{return await diagnostic(req,label+'-attempt-'+attempt);}catch(e){if(!transient(e)||attempt===4)throw e;await new Promise(r=>setTimeout(r,300));}}}
  const common={...a,title:'SYNTHETIC simultaneous'},pair=[request('save',common),request('save',{...common,text:common.text+' other'})];
  const same=await Promise.allSettled(pair.map((req,i)=>raced(req,'same-note-'+i)));assert.equal(same.filter(x=>x.status==='fulfilled').length,1);assert.equal(same.find(x=>x.status==='rejected').reason.status,409);a=await diagnostic(request('get',{id:a.id}),'after-same-note');report.checks.sameNoteOneWinner=true;
  const different=await Promise.allSettled([request('save',{...a,title:'SYNTHETIC different A'}),request('save',{...b,title:'SYNTHETIC different B'})].map((req,i)=>raced(req,'different-note-'+i)));

@@ -193,7 +193,7 @@ jobs:
           retention-days: 7
 
   per-note-trial:
-    if: github.event_name == 'push' && contains(github.event.head_commit.message, '[per-note-trial]')
+    if: github.event_name == 'push' && (contains(github.event.head_commit.message, '[per-note-trial]') || contains(github.event.head_commit.message, '[per-note-resume]'))
     needs: [simulation, source-update, operational-probe]
     runs-on: ubuntu-latest
     permissions:
@@ -210,6 +210,7 @@ jobs:
       - name: Isolated per-note functional and latency trial; never reset old namespace
         env:
           NOTES_GAS_PER_NOTE_TRIAL: ISOLATED_SYNTHETIC_ONLY
+          NOTES_GAS_PER_NOTE_RESUME: ${{ contains(github.event.head_commit.message, '[per-note-resume]') && 'EXACT_TWO_NOTE_RECONCILIATION' || '' }}
           NOTES_GAS_URL: 'https://script.google.com/macros/s/AKfycbwnIO4-cED9dRdNH0ik4FR9os_9kM4XDXqaNdn0iorb5JoiNRIg8dgp0fWEJYurLWAwPA/exec'
           NOTES_GAS_HMAC_KEY: ${{ secrets.NOTES_GAS_HMAC_KEY }}
         run: node experiments/notes-gas/scripts/per-note-trial.mjs

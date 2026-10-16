@@ -92,7 +92,10 @@ function ngShardRepository_(props,timings,recovery) {
   return {load:load,commit:commit,initialize:initialize,restore:restore};
 }
 function ngShardExecute_(props,timings,req) {
-  var b=req.payload||{},recovery=b.shardStore==='recovery',repo=ngShardRepository_(props,timings,recovery);
+  var b=req.payload||{},recovery=b.shardStore==='recovery';
+  // Recovery is an owner-only sandbox, never an alternate route for old share tokens.
+  if(recovery&&req.actor!=='owner')ngError_(403,'OP_FORBIDDEN');
+  var repo=ngShardRepository_(props,timings,recovery);
   if(['shardInit','shardSeed','shardRestore','shardExport'].indexOf(req.op)>=0&&req.actor!=='owner')ngError_(403,'OP_FORBIDDEN');
   if(req.op==='shardInit')return repo.initialize();
   if(req.op==='shardRestore')return repo.restore(b.backup);

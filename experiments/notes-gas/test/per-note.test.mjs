@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {randomUUID,createHash} from 'node:crypto';
+import {randomUUID} from 'node:crypto';
 import {harness,hash} from './harness.mjs';
 const clone=x=>JSON.parse(JSON.stringify(x));
 function setup(){const h=harness(),original=h.props.get('NOTES_HEAD');const call=(op,p={},actor='owner')=>h.call(op,{...p,perNote:true},actor);assert.equal(call('shardInit').ok,true);return {...h,call,original};}
@@ -38,9 +38,10 @@ test('workspace ACL is live, revoke precedes receipt, folder move changes scope;
 });
 test('export/restore to empty recovery namespace preserves revision, history, revoked ACL and idempotency',()=>{
  const h=setup(),req=h.request('save',{...note(),perNote:true}),a=ok(h.send(req));ok(h.call('save',{...a,title:'SYNTHETIC newer'}));
+ const shareId='d'.repeat(32);ok(h.call('shareCreate',{noteId:a.id,shareId,tokenHash:hash('a'.repeat(64))}));ok(h.call('shareRevoke',{shareId}));
  const backup=ok(h.call('shardExport')),original=h.props.get('NOTES_SHARD_HEAD');
  ok(h.call('shardRestore',{shardStore:'recovery',backup}));ok(h.call('shardRestore',{shardStore:'recovery',backup}));assert.equal(h.call('shardRestore',{shardStore:'recovery',backup:{...backup,revision:3}}).status,409);
- assert.deepEqual(ok(h.call('shardExport',{shardStore:'recovery'})),backup);assert.equal(h.props.get('NOTES_SHARD_HEAD'),original);
+ assert.deepEqual(ok(h.call('shardExport',{shardStore:'recovery'})),backup);assert.equal(h.props.get('NOTES_SHARD_HEAD'),original);assert.equal(backup.shares[shareId].revoked,true);assert.equal(h.call('get',{id:a.id,token:shareId+'.'+'a'.repeat(64),shardStore:'recovery'},'share').status,403);
  const replay={...req,payload:{...req.payload,shardStore:'recovery'}};assert.deepEqual(ok(h.send(replay)),a);
 });
 test('100 then 500 simulated notes preserve full text search and index; 501st fails; seed replay does not commit',()=>{
