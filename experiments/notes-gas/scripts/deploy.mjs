@@ -31,6 +31,7 @@ export async function deploy({env,files,fetcher=fetch,verify=async()=>true}) {
       if(!r.ok){
         let body;try{body=await r.json();}catch{}
         const error=body?.error;
+        report.googleError={httpStatus:r.status,status:['INVALID_ARGUMENT','PERMISSION_DENIED','FAILED_PRECONDITION','NOT_FOUND','INTERNAL'].includes(error?.status)?error.status:'OTHER',hints:['scriptId','deploymentConfig','Unknown name','read-only','manifest','version','permission','caller','deployment'].filter(x=>String(error?.message||'').toLowerCase().includes(x.toLowerCase()))};
         if(/user has not enabled.*Apps Script API|script\.google\.com\/home\/usersettings/i.test(String(error?.message||'')))fail('USER_APPS_SCRIPT_API_DISABLED');
         const reasons=(Array.isArray(error?.details)?error.details:[]).map(x=>x?.reason);
         if(reasons.includes('SERVICE_DISABLED'))fail('CLOUD_APPS_SCRIPT_API_DISABLED');
@@ -108,7 +109,8 @@ export async function deploy({env,files,fetcher=fetch,verify=async()=>true}) {
       if(after.deploymentConfig.versionNumber!==version.versionNumber)fail('DEPLOY_VERIFY_FAILED');
       report.deployed=true;report.phase='health';if(!await verify())fail('POST_DEPLOY_HEALTH_FAILED');
       report.phase='verified';return report;
-    }catch(_) {
+    }catch(cause) {
+      report.failureCode=/^[A-Z_0-9]{1,80}$/.test(cause.message)?cause.message:'REQUEST_FAILED';
       // A timed-out update may have committed. Read actual deployment before rollback.
       report.phase='deploy_failed';
       try {
@@ -138,5 +140,5 @@ if(process.argv[1]===fileURLToPath(import.meta.url)) {
     for(let i=0;i<3;i++){try{if((await client(newRequest('health'))).readVerified)return true;}catch{}if(i<2)await new Promise(r=>setTimeout(r,1500));}return false;
   };
   try{const result=await deploy({env:process.env,files,verify});await writeFile(new URL('../deployment-result.local.json',import.meta.url),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));}
-  catch(e){if(e.report)await writeFile(new URL('../deployment-result.local.json',import.meta.url),JSON.stringify({...e.report,error:e.message},null,2)+'\n');console.error(e.report?e.message:'DEPLOY_FAILED');process.exitCode=1;}
+  catch(e){if(e.report)await writeFile(new URL('../deployment-result.local.json',import.meta.url),JSON.stringify({...e.report,error:e.message},null,2)+'\n');console.error(e.report?JSON.stringify({...e.report,error:e.message}):'DEPLOY_FAILED');process.exitCode=1;}
 }
