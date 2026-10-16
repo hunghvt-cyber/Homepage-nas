@@ -87,3 +87,18 @@ Nguồn chính thức:
 The user confirmed three OAuth repository secrets were saved on 16/10/2026 at 14:43 VN. The workflow now pins the exact user-supplied, non-secret Script ID `1vASoUHTYVL1pP4oeAbrh0ueOCdo5cWwpUiwUkTleziWgKRod17Pa68cs` in the reviewed branch configuration and enables prototype source sync on push after simulation. The user no longer needs to manually create SCRIPT_ID/AUTODEPLOY variables to complete this step. Set repository Variable NOTES_GAS_AUTODEPLOY=false to disable future automatic sync. This supersedes the earlier default-disabled setup table for this one authorized prototype.
 
 Deployment ID remains unset until the initial /exec deployment is configured. The first live job only reads target metadata/content, synchronizes known source files and verifies the hash; it does not initialize a store, edit Properties, create a web deployment, migrate Notes, or access production Blob. Runtime secrets remain absent unless explicitly configured separately. API setup failures and expired/wrong OAuth credentials return fixed diagnostic codes without echoing response bodies or token values.
+
+### Managed endpoint bootstrap (2026-10-16)
+
+After the existing `NOTES_HMAC_KEY` is stored in repository secret
+`NOTES_GAS_HMAC_KEY`, the prototype workflow can bootstrap its web app via
+`projects.deployments.create`. This uses the already authorized deployment scope;
+no credentials are retrieved from GitHub or printed. The runner discovers an
+existing deployment with the exact description `Homepage Notes prototype managed
+endpoint` before creating one. It verifies immutable version content, reads back
+the deployment and validates a signed health response. A lost create response is
+not retried blindly; the next run discovers it. A failed initial health leaves the
+isolated endpoint for diagnosis and records its nonsecret ID/URL; it does not
+claim successful deployment or touch production. Multiple matching endpoints
+block execution. Once verified, pin the observed deployment ID for subsequent
+updates and rollback. This paragraph describes implementation, not live success.

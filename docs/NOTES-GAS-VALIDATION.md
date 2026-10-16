@@ -51,3 +51,13 @@ Workflow https://github.com/hunghvt-cyber/Homepage-nas/actions/runs/38869637124 
 Result phase: `source_verified_deployment_not_configured`, sourceUpdated=true, deployed=false. This is real Google OAuth/source read-write evidence, not a mock. No Script Properties, Notes Drive snapshots or production Blob were changed by source sync. Runtime web app deployment, health, CRUD benchmark and recovery are still unverified. The operational-probe job was green because runtime URL/key were absent and its script explicitly skipped; it is NOT evidence of live backend health.
 
 The three OAuth GitHub secrets are confirmed usable without revealing their values. Runtime HMAC secret is separate: owner must copy the existing Apps Script NOTES_HMAC_KEY into GitHub Secret NOTES_GAS_HMAC_KEY, not into chat. This is the remaining credential setup before live endpoint tests; no need to reauthorize OAuth or paste source files again.
+
+### 2026-10-16 15:07 ICT — endpoint bootstrap blocked safely
+
+Commit `12d37355879a21b67261dedc3adfb4431071117d`, workflow
+https://github.com/hunghvt-cyber/Homepage-nas/actions/runs/38871589532:
+29 simulated tests passed. Source-update failed with `RUNTIME_KEY_REQUIRED` before
+OAuth or Google mutations because Actions resolved `NOTES_GAS_HMAC_KEY` to empty.
+No endpoint was created and no real benchmark ran. User must add the existing GAS
+runtime key as a repository **Actions secret**, not a variable or another GAS
+Script Property. No credential value was read or disclosed.
