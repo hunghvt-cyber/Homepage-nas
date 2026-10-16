@@ -25,3 +25,14 @@ App support/contact email remains in Google OAuth configuration. These pages int
 The user's OAuth app remains External/Testing; Audience says Branding configuration is required while Verification Center says verification is not required because it is Testing. The user confirmed the three App domain URL fields are empty. Google Branding documentation describes homepage/privacy/terms for external production; adding real public pages is the next concrete setup step, not proof that the blank URLs were the only blocker.
 
 Official reference: https://support.google.com/cloud/answer/15549049
+
+## Verified live deployment — 16/10/2026
+
+- Source commit: `31da59ae45642b5cf1a08f8314ceac7bdd9772f5`.
+- Dedicated information deployment: `dpl_GpQEWgMpUuYbzewBgHMPJDte8vcB`, READY.
+- Homepage: https://homepage-automation-info.vercel.app/
+- Privacy: https://homepage-automation-info.vercel.app/privacy/
+- Terms: https://homepage-automation-info.vercel.app/terms/
+- Native unauthenticated HTTP reads returned 200 and matching source bytes for all three pages and style.css. Project metadata confirms password/SSO protection disabled only for this new public information project.
+- HTML link/heading/no-script/no-form/no-credential checks passed. Local Playwright browser could not launch because its Chromium binary was unavailable; no visual browser QA claimed.
+- Google publish/domain verification remains pending user action; live pages do not prove OAuth publishing is unblocked.
