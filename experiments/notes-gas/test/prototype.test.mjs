@@ -185,3 +185,17 @@ test('operational probe continues to fetch journal when health fails and returns
   const report=await inspect(async req=>{calls.push(req.op);if(req.op==='health')throw Object.assign(new Error('SNAPSHOT_CORRUPT'),{status:503});return {events:[{at:'2026-10-16T04:00:00.000Z',reference:'GAS-1234abcd',operation:'health',stage:'read',status:503,code:'SNAPSHOT_CORRUPT',durationMs:8,text:'DO NOT EXPORT',token:'DO NOT EXPORT'}]};});
   assert.deepEqual(calls,['health','logs']);assert.equal(report.healthy,false);assert.equal(report.journal.events.length,1);assert.equal(JSON.stringify(report).includes('DO NOT EXPORT'),false);
 });
+
+test('owner profiling preserves semantics and ping isolates storage-free path',()=>{
+ const h=harness();const ping=h.call('ping',{profile:true});assert.equal(ping.result.pong,true);assert.ok(ping.observability.timings.serverTotal>=0);assert.equal('snapshotRead' in ping.observability.timings,false);
+ const saved=h.call('save',{id:randomUUID(),title:'SYNTHETIC profile',text:'Tiếng Việt',profile:true});assert.equal(saved.ok,true);for(const label of ['snapshotCreate','snapshotReadback','headPublish','loadTotal','core','auditEnd'])assert.ok(saved.observability.timings[label]>=0,label);
+ assert.equal(h.call('ping',{profile:true},'share').status,403);assert.equal(h.call('list').observability.timings,undefined);
+ h.props.set('NOTES_HEAD','broken');assert.equal(h.call('ping',{profile:true}).ok,true);assert.equal(h.call('list',{profile:true}).ok,false);
+});
+
+test('transport profiling emits attempt stages without payload or URLs and observer errors are harmless',async()=>{
+ const h=harness(),attempts=[],req=newRequest('ping',{profile:true});
+ const result=await createGasClient({url:'https://script.google.com/macros/s/fake/exec',key,onAttempt:x=>attempts.push(x),fetcher:async(_,o)=>new Response(h.context.doPost({postData:{contents:o.body}}),{headers:{'content-type':'application/json'}})})(req);
+ assert.equal(result.pong,true);assert.equal(attempts.length,1);assert.equal(attempts[0].ok,true);assert.ok(attempts[0].postMs>=0);assert.ok(attempts[0].bodyMs>=0);assert.equal(JSON.stringify(attempts).includes('http'),false);assert.equal(JSON.stringify(attempts).includes(key),false);
+ await createGasClient({url:'https://script.google.com/macros/s/fake/exec',key,onAttempt:()=>{throw Error('observer');},fetcher:async(_,o)=>new Response(h.context.doPost({postData:{contents:o.body}}),{headers:{'content-type':'application/json'}})})(newRequest('ping'));
+});

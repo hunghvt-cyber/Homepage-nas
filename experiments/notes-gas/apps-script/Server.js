@@ -11,39 +11,43 @@ function ngEqual_(a,b) {
 }
 function ngBytes_(s) {return Utilities.newBlob(s).getBytes().length;}
 function ngError_(status,code) {var e=new Error(code);e.status=status;throw e;}
-function ngRepository_(props) {
+function ngTimed_(timings,name,fn) {
+  var started=Date.now();try{return fn();}finally{if(timings)timings[name]=(timings[name]||0)+Date.now()-started;}
+}
+function ngRepository_(props,timings) {
   return {
     load:function() {
-      var raw=props.getProperty('NOTES_HEAD');
+      var raw=ngTimed_(timings,'headRead',function(){return props.getProperty('NOTES_HEAD');});
       if(!raw)ngError_(503,'NOT_INITIALIZED');
-      var head=JSON.parse(raw), file=DriveApp.getFileById(head.id);
-      var folderId=props.getProperty('NOTES_ROOT_FOLDER_ID'),parents=file.getParents(),found=false;
-      while(parents.hasNext())if(parents.next().getId()===folderId)found=true;
-      if(!found||file.isTrashed())ngError_(503,'HEAD_UNAVAILABLE');
-      var data=file.getBlob().getDataAsString('UTF-8');
+      var head=JSON.parse(raw), file=ngTimed_(timings,'fileLookup',function(){return DriveApp.getFileById(head.id);});
+      ngTimed_(timings,'fileValidation',function(){
+        var folderId=props.getProperty('NOTES_ROOT_FOLDER_ID'),parents=file.getParents(),found=false;
+        while(parents.hasNext())if(parents.next().getId()===folderId)found=true;
+        if(!found||file.isTrashed())ngError_(503,'HEAD_UNAVAILABLE');
+      });
+      var data=ngTimed_(timings,'snapshotRead',function(){return file.getBlob().getDataAsString('UTF-8');});
       if(ngHash_(data)!==head.hash)ngError_(503,'SNAPSHOT_CORRUPT');
       var state=JSON.parse(data);
       if(state.schema!==1||state.revision!==head.revision||!Array.isArray(state.index)||!state.notes||!state.shares||!state.receipts)ngError_(503,'SNAPSHOT_CORRUPT');
       return {state:state,head:head,raw:raw};
     },
     commit:function(state,previous) {
-      var data=JSON.stringify(state),hash=ngHash_(data);
+      var data=ngTimed_(timings,'snapshotSerialize',function(){return JSON.stringify(state);}),hash=ngHash_(data);
       if(ngBytes_(data)>20000000)ngError_(413,'SNAPSHOT_CAPACITY');
       // Immutable candidate: a failed create/read-back never moves HEAD.
-      var folder=DriveApp.getFolderById(props.getProperty('NOTES_ROOT_FOLDER_ID'));
-      var file=folder.createFile(Utilities.newBlob(data,'application/json','snapshot-'+state.revision+'-'+Utilities.getUuid()+'.json'));
-      if(ngHash_(file.getBlob().getDataAsString('UTF-8'))!==hash)ngError_(503,'WRITE_VERIFY_FAILED');
-      if(props.getProperty('NOTES_HEAD')!==previous.raw)ngError_(409,'HEAD_CHANGED');
+      var folder=ngTimed_(timings,'folderLookup',function(){return DriveApp.getFolderById(props.getProperty('NOTES_ROOT_FOLDER_ID'));});
+      var file=ngTimed_(timings,'snapshotCreate',function(){return folder.createFile(Utilities.newBlob(data,'application/json','snapshot-'+state.revision+'-'+Utilities.getUuid()+'.json'));});
+      ngTimed_(timings,'snapshotReadback',function(){if(ngHash_(file.getBlob().getDataAsString('UTF-8'))!==hash)ngError_(503,'WRITE_VERIFY_FAILED');});
+      ngTimed_(timings,'headPrecondition',function(){if(props.getProperty('NOTES_HEAD')!==previous.raw)ngError_(409,'HEAD_CHANGED');});
       var head={id:file.getId(),hash:hash,revision:state.revision,previous:previous.head.id};
       var raw=JSON.stringify(head);
       // Single commit pointer; exceptions here are ambiguous, resolved by retry/load.
-      props.setProperty('NOTES_HEAD',raw);
-      if(props.getProperty('NOTES_HEAD')!==raw)ngError_(503,'COMMIT_UNCERTAIN');
+      ngTimed_(timings,'headPublish',function(){props.setProperty('NOTES_HEAD',raw);if(props.getProperty('NOTES_HEAD')!==raw)ngError_(503,'COMMIT_UNCERTAIN');});
     }
   };
 }
 // Bounded operational journal; independent of Drive/HEAD so corruption remains diagnosable.
-var NG_BUILD_ = 'notes-gas-ops-v1';
+var NG_BUILD_ = 'notes-gas-profile-v2';
 function ngAuditRead_(props) {
   var raw=props.getProperty('NOTES_OPS_LOG');
   if(!raw)return {schema:1,events:[]};
@@ -56,6 +60,7 @@ function ngAudit_(props,event,held,authenticated) {
   var row={at:new Date().toISOString(),reference:event.reference,build:NG_BUILD_,
     operation:event.operation,stage:event.stage,status:event.status,code:event.code,
     durationMs:Math.max(0,Date.now()-event.started)};
+  if(event.timings){row.timings={};['auth','lockWait','auditStart','headRead','fileLookup','fileValidation','snapshotRead','loadTotal','core','snapshotSerialize','folderLookup','snapshotCreate','snapshotReadback','headPrecondition','headPublish','commitTotal'].forEach(function(name){var value=event.timings[name];if(Number.isFinite(value)&&value>=0)row.timings[name]=value;});}
   try {console.log(JSON.stringify(row));}catch(_){}
   // Reject noise before persisting. Do not acquire/wait for another lock just to log.
   if(!held||!authenticated)return false;
@@ -90,7 +95,7 @@ function doGet() {
   return ContentService.createTextOutput(JSON.stringify({ok:false,status:405,code:'POST_REQUIRED'})).setMimeType(ContentService.MimeType.JSON);
 }
 function doPost(e) {
-  var key,requestId='',result,lock,authenticated=false;
+  var key,requestId='',result,lock,authenticated=false,timings={};
   var event={reference:'GAS-'+Utilities.getUuid().slice(0,8),operation:'unknown',stage:'auth',status:503,code:'STORAGE_UNAVAILABLE',started:Date.now()};
   try {
     var props=PropertiesService.getScriptProperties();
@@ -103,24 +108,24 @@ function doPost(e) {
     if(!ngEqual_(ngMac_('request\n'+envelope.sentAt+'\n'+envelope.request,key),envelope.signature))ngError_(401,'AUTH_INVALID');
     var req;try{req=JSON.parse(envelope.request);}catch(_){ngError_(400,'INVALID_JSON');}
     if(!/^[0-9a-f-]{36}$/.test(req.requestId||''))ngError_(400,'REQUEST_ID_REQUIRED');
-    requestId=req.requestId;authenticated=true;
-    var ops=['list','get','save','delete','restore','folderDelete','shareCreate','shareRevoke','shareList','backup','search','health','logs'];
+    requestId=req.requestId;authenticated=true;timings.auth=Date.now()-event.started;
+    var ops=['list','get','save','delete','restore','folderDelete','shareCreate','shareRevoke','shareList','backup','search','health','logs','ping'];
     event.operation=ops.indexOf(req.op)>=0?req.op:'unsupported';event.stage='lock';
     // Lock reads too: permission validation and snapshot publication share one order.
-    lock=LockService.getScriptLock();if(!lock.tryLock(1500))ngError_(503,'BUSY');
-    ngAudit_(props,{reference:event.reference,operation:event.operation,stage:'start',status:102,code:'STARTED',started:event.started},true,true);
-    var repo=ngRepository_(props),output;event.stage='read';
-    if(req.op==='health'||req.op==='logs'){
+    lock=LockService.getScriptLock();ngTimed_(timings,'lockWait',function(){if(!lock.tryLock(1500))ngError_(503,'BUSY');});
+    ngTimed_(timings,'auditStart',function(){ngAudit_(props,{reference:event.reference,operation:event.operation,stage:'start',status:102,code:'STARTED',started:event.started},true,true);});
+    var repo=ngRepository_(props,timings),output;event.stage='read';
+    if(req.op==='health'||req.op==='logs'||req.op==='ping'){
       if(req.actor!=='owner')ngError_(403,'OP_FORBIDDEN');
-      result={ok:true,status:200,result:req.op==='health'?ngHealth_(props,repo):ngAuditRead_(props)};
+      result={ok:true,status:200,result:req.op==='ping'?{service:'notes-prototype',build:NG_BUILD_,pong:true}:req.op==='health'?ngHealth_(props,repo):ngAuditRead_(props)};
     }else{
-      var current=repo.load();event.stage='validate';
-      output=NotesCore.execute(current.state,req,{now:Date.now,hash:ngHash_,equal:ngEqual_,bytes:ngBytes_});
+      var current=ngTimed_(timings,'loadTotal',function(){return repo.load();});event.stage='validate';
+      output=ngTimed_(timings,'core',function(){return NotesCore.execute(current.state,req,{now:Date.now,hash:ngHash_,equal:ngEqual_,bytes:ngBytes_});});
       result={ok:true,status:200,result:output.result};
     }
     // Reject oversized wire responses before publishing any mutation.
     if(ngBytes_(JSON.stringify({body:JSON.stringify(result),signature:'0'.repeat(64)}))>3999000)ngError_(413,'RESPONSE_TOO_LARGE');
-    if(output&&output.changed){event.stage='commit';repo.commit(output.state,current);}
+    if(output&&output.changed){event.stage='commit';ngTimed_(timings,'commitTotal',function(){repo.commit(output.state,current);});}
     event.stage='complete';event.status=200;event.code='OK';
   } catch(err) {
     // No raw Drive errors, secrets, IDs or note content in logs/responses.
@@ -128,9 +133,11 @@ function doPost(e) {
     event.status=result.status;event.code=result.code;
   } finally {
     var held=!!(lock&&lock.hasLock());
-    var persisted=ngAudit_(props,event,held,authenticated);
+    if(authenticated&&req.actor==='owner'&&req.payload&&req.payload.profile===true)event.timings=timings;
+    var persisted=ngTimed_(timings,'auditEnd',function(){return ngAudit_(props,event,held,authenticated);});
     if(result)result.observability={reference:event.reference,persisted:persisted};
     if(held)lock.releaseLock();
+    if(result&&authenticated&&req.actor==='owner'&&req.payload&&req.payload.profile===true){timings.serverTotal=Date.now()-event.started;result.observability.timings=timings;}
   }
   var body=JSON.stringify(result);
   return ContentService.createTextOutput(JSON.stringify({body:body,signature:key?ngMac_('response\n'+requestId+'\n'+body,key):''})).setMimeType(ContentService.MimeType.JSON);
