@@ -27,7 +27,7 @@ export async function deploy({env,files,fetcher=fetch,verify=async()=>true}) {
     const token=await response.json();if(typeof token.access_token!=='string'||!token.access_token)fail('OAUTH_REFRESH_FAILED');access=token.access_token;
     const base='https://script.googleapis.com/v1/projects/'+id;
     async function api(path,method='GET',value) {
-      const r=await fetcher(base+path,{method,headers:{Authorization:'Bearer '+access,'Cache-Control':'no-cache',...(value?{'Content-Type':'application/json'}:{})},...(value?{body:JSON.stringify(value)}:{}),redirect:'error',signal:AbortSignal.timeout(20000)});
+      const r=await fetcher(base+path,{method,headers:{Authorization:'Bearer '+access,'Cache-Control':'no-cache',...(value?{'Content-Type':'application/json'}:{})},...(value?{body:JSON.stringify(value)}:{}),redirect:'error',signal:AbortSignal.timeout(60000)});
       if(!r.ok){
         let body;try{body=await r.json();}catch{}
         const error=body?.error;
@@ -116,7 +116,7 @@ export async function deploy({env,files,fetcher=fetch,verify=async()=>true}) {
       report.deployed=true;report.phase='health';if(!await verify())fail('POST_DEPLOY_HEALTH_FAILED');
       report.phase='verified';return report;
     }catch(cause) {
-      report.failureCode=/^[A-Z_0-9]{1,80}$/.test(cause.message)?cause.message:'REQUEST_FAILED';
+      report.failureCode=/^[A-Z_0-9]{1,80}$/.test(cause.message)?cause.message:({TimeoutError:'GOOGLE_REQUEST_TIMEOUT',TypeError:'GOOGLE_NETWORK_FAILED'}[cause.name]||'REQUEST_FAILED');
       // A timed-out update may have committed. Read actual deployment before rollback.
       report.phase='deploy_failed';
       try {

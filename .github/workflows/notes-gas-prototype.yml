@@ -20,7 +20,7 @@ jobs:
       - run: find experiments/notes-gas -name '*.js' -o -name '*.mjs' | xargs -n1 node --check
 # Simulation needs no secrets. Optional operational probe below is read-only; no deployment or migration.
   operational-probe:
-    if: always() && github.event_name == 'push' && needs.simulation.result == 'success' && (needs.source-update.result == 'success' || needs.source-update.result == 'skipped')
+    if: always() && github.event_name == 'push' && needs.simulation.result == 'success'
     needs: [simulation, source-update]
     runs-on: ubuntu-latest
     permissions:
