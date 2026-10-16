@@ -95,8 +95,14 @@ export async function deploy({env,files,fetcher=fetch,verify=async()=>true}) {
       if(!await verify(url))fail('BOOTSTRAP_HEALTH_FAILED');
       report.phase='verified';return report;
     }
-    // Reuse a matching deployed version; do not burn version quota on every push.
-    if(previous.deploymentConfig.description===description){report.phase='already_deployed';return report;}
+    // Compare immutable deployed content, not commit descriptions: docs-only pushes
+    // must not consume versions or induce another rollout during measurements.
+    const deployedHash=digest((await api('/content?versionNumber='+report.previousVersion)).files);
+    if(deployedHash===desired){
+      report.version=report.previousVersion;report.reusedVersion=true;report.phase='health';
+      if(!await verify())fail('POST_DEPLOY_HEALTH_FAILED');
+      report.phase='verified_unchanged';return report;
+    }
     report.phase='version';const version=await api('/versions','POST',{description});
     if(!Number.isSafeInteger(version.versionNumber))fail('VERSION_INVALID');report.version=version.versionNumber;
     if(digest((await api('/content?versionNumber='+version.versionNumber)).files)!==desired)fail('VERSION_VERIFY_FAILED');

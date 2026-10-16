@@ -1,0 +1,2233 @@
+{
+  "kind": "LIVE_GOOGLE_STAGE_PROFILE",
+  "at": "2026-10-16T08:37:56.089Z",
+  "path": "GitHub runner -> GAS ContentService -> Drive; not Vercel/browser",
+  "timeoutMs": 12000,
+  "attempts": 2,
+  "samples": [
+    {
+      "operation": "health",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2420.879398,
+          "redirectMs": 220.50741900000003,
+          "bodyMs": 3.634639000000334,
+          "verifyMs": 0.11406099999976504,
+          "durationMs": 2645.15
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2645.51,
+      "serverMs": {
+        "auth": 42,
+        "lockWait": 128,
+        "auditStart": 87,
+        "headRead": 35,
+        "fileLookup": 214,
+        "fileValidation": 267,
+        "snapshotRead": 258,
+        "auditEnd": 77,
+        "serverTotal": 1311
+      },
+      "outsideMeasuredServerMs": 1334.15
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1285.7824029999997,
+          "redirectMs": 129.98998099999972,
+          "bodyMs": 1.3334450000002107,
+          "verifyMs": 0.08930400000008376,
+          "durationMs": 1417.2
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1417.24,
+      "serverMs": {
+        "auth": 30,
+        "lockWait": 58,
+        "auditStart": 83,
+        "auditEnd": 101,
+        "serverTotal": 392
+      },
+      "outsideMeasuredServerMs": 1025.2
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 981.5350040000003,
+          "redirectMs": 120.88609900000029,
+          "bodyMs": 1.0823989999998958,
+          "verifyMs": 0.08901300000070478,
+          "durationMs": 1103.6
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1103.62,
+      "serverMs": {
+        "auth": 31,
+        "lockWait": 58,
+        "auditStart": 87,
+        "auditEnd": 71,
+        "serverTotal": 364
+      },
+      "outsideMeasuredServerMs": 739.6
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1063.661207,
+          "redirectMs": 119.59922000000006,
+          "bodyMs": 1.3336550000003626,
+          "verifyMs": 0.08827199999996083,
+          "durationMs": 1184.69
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1184.73,
+      "serverMs": {
+        "auth": 13,
+        "lockWait": 48,
+        "auditStart": 33,
+        "auditEnd": 31,
+        "serverTotal": 222
+      },
+      "outsideMeasuredServerMs": 962.69
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1213.5629630000003,
+          "redirectMs": 122.47734000000037,
+          "bodyMs": 1.2193649999999252,
+          "verifyMs": 0.09025499999916065,
+          "durationMs": 1337.35
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1337.38,
+      "serverMs": {
+        "auth": 38,
+        "lockWait": 59,
+        "auditStart": 116,
+        "auditEnd": 74,
+        "serverTotal": 410
+      },
+      "outsideMeasuredServerMs": 927.35
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 968.4654769999997,
+          "redirectMs": 128.674543000001,
+          "bodyMs": 1.6513809999996738,
+          "verifyMs": 0.07690499999989697,
+          "durationMs": 1098.87
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1098.89,
+      "serverMs": {
+        "auth": 31,
+        "lockWait": 62,
+        "auditStart": 119,
+        "auditEnd": 101,
+        "serverTotal": 447
+      },
+      "outsideMeasuredServerMs": 651.87
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 961.0346389999995,
+          "redirectMs": 125.74207500000011,
+          "bodyMs": 0.8753500000002532,
+          "verifyMs": 0.07663399999910325,
+          "durationMs": 1087.73
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1087.75,
+      "serverMs": {
+        "auth": 53,
+        "lockWait": 67,
+        "auditStart": 106,
+        "auditEnd": 97,
+        "serverTotal": 445
+      },
+      "outsideMeasuredServerMs": 642.73
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1039.3917039999997,
+          "redirectMs": 131.67818699999953,
+          "bodyMs": 0.6176340000001801,
+          "verifyMs": 0.09939800000029209,
+          "durationMs": 1171.79
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1171.81,
+      "serverMs": {
+        "auth": 31,
+        "lockWait": 111,
+        "auditStart": 94,
+        "auditEnd": 101,
+        "serverTotal": 492
+      },
+      "outsideMeasuredServerMs": 679.79
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1196.7616479999997,
+          "redirectMs": 134.8748169999999,
+          "bodyMs": 1.1853140000002895,
+          "verifyMs": 0.11244800000167743,
+          "durationMs": 1332.94
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1332.96,
+      "serverMs": {
+        "auth": 35,
+        "lockWait": 91,
+        "auditStart": 88,
+        "auditEnd": 109,
+        "serverTotal": 484
+      },
+      "outsideMeasuredServerMs": 848.94
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1114.0547490000008,
+          "redirectMs": 125.8190080000004,
+          "bodyMs": 1.0460689999999886,
+          "verifyMs": 0.08610599999883561,
+          "durationMs": 1241.02
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1241.04,
+      "serverMs": {
+        "auth": 40,
+        "lockWait": 78,
+        "auditStart": 86,
+        "auditEnd": 104,
+        "serverTotal": 476
+      },
+      "outsideMeasuredServerMs": 765.02
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1095.5936500000007,
+          "redirectMs": 113.2809699999998,
+          "bodyMs": 1.0404969999999594,
+          "verifyMs": 0.07817700000123295,
+          "durationMs": 1210
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1210.01,
+      "serverMs": {
+        "auth": 46,
+        "lockWait": 71,
+        "auditStart": 113,
+        "auditEnd": 207,
+        "serverTotal": 595
+      },
+      "outsideMeasuredServerMs": 615
+    },
+    {
+      "operation": "list",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2224.952975,
+          "redirectMs": 121.86100199999782,
+          "bodyMs": 1.3372920000001614,
+          "verifyMs": 0.11915800000133459,
+          "durationMs": 2348.28
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2348.29,
+      "serverMs": {
+        "auth": 41,
+        "lockWait": 65,
+        "auditStart": 114,
+        "headRead": 45,
+        "fileLookup": 183,
+        "fileValidation": 217,
+        "snapshotRead": 298,
+        "loadTotal": 746,
+        "core": 3,
+        "auditEnd": 116,
+        "serverTotal": 1224
+      },
+      "outsideMeasuredServerMs": 1124.28
+    },
+    {
+      "operation": "list",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2426.4667969999973,
+          "redirectMs": 111.91177400000015,
+          "bodyMs": 0.948168999999325,
+          "verifyMs": 0.10100099999908707,
+          "durationMs": 2539.43
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2539.44,
+      "serverMs": {
+        "auth": 84,
+        "lockWait": 139,
+        "auditStart": 195,
+        "headRead": 46,
+        "fileLookup": 268,
+        "fileValidation": 303,
+        "snapshotRead": 322,
+        "loadTotal": 944,
+        "core": 2,
+        "auditEnd": 211,
+        "serverTotal": 1851
+      },
+      "outsideMeasuredServerMs": 688.43
+    },
+    {
+      "operation": "list",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1620.1018530000001,
+          "redirectMs": 205.85101000000213,
+          "bodyMs": 0.6494879999991099,
+          "verifyMs": 0.1389339999986987,
+          "durationMs": 1826.75
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1826.76,
+      "serverMs": {
+        "auth": 27,
+        "lockWait": 66,
+        "auditStart": 96,
+        "headRead": 21,
+        "fileLookup": 175,
+        "fileValidation": 211,
+        "snapshotRead": 277,
+        "loadTotal": 688,
+        "core": 2,
+        "auditEnd": 73,
+        "serverTotal": 1086
+      },
+      "outsideMeasuredServerMs": 740.75
+    },
+    {
+      "operation": "list",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1630.3637080000008,
+          "redirectMs": 121.60875300000043,
+          "bodyMs": 1.0827960000024177,
+          "verifyMs": 0.1208729999998468,
+          "durationMs": 1753.18
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1753.19,
+      "serverMs": {
+        "auth": 23,
+        "lockWait": 70,
+        "auditStart": 92,
+        "headRead": 32,
+        "fileLookup": 157,
+        "fileValidation": 177,
+        "snapshotRead": 312,
+        "loadTotal": 694,
+        "core": 3,
+        "auditEnd": 86,
+        "serverTotal": 1114
+      },
+      "outsideMeasuredServerMs": 639.18
+    },
+    {
+      "operation": "list",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1818.6740329999993,
+          "redirectMs": 136.1874459999999,
+          "bodyMs": 1.2188610000011977,
+          "verifyMs": 0.13573399999950198,
+          "durationMs": 1956.22
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1956.23,
+      "serverMs": {
+        "auth": 53,
+        "lockWait": 68,
+        "auditStart": 130,
+        "headRead": 42,
+        "fileLookup": 174,
+        "fileValidation": 237,
+        "snapshotRead": 302,
+        "loadTotal": 761,
+        "core": 2,
+        "auditEnd": 102,
+        "serverTotal": 1266
+      },
+      "outsideMeasuredServerMs": 690.22
+    },
+    {
+      "operation": "list",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1616.2230610000006,
+          "redirectMs": 119.87844400000176,
+          "bodyMs": 1.2958639999997104,
+          "verifyMs": 0.1226249999999709,
+          "durationMs": 1737.52
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1737.54,
+      "serverMs": {
+        "auth": 41,
+        "lockWait": 60,
+        "auditStart": 111,
+        "headRead": 46,
+        "fileLookup": 165,
+        "fileValidation": 200,
+        "snapshotRead": 276,
+        "loadTotal": 692,
+        "core": 3,
+        "auditEnd": 98,
+        "serverTotal": 1130
+      },
+      "outsideMeasuredServerMs": 607.52
+    },
+    {
+      "operation": "list",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2392.2762269999985,
+          "redirectMs": 121.06879599999957,
+          "bodyMs": 1.004585999999108,
+          "verifyMs": 0.12265500000285101,
+          "durationMs": 2514.48
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2514.49,
+      "serverMs": {
+        "auth": 82,
+        "lockWait": 119,
+        "auditStart": 261,
+        "headRead": 46,
+        "fileLookup": 239,
+        "fileValidation": 277,
+        "snapshotRead": 339,
+        "loadTotal": 905,
+        "core": 2,
+        "auditEnd": 187,
+        "serverTotal": 1821
+      },
+      "outsideMeasuredServerMs": 693.48
+    },
+    {
+      "operation": "list",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1745.2764330000027,
+          "redirectMs": 132.67032499999914,
+          "bodyMs": 0.5889690000003611,
+          "verifyMs": 0.11808799999926123,
+          "durationMs": 1878.66
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1878.67,
+      "serverMs": {
+        "auth": 35,
+        "lockWait": 57,
+        "auditStart": 100,
+        "headRead": 31,
+        "fileLookup": 177,
+        "fileValidation": 174,
+        "snapshotRead": 269,
+        "loadTotal": 653,
+        "core": 2,
+        "auditEnd": 78,
+        "serverTotal": 1051
+      },
+      "outsideMeasuredServerMs": 827.66
+    },
+    {
+      "operation": "list",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1502.5457350000033,
+          "redirectMs": 245.00158799999917,
+          "bodyMs": 0.942683000001125,
+          "verifyMs": 0.09997000000294065,
+          "durationMs": 1748.59
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1748.6,
+      "serverMs": {
+        "auth": 41,
+        "lockWait": 54,
+        "auditStart": 95,
+        "headRead": 31,
+        "fileLookup": 116,
+        "fileValidation": 181,
+        "snapshotRead": 256,
+        "loadTotal": 587,
+        "core": 3,
+        "auditEnd": 96,
+        "serverTotal": 997
+      },
+      "outsideMeasuredServerMs": 751.59
+    },
+    {
+      "operation": "list",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1704.5305850000004,
+          "redirectMs": 125.62690800000564,
+          "bodyMs": 0.48695500000030734,
+          "verifyMs": 0.12061199999880046,
+          "durationMs": 1830.77
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1830.78,
+      "serverMs": {
+        "auth": 49,
+        "lockWait": 65,
+        "auditStart": 120,
+        "headRead": 48,
+        "fileLookup": 170,
+        "fileValidation": 258,
+        "snapshotRead": 295,
+        "loadTotal": 776,
+        "core": 1,
+        "auditEnd": 112,
+        "serverTotal": 1283
+      },
+      "outsideMeasuredServerMs": 547.77
+    },
+    {
+      "operation": "save",
+      "writeMode": "create",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3749.8214940000034,
+          "redirectMs": 124.43027199999779,
+          "bodyMs": 0.5992569999943953,
+          "verifyMs": 0.12132399999973131,
+          "durationMs": 3875.04
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 3875.07,
+      "serverMs": {
+        "auth": 38,
+        "lockWait": 76,
+        "auditStart": 110,
+        "headRead": 36,
+        "fileLookup": 135,
+        "fileValidation": 189,
+        "snapshotRead": 238,
+        "loadTotal": 602,
+        "core": 42,
+        "snapshotSerialize": 3,
+        "folderLookup": 161,
+        "snapshotCreate": 1445,
+        "snapshotReadback": 321,
+        "headPrecondition": 38,
+        "headPublish": 92,
+        "commitTotal": 2087,
+        "auditEnd": 98,
+        "serverTotal": 3243
+      },
+      "outsideMeasuredServerMs": 632.04
+    },
+    {
+      "operation": "save",
+      "writeMode": "update",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4426.0904660000015,
+          "redirectMs": 208.70996000000014,
+          "bodyMs": 1.1307170000000042,
+          "verifyMs": 0.10199399999692105,
+          "durationMs": 4636.04
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4636.06,
+      "serverMs": {
+        "auth": 50,
+        "lockWait": 61,
+        "auditStart": 66,
+        "headRead": 11,
+        "fileLookup": 227,
+        "fileValidation": 180,
+        "snapshotRead": 314,
+        "loadTotal": 738,
+        "core": 72,
+        "snapshotSerialize": 1,
+        "folderLookup": 170,
+        "snapshotCreate": 2071,
+        "snapshotReadback": 284,
+        "headPrecondition": 6,
+        "headPublish": 47,
+        "commitTotal": 2622,
+        "auditEnd": 87,
+        "serverTotal": 3817
+      },
+      "outsideMeasuredServerMs": 819.04
+    },
+    {
+      "operation": "save",
+      "writeMode": "create",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4161.160736000005,
+          "redirectMs": 171.60228399999323,
+          "bodyMs": 1.8683799999998882,
+          "verifyMs": 0.08367700000235345,
+          "durationMs": 4334.72
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4334.74,
+      "serverMs": {
+        "auth": 56,
+        "lockWait": 75,
+        "auditStart": 117,
+        "headRead": 41,
+        "fileLookup": 186,
+        "fileValidation": 148,
+        "snapshotRead": 299,
+        "loadTotal": 680,
+        "core": 83,
+        "snapshotSerialize": 1,
+        "folderLookup": 167,
+        "snapshotCreate": 1458,
+        "snapshotReadback": 299,
+        "headPrecondition": 43,
+        "headPublish": 111,
+        "commitTotal": 2115,
+        "auditEnd": 94,
+        "serverTotal": 3400
+      },
+      "outsideMeasuredServerMs": 934.72
+    },
+    {
+      "operation": "save",
+      "writeMode": "update",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3455.2331510000004,
+          "redirectMs": 130.50948000000062,
+          "bodyMs": 0.844505000000936,
+          "verifyMs": 0.11366100000304868,
+          "durationMs": 3586.7
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 3586.72,
+      "serverMs": {
+        "auth": 34,
+        "lockWait": 66,
+        "auditStart": 91,
+        "headRead": 33,
+        "fileLookup": 124,
+        "fileValidation": 166,
+        "snapshotRead": 267,
+        "loadTotal": 594,
+        "core": 55,
+        "snapshotSerialize": 1,
+        "folderLookup": 176,
+        "snapshotCreate": 1174,
+        "snapshotReadback": 271,
+        "headPrecondition": 41,
+        "headPublish": 92,
+        "commitTotal": 1783,
+        "auditEnd": 102,
+        "serverTotal": 2868
+      },
+      "outsideMeasuredServerMs": 718.7
+    },
+    {
+      "operation": "save",
+      "writeMode": "create",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4058.5615749999997,
+          "redirectMs": 174.66323900000134,
+          "bodyMs": 0.9342900000046939,
+          "verifyMs": 0.14466800000082003,
+          "durationMs": 4234.31
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4234.33,
+      "serverMs": {
+        "auth": 37,
+        "lockWait": 63,
+        "auditStart": 85,
+        "headRead": 26,
+        "fileLookup": 138,
+        "fileValidation": 178,
+        "snapshotRead": 283,
+        "loadTotal": 631,
+        "core": 78,
+        "snapshotSerialize": 1,
+        "folderLookup": 157,
+        "snapshotCreate": 1723,
+        "snapshotReadback": 304,
+        "headPrecondition": 30,
+        "headPublish": 74,
+        "commitTotal": 2334,
+        "auditEnd": 90,
+        "serverTotal": 3456
+      },
+      "outsideMeasuredServerMs": 778.31
+    },
+    {
+      "operation": "save",
+      "writeMode": "update",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3872.581542,
+          "redirectMs": 129.15727999999945,
+          "bodyMs": 1.1797609999994165,
+          "verifyMs": 0.11028699999587843,
+          "durationMs": 4003.03
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4003.06,
+      "serverMs": {
+        "auth": 44,
+        "lockWait": 60,
+        "auditStart": 102,
+        "headRead": 41,
+        "fileLookup": 153,
+        "fileValidation": 185,
+        "snapshotRead": 304,
+        "loadTotal": 691,
+        "core": 101,
+        "snapshotSerialize": 1,
+        "folderLookup": 172,
+        "snapshotCreate": 1304,
+        "snapshotReadback": 315,
+        "headPrecondition": 27,
+        "headPublish": 95,
+        "commitTotal": 1961,
+        "auditEnd": 106,
+        "serverTotal": 3237
+      },
+      "outsideMeasuredServerMs": 766.03
+    },
+    {
+      "operation": "save",
+      "writeMode": "create",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5713.590627000005,
+          "redirectMs": 195.07592899999872,
+          "bodyMs": 1.8533579999930225,
+          "verifyMs": 0.45160100000794046,
+          "durationMs": 5910.98
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5911,
+      "serverMs": {
+        "auth": 45,
+        "lockWait": 135,
+        "auditStart": 208,
+        "headRead": 77,
+        "fileLookup": 287,
+        "fileValidation": 442,
+        "snapshotRead": 426,
+        "loadTotal": 1237,
+        "core": 65,
+        "snapshotSerialize": 1,
+        "folderLookup": 276,
+        "snapshotCreate": 2021,
+        "snapshotReadback": 426,
+        "headPrecondition": 39,
+        "headPublish": 221,
+        "commitTotal": 3021,
+        "auditEnd": 175,
+        "serverTotal": 5164
+      },
+      "outsideMeasuredServerMs": 746.98
+    },
+    {
+      "operation": "save",
+      "writeMode": "update",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4356.615153999999,
+          "redirectMs": 184.20832300001348,
+          "bodyMs": 0.8530480000044918,
+          "verifyMs": 0.1237470000050962,
+          "durationMs": 4541.8
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4541.82,
+      "serverMs": {
+        "auth": 24,
+        "lockWait": 56,
+        "auditStart": 60,
+        "headRead": 17,
+        "fileLookup": 213,
+        "fileValidation": 195,
+        "snapshotRead": 400,
+        "loadTotal": 832,
+        "core": 78,
+        "snapshotSerialize": 1,
+        "folderLookup": 208,
+        "snapshotCreate": 1953,
+        "snapshotReadback": 288,
+        "headPrecondition": 12,
+        "headPublish": 44,
+        "commitTotal": 2547,
+        "auditEnd": 54,
+        "serverTotal": 3804
+      },
+      "outsideMeasuredServerMs": 737.8
+    },
+    {
+      "operation": "save",
+      "writeMode": "create",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3772.6568379999953,
+          "redirectMs": 114.78456400000141,
+          "bodyMs": 0.4615170000033686,
+          "verifyMs": 0.09936000000743661,
+          "durationMs": 3888
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 3888.02,
+      "serverMs": {
+        "auth": 36,
+        "lockWait": 73,
+        "auditStart": 84,
+        "headRead": 16,
+        "fileLookup": 152,
+        "fileValidation": 169,
+        "snapshotRead": 329,
+        "loadTotal": 668,
+        "core": 39,
+        "snapshotSerialize": 1,
+        "folderLookup": 135,
+        "snapshotCreate": 1451,
+        "snapshotReadback": 348,
+        "headPrecondition": 37,
+        "headPublish": 74,
+        "commitTotal": 2070,
+        "auditEnd": 73,
+        "serverTotal": 3171
+      },
+      "outsideMeasuredServerMs": 717
+    },
+    {
+      "operation": "save",
+      "writeMode": "update",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4192.817501999991,
+          "redirectMs": 188.4852979999996,
+          "bodyMs": 0.660887999998522,
+          "verifyMs": 0.09552499999699648,
+          "durationMs": 4382.06
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4382.1,
+      "serverMs": {
+        "auth": 30,
+        "lockWait": 61,
+        "auditStart": 107,
+        "headRead": 30,
+        "fileLookup": 180,
+        "fileValidation": 164,
+        "snapshotRead": 284,
+        "loadTotal": 669,
+        "core": 100,
+        "snapshotSerialize": 2,
+        "folderLookup": 165,
+        "snapshotCreate": 1656,
+        "snapshotReadback": 254,
+        "headPrecondition": 47,
+        "headPublish": 71,
+        "commitTotal": 2235,
+        "auditEnd": 110,
+        "serverTotal": 3432
+      },
+      "outsideMeasuredServerMs": 950.06
+    },
+    {
+      "operation": "save",
+      "writeMode": "create",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5709.234270999994,
+          "redirectMs": 157.1450610000029,
+          "bodyMs": 0.5634509999945294,
+          "verifyMs": 0.08625100000062957,
+          "durationMs": 5867.03
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5867.05,
+      "serverMs": {
+        "auth": 98,
+        "lockWait": 192,
+        "auditStart": 273,
+        "headRead": 89,
+        "fileLookup": 215,
+        "fileValidation": 313,
+        "snapshotRead": 406,
+        "loadTotal": 1041,
+        "core": 138,
+        "snapshotSerialize": 2,
+        "folderLookup": 265,
+        "snapshotCreate": 1775,
+        "snapshotReadback": 424,
+        "headPrecondition": 51,
+        "headPublish": 224,
+        "commitTotal": 2825,
+        "auditEnd": 203,
+        "serverTotal": 5030
+      },
+      "outsideMeasuredServerMs": 837.03
+    },
+    {
+      "operation": "save",
+      "writeMode": "update",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4564.836858999988,
+          "redirectMs": 178.41485400000238,
+          "bodyMs": 0.638745000003837,
+          "verifyMs": 0.13135799999872688,
+          "durationMs": 4744.03
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4744.05,
+      "serverMs": {
+        "auth": 29,
+        "lockWait": 64,
+        "auditStart": 94,
+        "headRead": 40,
+        "fileLookup": 169,
+        "fileValidation": 166,
+        "snapshotRead": 415,
+        "loadTotal": 799,
+        "core": 152,
+        "snapshotSerialize": 2,
+        "folderLookup": 198,
+        "snapshotCreate": 1561,
+        "snapshotReadback": 287,
+        "headPrecondition": 17,
+        "headPublish": 70,
+        "commitTotal": 2217,
+        "auditEnd": 217,
+        "serverTotal": 3720
+      },
+      "outsideMeasuredServerMs": 1024.03
+    },
+    {
+      "operation": "get",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2694.460640999998,
+          "redirectMs": 126.15647099999478,
+          "bodyMs": 1.1853299999929732,
+          "verifyMs": 0.14257500000530854,
+          "durationMs": 2821.95
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2821.96,
+      "serverMs": {
+        "auth": 89,
+        "lockWait": 119,
+        "auditStart": 128,
+        "headRead": 37,
+        "fileLookup": 416,
+        "fileValidation": 296,
+        "snapshotRead": 496,
+        "loadTotal": 1252,
+        "core": 5,
+        "auditEnd": 266,
+        "serverTotal": 2152
+      },
+      "outsideMeasuredServerMs": 669.95
+    },
+    {
+      "operation": "get",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2543.7666739999986,
+          "redirectMs": 146.41684199999145,
+          "bodyMs": 0.6456749999924796,
+          "verifyMs": 0.11363100000016857,
+          "durationMs": 2690.95
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2690.96,
+      "serverMs": {
+        "auth": 44,
+        "lockWait": 125,
+        "auditStart": 247,
+        "headRead": 86,
+        "fileLookup": 201,
+        "fileValidation": 272,
+        "snapshotRead": 340,
+        "loadTotal": 907,
+        "core": 4,
+        "auditEnd": 155,
+        "serverTotal": 1764
+      },
+      "outsideMeasuredServerMs": 926.95
+    },
+    {
+      "operation": "get",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6140.075335999994,
+          "redirectMs": 180.9492290000053,
+          "bodyMs": 1.6121540000021923,
+          "verifyMs": 0.1378980000008596,
+          "durationMs": 6322.78
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6322.79,
+      "serverMs": {
+        "auth": 29,
+        "lockWait": 86,
+        "auditStart": 88,
+        "headRead": 14,
+        "fileLookup": 137,
+        "fileValidation": 183,
+        "snapshotRead": 296,
+        "loadTotal": 634,
+        "core": 4,
+        "auditEnd": 106,
+        "serverTotal": 1062
+      },
+      "outsideMeasuredServerMs": 5260.78
+    },
+    {
+      "operation": "get",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1621.9940769999957,
+          "redirectMs": 118.66408799999044,
+          "bodyMs": 0.9278009999979986,
+          "verifyMs": 0.11417200000141747,
+          "durationMs": 1741.7
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1741.72,
+      "serverMs": {
+        "auth": 15,
+        "lockWait": 61,
+        "auditStart": 56,
+        "headRead": 16,
+        "fileLookup": 218,
+        "fileValidation": 164,
+        "snapshotRead": 282,
+        "loadTotal": 685,
+        "core": 3,
+        "auditEnd": 55,
+        "serverTotal": 994
+      },
+      "outsideMeasuredServerMs": 747.7
+    },
+    {
+      "operation": "get",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2241.7484029999905,
+          "redirectMs": 246.72828399999707,
+          "bodyMs": 0.8845359999977518,
+          "verifyMs": 0.11398199999530334,
+          "durationMs": 2489.48
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2489.49,
+      "serverMs": {
+        "auth": 94,
+        "lockWait": 107,
+        "auditStart": 195,
+        "headRead": 87,
+        "fileLookup": 250,
+        "fileValidation": 227,
+        "snapshotRead": 300,
+        "loadTotal": 877,
+        "core": 7,
+        "auditEnd": 217,
+        "serverTotal": 1753
+      },
+      "outsideMeasuredServerMs": 736.48
+    },
+    {
+      "operation": "get",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1868.4130370000057,
+          "redirectMs": 125.65093999999226,
+          "bodyMs": 1.7591560000000754,
+          "verifyMs": 0.11176900001009926,
+          "durationMs": 1995.94
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1995.95,
+      "serverMs": {
+        "auth": 35,
+        "lockWait": 76,
+        "auditStart": 109,
+        "headRead": 37,
+        "fileLookup": 133,
+        "fileValidation": 193,
+        "snapshotRead": 242,
+        "loadTotal": 615,
+        "core": 8,
+        "auditEnd": 109,
+        "serverTotal": 1109
+      },
+      "outsideMeasuredServerMs": 886.94
+    },
+    {
+      "operation": "get",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2045.5813830000116,
+          "redirectMs": 132.90975200000685,
+          "bodyMs": 0.8221110000013141,
+          "verifyMs": 0.11500400000659283,
+          "durationMs": 2179.43
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2179.44,
+      "serverMs": {
+        "auth": 59,
+        "lockWait": 117,
+        "auditStart": 150,
+        "headRead": 48,
+        "fileLookup": 173,
+        "fileValidation": 213,
+        "snapshotRead": 271,
+        "loadTotal": 714,
+        "core": 5,
+        "auditEnd": 128,
+        "serverTotal": 1460
+      },
+      "outsideMeasuredServerMs": 719.43
+    },
+    {
+      "operation": "get",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1697.5183629999956,
+          "redirectMs": 114.02600899999379,
+          "bodyMs": 1.4664239999983693,
+          "verifyMs": 0.11242000000493135,
+          "durationMs": 1813.13
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1813.14,
+      "serverMs": {
+        "auth": 34,
+        "lockWait": 74,
+        "auditStart": 111,
+        "headRead": 32,
+        "fileLookup": 189,
+        "fileValidation": 164,
+        "snapshotRead": 239,
+        "loadTotal": 633,
+        "core": 5,
+        "auditEnd": 102,
+        "serverTotal": 1114
+      },
+      "outsideMeasuredServerMs": 699.13
+    },
+    {
+      "operation": "get",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1682.969484000001,
+          "redirectMs": 127.15092599998752,
+          "bodyMs": 0.47735100000863895,
+          "verifyMs": 0.1099160000012489,
+          "durationMs": 1810.71
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1810.72,
+      "serverMs": {
+        "auth": 36,
+        "lockWait": 67,
+        "auditStart": 83,
+        "headRead": 37,
+        "fileLookup": 144,
+        "fileValidation": 180,
+        "snapshotRead": 303,
+        "loadTotal": 679,
+        "core": 8,
+        "auditEnd": 108,
+        "serverTotal": 1132
+      },
+      "outsideMeasuredServerMs": 678.71
+    },
+    {
+      "operation": "get",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1551.073000000004,
+          "redirectMs": 121.10291600000346,
+          "bodyMs": 1.7013589999987744,
+          "verifyMs": 0.11235999999917112,
+          "durationMs": 1673.99
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1674,
+      "serverMs": {
+        "auth": 26,
+        "lockWait": 52,
+        "auditStart": 96,
+        "headRead": 25,
+        "fileLookup": 157,
+        "fileValidation": 173,
+        "snapshotRead": 279,
+        "loadTotal": 643,
+        "core": 5,
+        "auditEnd": 88,
+        "serverTotal": 1034
+      },
+      "outsideMeasuredServerMs": 639.99
+    },
+    {
+      "operation": "save",
+      "writeMode": "update",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3782.8364119999897,
+          "redirectMs": 120.97375499999907,
+          "bodyMs": 0.8035129999916535,
+          "verifyMs": 0.13597600000503007,
+          "durationMs": 3904.75
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 3904.78,
+      "serverMs": {
+        "auth": 43,
+        "lockWait": 64,
+        "auditStart": 124,
+        "headRead": 36,
+        "fileLookup": 201,
+        "fileValidation": 168,
+        "snapshotRead": 227,
+        "loadTotal": 639,
+        "core": 84,
+        "snapshotSerialize": 2,
+        "folderLookup": 160,
+        "snapshotCreate": 1225,
+        "snapshotReadback": 301,
+        "headPrecondition": 30,
+        "headPublish": 108,
+        "commitTotal": 1882,
+        "auditEnd": 86,
+        "serverTotal": 3081
+      },
+      "outsideMeasuredServerMs": 823.75
+    },
+    {
+      "operation": "save",
+      "writeMode": "update",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "verify",
+          "ok": false,
+          "postMs": 2013.1396420000092,
+          "redirectMs": 118.31819299999916,
+          "bodyMs": 0.6544880000001285,
+          "durationMs": 2132.32,
+          "code": "REVISION_CONFLICT"
+        }
+      ],
+      "ok": false,
+      "code": "REVISION_CONFLICT",
+      "status": 409,
+      "elapsedMs": 2132.49,
+      "serverMs": {
+        "auth": 67,
+        "lockWait": 76,
+        "auditStart": 129,
+        "headRead": 30,
+        "fileLookup": 115,
+        "fileValidation": 388,
+        "snapshotRead": 220,
+        "loadTotal": 770,
+        "core": 31,
+        "auditEnd": 167,
+        "serverTotal": 1399
+      },
+      "outsideMeasuredServerMs": 733.32
+    },
+    {
+      "operation": "health",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2359.0607230000023,
+          "redirectMs": 148.60119300000952,
+          "bodyMs": 0.830524000004516,
+          "verifyMs": 0.11806799999612849,
+          "durationMs": 2508.62
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2508.64,
+      "serverMs": {
+        "auth": 51,
+        "lockWait": 112,
+        "auditStart": 201,
+        "headRead": 38,
+        "fileLookup": 298,
+        "fileValidation": 233,
+        "snapshotRead": 355,
+        "auditEnd": 145,
+        "serverTotal": 1842
+      },
+      "outsideMeasuredServerMs": 666.62
+    }
+  ],
+  "diagnosticJournal": [
+    {
+      "at": "2026-10-16T08:39:20.106Z",
+      "operation": "save",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 4695,
+      "timings": {
+        "auth": 98,
+        "lockWait": 192,
+        "auditStart": 273,
+        "headRead": 89,
+        "fileLookup": 215,
+        "fileValidation": 313,
+        "snapshotRead": 406,
+        "loadTotal": 1041,
+        "core": 138,
+        "snapshotSerialize": 2,
+        "folderLookup": 265,
+        "snapshotCreate": 1775,
+        "snapshotReadback": 424,
+        "headPrecondition": 51,
+        "headPublish": 224,
+        "commitTotal": 2825
+      }
+    },
+    {
+      "at": "2026-10-16T08:39:21.577Z",
+      "operation": "save",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 96
+    },
+    {
+      "at": "2026-10-16T08:39:24.925Z",
+      "operation": "save",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 3444,
+      "timings": {
+        "auth": 29,
+        "lockWait": 64,
+        "auditStart": 94,
+        "headRead": 40,
+        "fileLookup": 169,
+        "fileValidation": 166,
+        "snapshotRead": 415,
+        "loadTotal": 799,
+        "core": 152,
+        "snapshotSerialize": 2,
+        "folderLookup": 198,
+        "snapshotCreate": 1561,
+        "snapshotReadback": 287,
+        "headPrecondition": 17,
+        "headPublish": 70,
+        "commitTotal": 2217
+      }
+    },
+    {
+      "at": "2026-10-16T08:39:26.142Z",
+      "operation": "get",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 210
+    },
+    {
+      "at": "2026-10-16T08:39:27.697Z",
+      "operation": "get",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 1765,
+      "timings": {
+        "auth": 89,
+        "lockWait": 119,
+        "auditStart": 128,
+        "headRead": 37,
+        "fileLookup": 416,
+        "fileValidation": 296,
+        "snapshotRead": 496,
+        "loadTotal": 1252,
+        "core": 5
+      }
+    },
+    {
+      "at": "2026-10-16T08:39:29.162Z",
+      "operation": "get",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 171
+    },
+    {
+      "at": "2026-10-16T08:39:30.452Z",
+      "operation": "get",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 1460,
+      "timings": {
+        "auth": 44,
+        "lockWait": 125,
+        "auditStart": 247,
+        "headRead": 86,
+        "fileLookup": 201,
+        "fileValidation": 272,
+        "snapshotRead": 340,
+        "loadTotal": 907,
+        "core": 4
+      }
+    },
+    {
+      "at": "2026-10-16T08:39:36.009Z",
+      "operation": "get",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 117
+    },
+    {
+      "at": "2026-10-16T08:39:36.792Z",
+      "operation": "get",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 899,
+      "timings": {
+        "auth": 29,
+        "lockWait": 86,
+        "auditStart": 88,
+        "headRead": 14,
+        "fileLookup": 137,
+        "fileValidation": 183,
+        "snapshotRead": 296,
+        "loadTotal": 634,
+        "core": 4
+      }
+    },
+    {
+      "at": "2026-10-16T08:39:37.943Z",
+      "operation": "get",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 77
+    },
+    {
+      "at": "2026-10-16T08:39:38.747Z",
+      "operation": "get",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 881,
+      "timings": {
+        "auth": 15,
+        "lockWait": 61,
+        "auditStart": 56,
+        "headRead": 16,
+        "fileLookup": 218,
+        "fileValidation": 164,
+        "snapshotRead": 282,
+        "loadTotal": 685,
+        "core": 3
+      }
+    },
+    {
+      "at": "2026-10-16T08:39:39.664Z",
+      "operation": "get",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 203
+    },
+    {
+      "at": "2026-10-16T08:39:40.875Z",
+      "operation": "get",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 1413,
+      "timings": {
+        "auth": 94,
+        "lockWait": 107,
+        "auditStart": 195,
+        "headRead": 87,
+        "fileLookup": 250,
+        "fileValidation": 227,
+        "snapshotRead": 300,
+        "loadTotal": 877,
+        "core": 7
+      }
+    },
+    {
+      "at": "2026-10-16T08:39:42.337Z",
+      "operation": "get",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 113
+    },
+    {
+      "at": "2026-10-16T08:39:43.154Z",
+      "operation": "get",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 930,
+      "timings": {
+        "auth": 35,
+        "lockWait": 76,
+        "auditStart": 109,
+        "headRead": 37,
+        "fileLookup": 133,
+        "fileValidation": 193,
+        "snapshotRead": 242,
+        "loadTotal": 615,
+        "core": 8
+      }
+    },
+    {
+      "at": "2026-10-16T08:39:44.216Z",
+      "operation": "get",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 178
+    },
+    {
+      "at": "2026-10-16T08:39:45.236Z",
+      "operation": "get",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 1197,
+      "timings": {
+        "auth": 59,
+        "lockWait": 117,
+        "auditStart": 150,
+        "headRead": 48,
+        "fileLookup": 173,
+        "fileValidation": 213,
+        "snapshotRead": 271,
+        "loadTotal": 714,
+        "core": 5
+      }
+    },
+    {
+      "at": "2026-10-16T08:39:46.329Z",
+      "operation": "get",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 110
+    },
+    {
+      "at": "2026-10-16T08:39:47.155Z",
+      "operation": "get",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 936,
+      "timings": {
+        "auth": 34,
+        "lockWait": 74,
+        "auditStart": 111,
+        "headRead": 32,
+        "fileLookup": 189,
+        "fileValidation": 164,
+        "snapshotRead": 239,
+        "loadTotal": 633,
+        "core": 5
+      }
+    },
+    {
+      "at": "2026-10-16T08:39:48.116Z",
+      "operation": "get",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 108
+    },
+    {
+      "at": "2026-10-16T08:39:48.965Z",
+      "operation": "get",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 956,
+      "timings": {
+        "auth": 36,
+        "lockWait": 67,
+        "auditStart": 83,
+        "headRead": 37,
+        "fileLookup": 144,
+        "fileValidation": 180,
+        "snapshotRead": 303,
+        "loadTotal": 679,
+        "core": 8
+      }
+    },
+    {
+      "at": "2026-10-16T08:39:49.872Z",
+      "operation": "get",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 79
+    },
+    {
+      "at": "2026-10-16T08:39:50.682Z",
+      "operation": "get",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 889,
+      "timings": {
+        "auth": 26,
+        "lockWait": 52,
+        "auditStart": 96,
+        "headRead": 25,
+        "fileLookup": 157,
+        "fileValidation": 173,
+        "snapshotRead": 279,
+        "loadTotal": 643,
+        "core": 5
+      }
+    },
+    {
+      "at": "2026-10-16T08:39:51.761Z",
+      "operation": "save",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 109
+    },
+    {
+      "at": "2026-10-16T08:39:54.581Z",
+      "operation": "save",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 2928,
+      "timings": {
+        "auth": 43,
+        "lockWait": 64,
+        "auditStart": 124,
+        "headRead": 36,
+        "fileLookup": 201,
+        "fileValidation": 168,
+        "snapshotRead": 227,
+        "loadTotal": 639,
+        "core": 84,
+        "snapshotSerialize": 2,
+        "folderLookup": 160,
+        "snapshotCreate": 1225,
+        "snapshotReadback": 301,
+        "headPrecondition": 30,
+        "headPublish": 108,
+        "commitTotal": 1882
+      }
+    },
+    {
+      "at": "2026-10-16T08:39:55.600Z",
+      "operation": "save",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 145
+    },
+    {
+      "at": "2026-10-16T08:39:56.611Z",
+      "operation": "save",
+      "stage": "validate",
+      "status": 409,
+      "code": "REVISION_CONFLICT",
+      "durationMs": 1155,
+      "timings": {
+        "auth": 67,
+        "lockWait": 76,
+        "auditStart": 129,
+        "headRead": 30,
+        "fileLookup": 115,
+        "fileValidation": 388,
+        "snapshotRead": 220,
+        "loadTotal": 770,
+        "core": 31
+      }
+    },
+    {
+      "at": "2026-10-16T08:39:57.670Z",
+      "operation": "health",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 165
+    },
+    {
+      "at": "2026-10-16T08:39:59.078Z",
+      "operation": "health",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 1573,
+      "timings": {
+        "auth": 51,
+        "lockWait": 112,
+        "auditStart": 201,
+        "headRead": 38,
+        "fileLookup": 298,
+        "fileValidation": 233,
+        "snapshotRead": 355
+      }
+    },
+    {
+      "at": "2026-10-16T08:40:00.119Z",
+      "operation": "logs",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 104
+    }
+  ],
+  "assertions": {
+    "staleRejected": true
+  },
+  "completed": true,
+  "initialHealth": {
+    "revision": 10,
+    "activeNotes": 10,
+    "build": "notes-gas-profile-v2"
+  },
+  "finalHealth": {
+    "revision": 23,
+    "activeNotes": 16,
+    "build": "notes-gas-profile-v2"
+  },
+  "summary": {
+    "health": {
+      "count": 2,
+      "success": 2,
+      "p50Ms": 2508.64,
+      "p95Ms": 2645.51,
+      "stages": {
+        "auth": {
+          "p50Ms": 42,
+          "p95Ms": 51
+        },
+        "lockWait": {
+          "p50Ms": 112,
+          "p95Ms": 128
+        },
+        "auditStart": {
+          "p50Ms": 87,
+          "p95Ms": 201
+        },
+        "headRead": {
+          "p50Ms": 35,
+          "p95Ms": 38
+        },
+        "fileLookup": {
+          "p50Ms": 214,
+          "p95Ms": 298
+        },
+        "fileValidation": {
+          "p50Ms": 233,
+          "p95Ms": 267
+        },
+        "snapshotRead": {
+          "p50Ms": 258,
+          "p95Ms": 355
+        },
+        "auditEnd": {
+          "p50Ms": 77,
+          "p95Ms": 145
+        },
+        "serverTotal": {
+          "p50Ms": 1311,
+          "p95Ms": 1842
+        }
+      }
+    },
+    "ping": {
+      "count": 10,
+      "success": 10,
+      "p50Ms": 1184.73,
+      "p95Ms": 1417.24,
+      "stages": {
+        "auth": {
+          "p50Ms": 31,
+          "p95Ms": 53
+        },
+        "lockWait": {
+          "p50Ms": 62,
+          "p95Ms": 111
+        },
+        "auditStart": {
+          "p50Ms": 88,
+          "p95Ms": 119
+        },
+        "auditEnd": {
+          "p50Ms": 101,
+          "p95Ms": 207
+        },
+        "serverTotal": {
+          "p50Ms": 445,
+          "p95Ms": 595
+        }
+      }
+    },
+    "list": {
+      "count": 10,
+      "success": 10,
+      "p50Ms": 1830.78,
+      "p95Ms": 2539.44,
+      "stages": {
+        "auth": {
+          "p50Ms": 41,
+          "p95Ms": 84
+        },
+        "lockWait": {
+          "p50Ms": 65,
+          "p95Ms": 139
+        },
+        "auditStart": {
+          "p50Ms": 111,
+          "p95Ms": 261
+        },
+        "headRead": {
+          "p50Ms": 42,
+          "p95Ms": 48
+        },
+        "fileLookup": {
+          "p50Ms": 174,
+          "p95Ms": 268
+        },
+        "fileValidation": {
+          "p50Ms": 211,
+          "p95Ms": 303
+        },
+        "snapshotRead": {
+          "p50Ms": 295,
+          "p95Ms": 339
+        },
+        "loadTotal": {
+          "p50Ms": 694,
+          "p95Ms": 944
+        },
+        "core": {
+          "p50Ms": 2,
+          "p95Ms": 3
+        },
+        "auditEnd": {
+          "p50Ms": 98,
+          "p95Ms": 211
+        },
+        "serverTotal": {
+          "p50Ms": 1130,
+          "p95Ms": 1851
+        }
+      }
+    },
+    "save": {
+      "count": 14,
+      "success": 13,
+      "p50Ms": 4334.74,
+      "p95Ms": 5911,
+      "stages": {
+        "auth": {
+          "p50Ms": 38,
+          "p95Ms": 98
+        },
+        "lockWait": {
+          "p50Ms": 64,
+          "p95Ms": 192
+        },
+        "auditStart": {
+          "p50Ms": 102,
+          "p95Ms": 273
+        },
+        "headRead": {
+          "p50Ms": 36,
+          "p95Ms": 89
+        },
+        "fileLookup": {
+          "p50Ms": 180,
+          "p95Ms": 287
+        },
+        "fileValidation": {
+          "p50Ms": 178,
+          "p95Ms": 442
+        },
+        "snapshotRead": {
+          "p50Ms": 304,
+          "p95Ms": 426
+        },
+        "loadTotal": {
+          "p50Ms": 680,
+          "p95Ms": 1237
+        },
+        "core": {
+          "p50Ms": 78,
+          "p95Ms": 152
+        },
+        "snapshotSerialize": {
+          "p50Ms": 1,
+          "p95Ms": 3
+        },
+        "folderLookup": {
+          "p50Ms": 170,
+          "p95Ms": 276
+        },
+        "snapshotCreate": {
+          "p50Ms": 1561,
+          "p95Ms": 2071
+        },
+        "snapshotReadback": {
+          "p50Ms": 301,
+          "p95Ms": 426
+        },
+        "headPrecondition": {
+          "p50Ms": 37,
+          "p95Ms": 51
+        },
+        "headPublish": {
+          "p50Ms": 92,
+          "p95Ms": 224
+        },
+        "commitTotal": {
+          "p50Ms": 2217,
+          "p95Ms": 3021
+        },
+        "auditEnd": {
+          "p50Ms": 98,
+          "p95Ms": 217
+        },
+        "serverTotal": {
+          "p50Ms": 3432,
+          "p95Ms": 5164
+        }
+      }
+    },
+    "get": {
+      "count": 10,
+      "success": 10,
+      "p50Ms": 1995.95,
+      "p95Ms": 6322.79,
+      "stages": {
+        "auth": {
+          "p50Ms": 35,
+          "p95Ms": 94
+        },
+        "lockWait": {
+          "p50Ms": 76,
+          "p95Ms": 125
+        },
+        "auditStart": {
+          "p50Ms": 109,
+          "p95Ms": 247
+        },
+        "headRead": {
+          "p50Ms": 37,
+          "p95Ms": 87
+        },
+        "fileLookup": {
+          "p50Ms": 173,
+          "p95Ms": 416
+        },
+        "fileValidation": {
+          "p50Ms": 183,
+          "p95Ms": 296
+        },
+        "snapshotRead": {
+          "p50Ms": 282,
+          "p95Ms": 496
+        },
+        "loadTotal": {
+          "p50Ms": 679,
+          "p95Ms": 1252
+        },
+        "core": {
+          "p50Ms": 5,
+          "p95Ms": 8
+        },
+        "auditEnd": {
+          "p50Ms": 108,
+          "p95Ms": 266
+        },
+        "serverTotal": {
+          "p50Ms": 1114,
+          "p95Ms": 2152
+        }
+      }
+    }
+  },
+  "caveats": [
+    "Stage timers are wall clock, nested totals must not be summed with children.",
+    "OutsideMeasuredServer includes platform startup, response signing/output, network, redirect; it is not pure network.",
+    "60-second same-request reconciliation is separate diagnostic evidence; primary 12-second failures remain.",
+    "Small sequential sample, no cold-start guarantee, no production Blob comparison yet."
+  ],
+  "checkpointSummary": {
+    "count": 14,
+    "resolved": 12,
+    "note": "Exact synthetic request payloads retained in workflow artifact; omitted from committed timing evidence."
+  }
+}

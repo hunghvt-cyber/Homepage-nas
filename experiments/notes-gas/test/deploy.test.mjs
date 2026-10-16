@@ -4,8 +4,8 @@ import {deploy} from '../scripts/deploy.mjs';
 const id='test_script_id_123456789012345',dep='test_deployment_123456789012345';
 const files=[{name:'Core',type:'SERVER_JS',source:'var NotesCore={};'},{name:'Server',type:'SERVER_JS',source:'function doPost(){}'},{name:'appsscript',type:'JSON',source:JSON.stringify({oauthScopes:['https://www.googleapis.com/auth/drive'],webapp:{executeAs:'USER_DEPLOYING',access:'ANYONE_ANONYMOUS'}})}];
 const env={NOTES_GAS_AUTODEPLOY:'true',GITHUB_REF:'refs/heads/prototype/notes-apps-script-drive-20261016',GITHUB_SHA:'a'.repeat(40),NOTES_GAS_SCRIPT_ID:id,NOTES_GAS_DEPLOYMENT_ID:dep,GAS_OAUTH_CLIENT_ID:'fake',GAS_OAUTH_CLIENT_SECRET:'DO_NOT_LOG_CLIENT_SECRET',GAS_OAUTH_REFRESH_TOKEN:'DO_NOT_LOG_REFRESH_TOKEN'};
-function fake({extra=false,title='Homepage Notes Prototype',lost=false,changed=false,staleRead=false}={}){
- let source=files.map(f=>({...f,source:f.name==='Core'?'old source':f.source})),version=1,puts=0,contentReads=0,staleShown=false;const calls=[];
+function fake({extra=false,title='Homepage Notes Prototype',lost=false,changed=false,staleRead=false,initialCurrent=false}={}){
+ let source=files.map(f=>({...f,source:f.name==='Core'&&!initialCurrent?'old source':f.source})),version=1,puts=0,contentReads=0,staleShown=false;const calls=[],initialFiles=JSON.parse(JSON.stringify(source));
  const fetcher=async(url,o={})=>{
   calls.push({url,method:o.method||'GET'});
   if(url==='https://oauth2.googleapis.com/token')return Response.json({access_token:'DO_NOT_LOG_ACCESS_TOKEN'});
@@ -14,6 +14,7 @@ function fake({extra=false,title='Homepage Notes Prototype',lost=false,changed=f
   if(path==='')return Response.json({scriptId:id,title});
   if(path==='/content'&&o.method==='PUT'){source=JSON.parse(o.body).files;return Response.json({files:source});}
   if(path==='/content'){contentReads++;return Response.json({files:[...source,...(extra?[{name:'other-private-file',type:'SERVER_JS',source:'DO NOT DELETE'}]:[]),...(changed&&contentReads===2?[{name:'Core2',type:'SERVER_JS',source:'external update'}]:[])]});}
+  if(path==='/content?versionNumber=1')return Response.json({files:initialFiles});
   if(path==='/versions')return Response.json({versionNumber:2});
   if(path==='/content?versionNumber=2')return Response.json({files:source});
   if(path==='/deployments/'+dep&&o.method==='PUT'){version=JSON.parse(o.body).deploymentConfig.versionNumber;puts++;if(lost&&puts===1)throw Error('network lost');return Response.json({});}
@@ -87,3 +88,10 @@ test('bootstrap creates a versioned endpoint once and records metadata on failed
 });
 
 test('deployment readback tolerates a stale old version before convergence',async()=>{const f=fake({staleRead:true});const r=await deploy({env,files,fetcher:f.fetcher});assert.equal(r.phase,'verified');assert.equal(f.puts(),1);});
+
+test('docs-only change reuses identical deployed content and still requires signed health',async()=>{
+ const f=fake({initialCurrent:true});let probes=0;
+ const r=await deploy({env,files,fetcher:f.fetcher,verify:async()=>{probes++;return true;}});
+ assert.equal(r.phase,'verified_unchanged');assert.equal(r.reusedVersion,true);assert.equal(r.version,1);assert.equal(probes,1);assert.equal(f.calls.some(x=>x.url.includes('script.googleapis.com')&&(x.method==='POST'||x.method==='PUT')),false);
+ const bad=fake({initialCurrent:true});await assert.rejects(deploy({env,files,fetcher:bad.fetcher,verify:async()=>false}),/POST_DEPLOY_HEALTH_FAILED/);assert.equal(bad.puts(),0);
+});

@@ -1,0 +1,557 @@
+{
+  "kind": "LIVE_GOOGLE_STAGE_PROFILE",
+  "at": "2026-10-16T08:36:00.194Z",
+  "path": "GitHub runner -> GAS ContentService -> Drive; not Vercel/browser",
+  "timeoutMs": 12000,
+  "attempts": 2,
+  "samples": [
+    {
+      "operation": "health",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1860.707253,
+          "redirectMs": 154.55109500000003,
+          "bodyMs": 2.989452999999912,
+          "verifyMs": 0.16359400000010282,
+          "durationMs": 2018.43
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2018.83,
+      "serverMs": {
+        "auth": 15,
+        "lockWait": 81,
+        "auditStart": 50,
+        "headRead": 18,
+        "fileLookup": 244,
+        "fileValidation": 198,
+        "snapshotRead": 449,
+        "auditEnd": 44,
+        "serverTotal": 1238
+      },
+      "outsideMeasuredServerMs": 780.43
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1143.40128,
+          "redirectMs": 215.13658899999973,
+          "bodyMs": 1.0875599999999395,
+          "verifyMs": 0.07948799999985567,
+          "durationMs": 1359.71
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1359.74,
+      "serverMs": {
+        "auth": 42,
+        "lockWait": 102,
+        "auditStart": 94,
+        "auditEnd": 74,
+        "serverTotal": 442
+      },
+      "outsideMeasuredServerMs": 917.71
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1519.4374249999996,
+          "redirectMs": 131.84414000000015,
+          "bodyMs": 1.2617190000000846,
+          "verifyMs": 0.0797389999997904,
+          "durationMs": 1652.63
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1652.65,
+      "serverMs": {
+        "auth": 44,
+        "lockWait": 241,
+        "auditStart": 101,
+        "auditEnd": 100,
+        "serverTotal": 615
+      },
+      "outsideMeasuredServerMs": 1037.63
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1796.8957529999998,
+          "redirectMs": 109.06571100000019,
+          "bodyMs": 1.3636420000002545,
+          "verifyMs": 0.09183299999949668,
+          "durationMs": 1907.42
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1907.44,
+      "serverMs": {
+        "auth": 90,
+        "lockWait": 125,
+        "auditStart": 272,
+        "auditEnd": 269,
+        "serverTotal": 1034
+      },
+      "outsideMeasuredServerMs": 873.42
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1002.8351009999997,
+          "redirectMs": 124.88043500000003,
+          "bodyMs": 1.0294480000002295,
+          "verifyMs": 0.09537300000010873,
+          "durationMs": 1128.85
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1128.88,
+      "serverMs": {
+        "auth": 39,
+        "lockWait": 64,
+        "auditStart": 100,
+        "auditEnd": 108,
+        "serverTotal": 434
+      },
+      "outsideMeasuredServerMs": 694.85
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 874.0804740000003,
+          "redirectMs": 97.94767800000045,
+          "bodyMs": 1.4195550000004005,
+          "verifyMs": 0.09600400000090303,
+          "durationMs": 973.55
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 973.57,
+      "serverMs": {
+        "auth": 47,
+        "lockWait": 62,
+        "auditStart": 106,
+        "auditEnd": 96,
+        "serverTotal": 435
+      },
+      "outsideMeasuredServerMs": 538.55
+    },
+    {
+      "operation": "ping",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "verify",
+          "ok": false,
+          "postMs": 1759.5914190000003,
+          "redirectMs": 132.1894199999988,
+          "bodyMs": 0.5241379999988567,
+          "durationMs": 1892.48,
+          "code": "OP_FORBIDDEN"
+        }
+      ],
+      "ok": false,
+      "code": "OP_FORBIDDEN",
+      "status": 403,
+      "elapsedMs": 1892.6
+    }
+  ],
+  "checkpoints": [],
+  "diagnosticJournal": [
+    {
+      "at": "2026-10-16T08:20:28.312Z",
+      "operation": "save",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 2942
+    },
+    {
+      "at": "2026-10-16T08:20:48.261Z",
+      "operation": "save",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 223
+    },
+    {
+      "at": "2026-10-16T08:20:49.662Z",
+      "operation": "save",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 1620
+    },
+    {
+      "at": "2026-10-16T08:23:51.733Z",
+      "operation": "health",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 113
+    },
+    {
+      "at": "2026-10-16T08:23:52.729Z",
+      "operation": "health",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 1109
+    },
+    {
+      "at": "2026-10-16T08:24:05.970Z",
+      "operation": "health",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 89
+    },
+    {
+      "at": "2026-10-16T08:24:07.000Z",
+      "operation": "health",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 1119
+    },
+    {
+      "at": "2026-10-16T08:24:08.282Z",
+      "operation": "logs",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 191
+    },
+    {
+      "at": "2026-10-16T08:24:08.660Z",
+      "operation": "logs",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 565
+    },
+    {
+      "at": "2026-10-16T08:35:47.962Z",
+      "operation": "health",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 245
+    },
+    {
+      "at": "2026-10-16T08:35:49.730Z",
+      "operation": "health",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 2012
+    },
+    {
+      "at": "2026-10-16T08:36:00.821Z",
+      "operation": "health",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 98
+    },
+    {
+      "at": "2026-10-16T08:36:01.867Z",
+      "operation": "health",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 1144,
+      "timings": {
+        "auth": 15,
+        "lockWait": 81,
+        "auditStart": 50,
+        "headRead": 18,
+        "fileLookup": 244,
+        "fileValidation": 198,
+        "snapshotRead": 449
+      }
+    },
+    {
+      "at": "2026-10-16T08:36:01.968Z",
+      "operation": "health",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 459
+    },
+    {
+      "at": "2026-10-16T08:36:02.809Z",
+      "operation": "health",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 1299
+    },
+    {
+      "at": "2026-10-16T08:36:02.970Z",
+      "operation": "ping",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 157
+    },
+    {
+      "at": "2026-10-16T08:36:03.125Z",
+      "operation": "ping",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 302,
+      "timings": {
+        "auth": 42,
+        "lockWait": 102,
+        "auditStart": 94
+      }
+    },
+    {
+      "at": "2026-10-16T08:36:04.280Z",
+      "operation": "logs",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 116
+    },
+    {
+      "at": "2026-10-16T08:36:04.502Z",
+      "operation": "logs",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 337
+    },
+    {
+      "at": "2026-10-16T08:36:04.672Z",
+      "operation": "ping",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 286
+    },
+    {
+      "at": "2026-10-16T08:36:04.837Z",
+      "operation": "ping",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 450,
+      "timings": {
+        "auth": 44,
+        "lockWait": 241,
+        "auditStart": 101
+      }
+    },
+    {
+      "at": "2026-10-16T08:36:06.116Z",
+      "operation": "ping",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 217
+    },
+    {
+      "at": "2026-10-16T08:36:06.520Z",
+      "operation": "ping",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 621,
+      "timings": {
+        "auth": 90,
+        "lockWait": 125,
+        "auditStart": 272
+      }
+    },
+    {
+      "at": "2026-10-16T08:36:07.729Z",
+      "operation": "ping",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 104
+    },
+    {
+      "at": "2026-10-16T08:36:07.892Z",
+      "operation": "ping",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 267,
+      "timings": {
+        "auth": 39,
+        "lockWait": 64,
+        "auditStart": 100
+      }
+    },
+    {
+      "at": "2026-10-16T08:36:08.728Z",
+      "operation": "ping",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 111
+    },
+    {
+      "at": "2026-10-16T08:36:08.893Z",
+      "operation": "ping",
+      "stage": "complete",
+      "status": 200,
+      "code": "OK",
+      "durationMs": 275,
+      "timings": {
+        "auth": 47,
+        "lockWait": 62,
+        "auditStart": 106
+      }
+    },
+    {
+      "at": "2026-10-16T08:36:09.926Z",
+      "operation": "unsupported",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 120
+    },
+    {
+      "at": "2026-10-16T08:36:10.712Z",
+      "operation": "unsupported",
+      "stage": "validate",
+      "status": 403,
+      "code": "OP_FORBIDDEN",
+      "durationMs": 905
+    },
+    {
+      "at": "2026-10-16T08:36:11.812Z",
+      "operation": "logs",
+      "stage": "start",
+      "status": 102,
+      "code": "STARTED",
+      "durationMs": 151
+    }
+  ],
+  "assertions": {},
+  "completed": false,
+  "initialHealth": {
+    "revision": 10,
+    "activeNotes": 10,
+    "build": "notes-gas-profile-v2"
+  },
+  "error": {
+    "code": "OP_FORBIDDEN",
+    "status": 403
+  },
+  "summary": {
+    "health": {
+      "count": 1,
+      "success": 1,
+      "p50Ms": 2018.83,
+      "p95Ms": 2018.83,
+      "stages": {
+        "auth": {
+          "p50Ms": 15,
+          "p95Ms": 15
+        },
+        "lockWait": {
+          "p50Ms": 81,
+          "p95Ms": 81
+        },
+        "auditStart": {
+          "p50Ms": 50,
+          "p95Ms": 50
+        },
+        "headRead": {
+          "p50Ms": 18,
+          "p95Ms": 18
+        },
+        "fileLookup": {
+          "p50Ms": 244,
+          "p95Ms": 244
+        },
+        "fileValidation": {
+          "p50Ms": 198,
+          "p95Ms": 198
+        },
+        "snapshotRead": {
+          "p50Ms": 449,
+          "p95Ms": 449
+        },
+        "auditEnd": {
+          "p50Ms": 44,
+          "p95Ms": 44
+        },
+        "serverTotal": {
+          "p50Ms": 1238,
+          "p95Ms": 1238
+        }
+      }
+    },
+    "ping": {
+      "count": 6,
+      "success": 5,
+      "p50Ms": 1359.74,
+      "p95Ms": 1907.44,
+      "stages": {
+        "auth": {
+          "p50Ms": 44,
+          "p95Ms": 90
+        },
+        "lockWait": {
+          "p50Ms": 102,
+          "p95Ms": 241
+        },
+        "auditStart": {
+          "p50Ms": 101,
+          "p95Ms": 272
+        },
+        "auditEnd": {
+          "p50Ms": 100,
+          "p95Ms": 269
+        },
+        "serverTotal": {
+          "p50Ms": 442,
+          "p95Ms": 1034
+        }
+      }
+    }
+  },
+  "caveats": [
+    "Stage timers are wall clock, nested totals must not be summed with children.",
+    "OutsideMeasuredServer includes platform startup, response signing/output, network, redirect; it is not pure network.",
+    "60-second same-request reconciliation is separate diagnostic evidence; primary 12-second failures remain.",
+    "Small sequential sample, no cold-start guarantee, no production Blob comparison yet."
+  ]
+}
