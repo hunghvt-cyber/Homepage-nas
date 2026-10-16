@@ -59,7 +59,41 @@ export async function deploy({env,files,fetcher=fetch,verify=async()=>true}) {
       report.sourceUpdated=true;
       if(digest((await api('/content')).files)!==desired)fail('SOURCE_VERIFY_FAILED');
     }
-    if(!dep){report.phase='source_verified_deployment_not_configured';return report;}
+    if(!dep){
+      if(env.NOTES_GAS_BOOTSTRAP!=='true'){report.phase='source_verified_deployment_not_configured';return report;}
+      report.phase='bootstrap_discovery';
+      const marker='Homepage Notes prototype managed endpoint';
+      let deployments=[],pageToken;
+      do {
+        const page=await api('/deployments?pageSize=50'+(pageToken?'&pageToken='+encodeURIComponent(pageToken):''));
+        deployments.push(...(page.deployments||[]));pageToken=page.nextPageToken;
+        if(deployments.length>200)fail('DEPLOYMENT_LIST_LIMIT');
+      }while(pageToken);
+      const managed=deployments.filter(d=>d.deploymentConfig?.description===marker);
+      if(managed.length>1)fail('MULTIPLE_MANAGED_DEPLOYMENTS');
+      let endpoint=managed[0];
+      if(!endpoint){
+        report.phase='bootstrap_version';
+        const version=await api('/versions','POST',{description});
+        if(!Number.isSafeInteger(version.versionNumber))fail('VERSION_INVALID');
+        report.version=version.versionNumber;
+        if(digest((await api('/content?versionNumber='+version.versionNumber)).files)!==desired)fail('VERSION_VERIFY_FAILED');
+        report.phase='bootstrap_create';
+        // Never retry this mutation blindly: a lost response may have created it.
+        endpoint=await api('/deployments','POST',{versionNumber:version.versionNumber,manifestFileName:'appsscript',description:marker});
+      }
+      if(!/^[\w-]{20,200}$/.test(endpoint.deploymentId||''))fail('DEPLOYMENT_MISMATCH');
+      endpoint=await api('/deployments/'+endpoint.deploymentId);
+      report.deploymentId=endpoint.deploymentId;report.version=endpoint.deploymentConfig?.versionNumber;
+      const entry=endpoint.entryPoints?.find(e=>e.entryPointType==='WEB_APP');
+      const url=entry?.webApp?.url;
+      if(url!=='https://script.google.com/macros/s/'+endpoint.deploymentId+'/exec')fail('WEBAPP_ENDPOINT_INVALID');
+      report.url=url;
+      if(digest((await api('/content?versionNumber='+report.version)).files)!==desired)fail('BOOTSTRAP_VERSION_DIFFERS_PIN_DEPLOYMENT');
+      report.deployed=true;report.phase='bootstrap_health';
+      if(!await verify(url))fail('BOOTSTRAP_HEALTH_FAILED');
+      report.phase='verified';return report;
+    }
     // Reuse a matching deployed version; do not burn version quota on every push.
     if(previous.deploymentConfig.description===description){report.phase='already_deployed';return report;}
     report.phase='version';const version=await api('/versions','POST',{description});
@@ -97,10 +131,12 @@ if(process.argv[1]===fileURLToPath(import.meta.url)) {
   const files=await Promise.all([['Core','Core.js','SERVER_JS'],['Server','Server.js','SERVER_JS'],['appsscript','appsscript.json','JSON']].map(async([name,path,type])=>({name,type,source:await readFile(new URL(path,root),'utf8')})));
   const {createGasClient,newRequest}=await import('../adapter.mjs');
   // Validate probe config before touching Google source/deployment.
-  const verify=process.env.NOTES_GAS_DEPLOYMENT_ID?(()=>{
-    const client=createGasClient({url:process.env.NOTES_GAS_URL,key:process.env.NOTES_GAS_HMAC_KEY});
-    return async()=>{for(let i=0;i<3;i++){try{if((await client(newRequest('health'))).readVerified)return true;}catch{}if(i<2)await new Promise(r=>setTimeout(r,1500));}return false;};
-  })():async()=>true;
+  const runtimeEnabled=process.env.NOTES_GAS_DEPLOYMENT_ID||process.env.NOTES_GAS_BOOTSTRAP==='true';
+  if(runtimeEnabled&&!/^[a-fA-F0-9]{64}$/.test(process.env.NOTES_GAS_HMAC_KEY||''))throw Error('RUNTIME_KEY_REQUIRED');
+  const verify=async(url=process.env.NOTES_GAS_URL)=>{
+    const client=createGasClient({url,key:process.env.NOTES_GAS_HMAC_KEY});
+    for(let i=0;i<3;i++){try{if((await client(newRequest('health'))).readVerified)return true;}catch{}if(i<2)await new Promise(r=>setTimeout(r,1500));}return false;
+  };
   try{const result=await deploy({env:process.env,files,verify});await writeFile(new URL('../deployment-result.local.json',import.meta.url),JSON.stringify(result,null,2)+'\n');console.log(JSON.stringify(result));}
   catch(e){if(e.report)await writeFile(new URL('../deployment-result.local.json',import.meta.url),JSON.stringify({...e.report,error:e.message},null,2)+'\n');console.error(e.report?e.message:'DEPLOY_FAILED');process.exitCode=1;}
 }

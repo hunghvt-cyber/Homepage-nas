@@ -60,3 +60,27 @@ test('Apps Script API setup errors are safely distinguished before source writes
 test('leading whitespace in the intended project title is normalized without relaxing Script ID guard',async()=>{
  const f=fake({title:'    Homepage Notes Prototype  '});const r=await deploy({env,files,fetcher:f.fetcher});assert.equal(r.phase,'verified');
 });
+
+test('bootstrap discovers a previously created endpoint without creating duplicates',async()=>{
+ const f=fake();let creates=0,probed;
+ const endpoint={deploymentId:dep,deploymentConfig:{versionNumber:2,description:'Homepage Notes prototype managed endpoint'},entryPoints:[{entryPointType:'WEB_APP',webApp:{url:'https://script.google.com/macros/s/'+dep+'/exec'}}]};
+ const fetcher=async(url,o)=>{
+  if(url.endsWith('/deployments?pageSize=50'))return Response.json({deployments:[endpoint]});
+  if(url.endsWith('/deployments/'+dep))return Response.json(endpoint);
+  if(url.endsWith('/deployments')&&o.method==='POST'){creates++;return Response.json(endpoint);}
+  return f.fetcher(url,o);
+ };
+ const r=await deploy({env:{...env,NOTES_GAS_DEPLOYMENT_ID:'',NOTES_GAS_BOOTSTRAP:'true'},files,fetcher,verify:async url=>{probed=url;return true;}});
+ assert.equal(r.phase,'verified');assert.equal(creates,0);assert.equal(probed,endpoint.entryPoints[0].webApp.url);
+});
+test('bootstrap creates a versioned endpoint once and records metadata on failed health',async()=>{
+ const f=fake();let creates=0;
+ const endpoint={deploymentId:dep,deploymentConfig:{versionNumber:2},entryPoints:[{entryPointType:'WEB_APP',webApp:{url:'https://script.google.com/macros/s/'+dep+'/exec'}}]};
+ const fetcher=async(url,o)=>{
+  if(url.endsWith('/deployments?pageSize=50'))return Response.json({deployments:[]});
+  if(url.endsWith('/deployments/'+dep))return Response.json(endpoint);
+  if(url.endsWith('/deployments')&&o.method==='POST'){creates++;assert.equal(JSON.parse(o.body).versionNumber,2);return Response.json(endpoint);}
+  return f.fetcher(url,o);
+ };
+ await assert.rejects(deploy({env:{...env,NOTES_GAS_DEPLOYMENT_ID:'',NOTES_GAS_BOOTSTRAP:'true'},files,fetcher,verify:async()=>false}),e=>{assert.equal(e.message,'BOOTSTRAP_HEALTH_FAILED');assert.equal(e.report.deploymentId,dep);return true;});assert.equal(creates,1);
+});

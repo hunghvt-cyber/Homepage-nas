@@ -63,6 +63,7 @@ jobs:
       - name: Update only pinned Google prototype after tests
         env:
           NOTES_GAS_AUTODEPLOY: 'true'
+          NOTES_GAS_BOOTSTRAP: 'true'
           NOTES_GAS_SCRIPT_ID: '1vASoUHTYVL1pP4oeAbrh0ueOCdo5cWwpUiwUkTleziWgKRod17Pa68cs'
           NOTES_GAS_DEPLOYMENT_ID: ${{ vars.NOTES_GAS_DEPLOYMENT_ID }}
           GAS_OAUTH_CLIENT_ID: ${{ secrets.GAS_OAUTH_CLIENT_ID }}
