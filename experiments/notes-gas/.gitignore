@@ -1,0 +1,5 @@
+.env
+.env.local
+.clasp.json
+benchmark-result.local.json
+*.backup.json

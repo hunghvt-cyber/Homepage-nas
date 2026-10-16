@@ -1,0 +1,21 @@
+name: Notes Apps Script prototype
+on:
+  pull_request:
+    branches: [main]
+    paths: ['experiments/notes-gas/**', '.github/workflows/notes-gas-prototype.yml', 'docs/NOTES-GAS-*']
+  push:
+    branches: [prototype/notes-apps-script-drive-20261016]
+jobs:
+  simulation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: node --test experiments/notes-gas/test/*.test.mjs
+      - run: find experiments/notes-gas -name '*.js' -o -name '*.mjs' | xargs -n1 node --check
+# No Google credentials, live benchmark, deployment, migration or production writes.
