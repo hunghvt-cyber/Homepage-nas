@@ -1,0 +1,701 @@
+{
+  "kind": "LIVE_GOOGLE_PER_NOTE_NOT_VERCEL_OR_IPAD",
+  "at": "2026-10-16T10:32:48.534Z",
+  "completed": false,
+  "calls": [
+    {
+      "label": "readiness-0",
+      "ok": true,
+      "ms": 3531.03147,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3217.064894,
+          "redirectMs": 309.6216449999997,
+          "bodyMs": 3.8289049999998497,
+          "verifyMs": 0.12088200000016514,
+          "durationMs": 3530.6505380000003
+        }
+      ]
+    },
+    {
+      "label": "readiness-1",
+      "ok": true,
+      "ms": 3258.172469,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3039.2731270000004,
+          "redirectMs": 217.462841999999,
+          "bodyMs": 1.3170809999992343,
+          "verifyMs": 0.07751599999937753,
+          "durationMs": 3258.135483
+        }
+      ]
+    },
+    {
+      "label": "reconcile-retained-two",
+      "ok": true,
+      "ms": 4377.986389,
+      "timings": {
+        "auth": 56,
+        "lockWait": 79,
+        "auditStart": 115,
+        "manifestRead": 568,
+        "noteRead": 1173,
+        "receiptRead": 1109,
+        "shardLoad": 2880,
+        "auditEnd": 84,
+        "serverTotal": 3361
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4172.711450999999,
+          "redirectMs": 203.6914770000003,
+          "bodyMs": 1.2375000000010914,
+          "verifyMs": 0.32594999999855645,
+          "durationMs": 4377.971066
+        }
+      ]
+    },
+    {
+      "label": "same-note-0-attempt-0",
+      "ok": false,
+      "ms": 2700.313295,
+      "code": "BUSY",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "verify",
+          "ok": false,
+          "postMs": 2526.5069239999993,
+          "redirectMs": 172.55436800000098,
+          "bodyMs": 0.9161979999989853,
+          "durationMs": 2700.2092890000004,
+          "code": "BUSY"
+        }
+      ]
+    },
+    {
+      "label": "same-note-0-attempt-0-retry-1",
+      "ok": false,
+      "ms": 2426.1927430000032,
+      "code": "BUSY",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "verify",
+          "ok": false,
+          "postMs": 2260.1053079999983,
+          "redirectMs": 164.50498700000026,
+          "bodyMs": 1.3540849999990314,
+          "durationMs": 2426.084941000001,
+          "code": "BUSY"
+        }
+      ]
+    },
+    {
+      "label": "same-note-1-attempt-0",
+      "ok": true,
+      "ms": 6823.856097,
+      "timings": {
+        "auth": 49,
+        "lockWait": 64,
+        "auditStart": 125,
+        "manifestRead": 601,
+        "noteRead": 524,
+        "shardLoad": 1148,
+        "core": 55,
+        "noteWrite": 2072,
+        "manifestWrite": 1955,
+        "shardPublish": 100,
+        "shardCommit": 4185,
+        "auditEnd": 96,
+        "serverTotal": 5908
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6654.114170000001,
+          "redirectMs": 168.20054000000164,
+          "bodyMs": 1.3463540000011562,
+          "verifyMs": 0.15279000000009546,
+          "durationMs": 6823.819291
+        }
+      ]
+    },
+    {
+      "label": "same-note-0-attempt-0-retry-2",
+      "ok": false,
+      "ms": 3452.324518999998,
+      "code": "REVISION_CONFLICT",
+      "status": 409,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "verify",
+          "ok": false,
+          "postMs": 3287.89589,
+          "redirectMs": 163.06335599999875,
+          "bodyMs": 1.1703989999987243,
+          "durationMs": 3452.263267000002,
+          "code": "REVISION_CONFLICT"
+        }
+      ]
+    },
+    {
+      "label": "after-same-note",
+      "ok": true,
+      "ms": 2264.970446000003,
+      "timings": {
+        "auth": 41,
+        "lockWait": 60,
+        "auditStart": 99,
+        "manifestRead": 482,
+        "noteRead": 488,
+        "shardLoad": 1007,
+        "core": 2,
+        "auditEnd": 94,
+        "serverTotal": 1476
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2063.7895009999993,
+          "redirectMs": 199.9787580000011,
+          "bodyMs": 1.0004540000009001,
+          "verifyMs": 0.18118300000060117,
+          "durationMs": 2264.9550329999984
+        }
+      ]
+    },
+    {
+      "label": "different-note-1-attempt-0",
+      "ok": false,
+      "ms": 2826.176042000003,
+      "code": "BUSY",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "verify",
+          "ok": false,
+          "postMs": 2591.105104000002,
+          "redirectMs": 234.10147100000177,
+          "bodyMs": 0.8184799999980896,
+          "durationMs": 2826.133539000002,
+          "code": "BUSY"
+        }
+      ]
+    },
+    {
+      "label": "different-note-1-attempt-0-retry-1",
+      "ok": false,
+      "ms": 2454.0532889999995,
+      "code": "BUSY",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "verify",
+          "ok": false,
+          "postMs": 2290.8423550000007,
+          "redirectMs": 162.1548760000005,
+          "bodyMs": 0.8564170000026934,
+          "durationMs": 2453.976012000003,
+          "code": "BUSY"
+        }
+      ]
+    },
+    {
+      "label": "different-note-0-attempt-0",
+      "ok": true,
+      "ms": 7351.303288999996,
+      "timings": {
+        "auth": 19,
+        "lockWait": 45,
+        "auditStart": 76,
+        "manifestRead": 694,
+        "noteRead": 942,
+        "shardLoad": 1642,
+        "core": 22,
+        "noteWrite": 2243,
+        "manifestWrite": 2245,
+        "shardPublish": 46,
+        "shardCommit": 4555,
+        "auditEnd": 73,
+        "serverTotal": 6540
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 7184.288962999999,
+          "redirectMs": 165.13047399999778,
+          "bodyMs": 1.7047729999976582,
+          "verifyMs": 0.12956400000257418,
+          "durationMs": 7351.2632289999965
+        }
+      ]
+    },
+    {
+      "label": "different-note-1-attempt-0-retry-2",
+      "ok": true,
+      "ms": 6804.23357,
+      "timings": {
+        "auth": 33,
+        "lockWait": 387,
+        "auditStart": 110,
+        "manifestRead": 659,
+        "noteRead": 722,
+        "shardLoad": 1420,
+        "core": 30,
+        "noteWrite": 1897,
+        "manifestWrite": 1670,
+        "shardPublish": 115,
+        "shardCommit": 3726,
+        "auditEnd": 80,
+        "serverTotal": 5959
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6609.287817,
+          "redirectMs": 193.98019100000238,
+          "bodyMs": 0.8122919999950682,
+          "verifyMs": 0.09832800000003772,
+          "durationMs": 6804.182062999997
+        }
+      ]
+    },
+    {
+      "label": "get-a",
+      "ok": true,
+      "ms": 2373.5079960000003,
+      "timings": {
+        "auth": 31,
+        "lockWait": 73,
+        "auditStart": 72,
+        "manifestRead": 468,
+        "noteRead": 594,
+        "shardLoad": 1090,
+        "core": 1,
+        "auditEnd": 68,
+        "serverTotal": 1491
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2206.296620000001,
+          "redirectMs": 165.35249200000544,
+          "bodyMs": 1.6830699999991339,
+          "verifyMs": 0.15939900000375928,
+          "durationMs": 2373.4951569999976
+        }
+      ]
+    },
+    {
+      "label": "get-b",
+      "ok": true,
+      "ms": 2536.8682180000033,
+      "timings": {
+        "auth": 52,
+        "lockWait": 69,
+        "auditStart": 109,
+        "manifestRead": 615,
+        "noteRead": 555,
+        "shardLoad": 1204,
+        "core": 2,
+        "auditEnd": 90,
+        "serverTotal": 1693
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2373.1556070000006,
+          "redirectMs": 162.2394770000028,
+          "bodyMs": 1.3212659999990137,
+          "verifyMs": 0.12955499999952735,
+          "durationMs": 2536.850301999999
+        }
+      ]
+    },
+    {
+      "label": "replay-first",
+      "ok": true,
+      "ms": 10231.986738,
+      "timings": {
+        "auth": 44,
+        "lockWait": 138,
+        "auditStart": 156,
+        "manifestRead": 820,
+        "noteRead": 683,
+        "shardLoad": 1546,
+        "core": 35,
+        "noteWrite": 2404,
+        "manifestWrite": 2659,
+        "shardPublish": 128,
+        "shardCommit": 5235,
+        "auditEnd": 156,
+        "serverTotal": 7673
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 8771.337775,
+          "redirectMs": 1459.591143000005,
+          "bodyMs": 0.8511289999951259,
+          "verifyMs": 0.15469199999643024,
+          "durationMs": 10231.938836000001
+        }
+      ]
+    },
+    {
+      "label": "replay-same-id",
+      "ok": true,
+      "ms": 3398.6193580000036,
+      "timings": {
+        "auth": 90,
+        "lockWait": 141,
+        "auditStart": 142,
+        "manifestRead": 691,
+        "noteRead": 729,
+        "shardLoad": 1467,
+        "core": 2,
+        "auditEnd": 145,
+        "serverTotal": 2313
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3060.466674999996,
+          "redirectMs": 337.16972299999907,
+          "bodyMs": 0.8077269999994314,
+          "verifyMs": 0.13434200000483543,
+          "durationMs": 3398.581591000002
+        }
+      ]
+    },
+    {
+      "label": "workspace-share",
+      "ok": true,
+      "ms": 7912.025331999997,
+      "timings": {
+        "auth": 20,
+        "lockWait": 50,
+        "auditStart": 51,
+        "manifestRead": 673,
+        "shardLoad": 688,
+        "core": 23,
+        "manifestWrite": 2227,
+        "shardPublish": 74,
+        "shardCommit": 2314,
+        "auditEnd": 49,
+        "serverTotal": 3355
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6126.551609999995,
+          "redirectMs": 1783.589890000003,
+          "bodyMs": 1.7886789999975008,
+          "verifyMs": 0.07868899999448331,
+          "durationMs": 7912.012111999997
+        }
+      ]
+    },
+    {
+      "label": "shared-get",
+      "ok": true,
+      "ms": 2643.4577819999977,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2491.1424629999965,
+          "redirectMs": 151.23046700000123,
+          "bodyMs": 0.9600930000015069,
+          "verifyMs": 0.11059599999862257,
+          "durationMs": 2643.4465340000024
+        }
+      ]
+    },
+    {
+      "label": "shared-save",
+      "ok": true,
+      "ms": 7967.562428999998,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6931.830778000003,
+          "redirectMs": 1034.584858000002,
+          "bodyMs": 1.0080750000051921,
+          "verifyMs": 0.0811119999998482,
+          "durationMs": 7967.507998000001
+        }
+      ]
+    },
+    {
+      "label": "revoke",
+      "ok": true,
+      "ms": 6410.416572000002,
+      "timings": {
+        "auth": 32,
+        "lockWait": 57,
+        "auditStart": 106,
+        "manifestRead": 536,
+        "shardLoad": 562,
+        "core": 14,
+        "manifestWrite": 1789,
+        "shardPublish": 76,
+        "shardCommit": 1890,
+        "auditEnd": 88,
+        "serverTotal": 2889
+      },
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4686.594075999994,
+          "redirectMs": 1722.7103639999987,
+          "bodyMs": 1.0261430000100518,
+          "verifyMs": 0.07206900000164751,
+          "durationMs": 6410.406306000004
+        }
+      ]
+    },
+    {
+      "label": "revoked-replay",
+      "ok": false,
+      "ms": 5749.970940999992,
+      "code": "SHARE_NOT_FOUND",
+      "status": 404,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "verify",
+          "ok": false,
+          "postMs": 4028.7317029999977,
+          "redirectMs": 1719.8601640000124,
+          "bodyMs": 1.2256130000023404,
+          "durationMs": 5749.910589000006,
+          "code": "SHARE_NOT_FOUND"
+        }
+      ]
+    },
+    {
+      "label": "owner-get-after-share",
+      "ok": false,
+      "ms": 33677.28512300001,
+      "code": "NETWORK_OR_TIMEOUT",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 33484.112792,
+          "durationMs": 33677.213676000014,
+          "code": "NETWORK_OR_TIMEOUT"
+        }
+      ]
+    },
+    {
+      "label": "owner-get-after-share-retry-1",
+      "ok": false,
+      "ms": 36150.72932500001,
+      "code": "NETWORK_OR_TIMEOUT",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 20005.342066000012,
+          "durationMs": 36150.68981499999,
+          "code": "NETWORK_OR_TIMEOUT"
+        }
+      ]
+    },
+    {
+      "label": "owner-get-after-share-retry-2",
+      "ok": false,
+      "ms": 19407.864849000005,
+      "code": "NETWORK_OR_TIMEOUT",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 10578.923569999984,
+          "durationMs": 19407.82308500001,
+          "code": "NETWORK_OR_TIMEOUT"
+        }
+      ]
+    },
+    {
+      "label": "original-health-after",
+      "ok": false,
+      "ms": 11185.570199999987,
+      "code": "NETWORK_OR_TIMEOUT",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 3195.1215139999986,
+          "durationMs": 11185.54519199999,
+          "code": "NETWORK_OR_TIMEOUT"
+        }
+      ]
+    },
+    {
+      "label": "original-health-after-retry-1",
+      "ok": false,
+      "ms": 18146.60757999998,
+      "code": "NETWORK_OR_TIMEOUT",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 10896.004457999981,
+          "durationMs": 18146.56986399999,
+          "code": "NETWORK_OR_TIMEOUT"
+        }
+      ]
+    },
+    {
+      "label": "original-health-after-retry-2",
+      "ok": false,
+      "ms": 25416.13008599999,
+      "code": "NETWORK_OR_TIMEOUT",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 9970.028641000012,
+          "durationMs": 25416.09327100002,
+          "code": "NETWORK_OR_TIMEOUT"
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "sameNoteOneWinner": true,
+    "differentNotesBothRetained": true,
+    "idempotency": true,
+    "workspaceShareRevokeReplay": true
+  },
+  "errors": [
+    {
+      "code": "NETWORK_OR_TIMEOUT",
+      "status": 503
+    },
+    {
+      "code": "ORIGINAL_HEALTH_UNVERIFIED"
+    }
+  ],
+  "readinessBuilds": [
+    "notes-gas-per-note-v6",
+    "notes-gas-per-note-v6"
+  ],
+  "originalBefore": {
+    "service": "notes-prototype",
+    "build": "notes-gas-per-note-v6",
+    "schema": 1,
+    "revision": 119,
+    "activeNotes": 100,
+    "records": 100,
+    "readVerified": true,
+    "journalAvailable": true,
+    "lastError": {
+      "at": "2026-10-16T10:26:52.470Z",
+      "reference": "GAS-d150ca9d",
+      "build": "notes-gas-per-note-v5",
+      "operation": "save",
+      "stage": "read",
+      "status": 409,
+      "code": "REVISION_CONFLICT",
+      "durationMs": 2312,
+      "timings": {
+        "auth": 43,
+        "lockWait": 780,
+        "auditStart": 128,
+        "core": 2,
+        "manifestRead": 667,
+        "noteRead": 514,
+        "shardLoad": 1221
+      }
+    }
+  },
+  "reconciliation": {
+    "revision": 4,
+    "records": 2,
+    "bothPriorTitlesPresent": false,
+    "receiptCount": 4
+  },
+  "summary": {
+    "ping": {
+      "attempted": 0,
+      "success": 0,
+      "p50": null,
+      "p95": null
+    },
+    "list-100": {
+      "attempted": 0,
+      "success": 0,
+      "p50": null,
+      "p95": null
+    },
+    "get-100": {
+      "attempted": 0,
+      "success": 0,
+      "p50": null,
+      "p95": null
+    },
+    "save-100": {
+      "attempted": 0,
+      "success": 0,
+      "p50": null,
+      "p95": null
+    }
+  },
+  "live500": "NOT_RUN: first validate n100; no automatic stress escalation",
+  "checkpointCount": 8
+}

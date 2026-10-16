@@ -129,3 +129,41 @@ reuse request IDs. Primary benchmark budget is unchanged. Readiness now expectsv
 Security follow-up: recovery namespace is owner-only even when a restored old
 backup contains a formerly valid share token. Shared actors cannot select it as
 an alternate route. Test includes a revoked capability in portable restore.
+
+### Third live attempt: functional progress, transport failure; stop load
+
+Commite8d8354/run38887821782, version11/buildv6, canonical source hash
+ e3ff2f391a49dfe2ec56e9774c080e5e34552a4c74b7534661d79eceb4704da3.
+Simulation47/47, source update and independent operational-probe passed.
+Continuation export found revision4/two records/four receipts; previous ambiguous
+B was not committed in that observed state. New tests used fresh current revisions.
+
+Live confirmed: one same-note winner/one409 after BUSY retry; different-note writes
+both retained; exact same-request replay returned prior result without shardCommit;
+workspace shared get omitted history, shared save succeeded, revoke rejected old
+shared save replay404. These are individual rehearsals, not repeated50-pair proof.
+
+Five successful body mutations in attempt3 took6.80–10.23s observed, including
+retry-independent confirmed samples. They are functional small-store calls, not
+n100 randomized A/B or reliable percentile estimates. In attempt3 profiled successful
+body writes took1.90–2.40s and manifest writes1.67–2.66s; global lock still spans
+these operations. Reducing bytes does not remove the second create/readback cost.
+
+After revoke, three read-only owner gets failed NETWORK_OR_TIMEOUT (33.68s,36.15s,
+19.41s), followed by three legacy health failures (11.19s,18.15s,25.42s). This is
+not evidence of a per-note hash/CAS failure or data loss, but it prevents usability
+and integrity claims. No history/delete/folder/restore phase, no seed100, no20x
+latency sample or live500 reached. Small complete restore remains simulation only.
+No claim the entire live suite passed. Raw sanitized evidence at
+results/google-per-note-20261016.json;8 synthetic checkpoints retained only in the
+runner artifact12040342504 (no capability secret). Original health after trial was
+UNVERIFIED at that moment, not reported unchanged merely from source inspection.
+
+Decision: stop mutation trials instead of increasing timeouts/load. Keep prototype
+opt-in and production cutover blocked. Add bounded read-only legacy health + exact
+per-note revision11/two records/11 receipts/revoked share reconciliation. It does not
+modify HEADs, retry a mutation, restore or reset anything. Result pending below.
+
+This implementation tests per-note bodies with an atomic manifest. It does not
+prove that all GAS/Drive per-note HEAD designs are impossible. Removing the manifest
+would require a different transaction/index/recovery protocol, not a free speedup.

@@ -221,3 +221,28 @@ jobs:
           path: experiments/notes-gas/per-note-result.local.json
           if-no-files-found: ignore
           retention-days: 7
+
+  per-note-integrity:
+    if: always() && github.event_name == 'push' && contains(github.event.head_commit.message, '[verify-per-note]') && needs.simulation.result == 'success'
+    needs: [simulation, source-update, operational-probe]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Read-only reconciliation; no mutation workload rerun
+        env:
+          NOTES_GAS_URL: 'https://script.google.com/macros/s/AKfycbwnIO4-cED9dRdNH0ik4FR9os_9kM4XDXqaNdn0iorb5JoiNRIg8dgp0fWEJYurLWAwPA/exec'
+          NOTES_GAS_HMAC_KEY: ${{ secrets.NOTES_GAS_HMAC_KEY }}
+        run: node experiments/notes-gas/scripts/verify-per-note.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: notes-prototype-per-note-integrity
+          path: experiments/notes-gas/per-note-integrity.local.json
+          if-no-files-found: ignore
+          retention-days: 7
