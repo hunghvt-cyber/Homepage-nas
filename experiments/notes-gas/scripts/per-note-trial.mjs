@@ -16,8 +16,14 @@ async function confirmed(req,label){try{return await live(req,label);}catch(e){i
 const fixture=(id=randomUUID(),folder='trial-workspace')=>({id,title:'SYNTHETIC per-note '+id.slice(0,8),text:'Tiếng Việt 日本語 😀\n'+'Nội dung thử nghiệm. '.repeat(80),folder,pinned:false,checklist:[{id:'one',text:'Việc đã xong ✅',checked:true},{id:'two',text:'Việc tiếp theo',checked:false}]});
 async function expectStatus(req,status,label){try{await diagnostic(req,label);assert.fail('EXPECTED_ERROR');}catch(e){assert.equal(e.status,status);}}
 try{
- report.originalBefore=await diagnostic(newRequest('health'),'original-health-before');assert.equal(report.originalBefore.revision,119);assert.equal(report.originalBefore.activeNotes,100);
- assert.equal(report.originalBefore.build,'notes-gas-per-note-v5');
+ // Deployment management readback does not prove runtime propagation. No mutations
+ // until two independent signed responses identify the expected build.
+ let stable=0;
+ for(let attempt=0;attempt<12&&stable<2;attempt++){
+  try{const h=await make(30000,1)(newRequest('health'),'readiness-'+attempt);assert.equal(h.revision,119);assert.equal(h.activeNotes,100);report.readinessBuilds??=[];report.readinessBuilds.push(h.build);if(h.build==='notes-gas-per-note-v5'){stable++;report.originalBefore=h;}else stable=0;}catch(e){stable=0;if(e.status&&e.status!==503)throw e;}
+  if(stable<2)await new Promise(r=>setTimeout(r,3000));
+ }
+ if(stable<2)throw Error('RUNTIME_BUILD_NOT_READY');
  const init=await diagnostic(request('shardInit'),'shard-init');assert.equal(init.existing,false,'REFUSE_USED_SHARD_NAMESPACE');
  let a=await confirmed(request('save',fixture()),'functional-create-a');let b=await confirmed(request('save',fixture()),'functional-create-b');
  async function raced(req,label){for(let attempt=0;attempt<5;attempt++){try{return await diagnostic(req,label+'-attempt-'+attempt);}catch(e){if(e.status!==503||attempt===4)throw e;await new Promise(r=>setTimeout(r,300));}}}

@@ -91,3 +91,18 @@ are not introduced. Direct shared reads bypassing live ACL are not introduced.
 
 Pending actual workflow evidence. Simulation and live findings will be recorded
 separately; no claim that per-note is faster before measurement.
+
+### First live attempt: harness/readiness failure, no shard mutation
+
+Commit1db6d0b, run38886692298:47 simulated tests passed. Source management
+readback verified version10/hash3ea307cefe90cce737e6597090b4ccc3da21a982395b535701d8226c3470d4d0;
+independent operations passed. Trial's first legacy health returned BUSY while
+operations was running; it stopped BEFORE shardInit. Final health returned old
+buildv4 despite management version10. This confirms readiness was not established,
+not a measured per-note storage failure. No runtime propagation cause inferred.
+Evidence: results/google-per-note-attempt1-20261016.json, artifact12039484374.
+
+Correction: trial waits for operational-probe completion, then requires two signed
+health responses with expected runtime build before shardInit. Diagnostic readiness
+failures remain in evidence; they are not benchmark successes. Retrying this attempt
+is safe because artifact proves no initialization or Note mutation was attempted.

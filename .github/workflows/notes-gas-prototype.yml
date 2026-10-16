@@ -194,7 +194,7 @@ jobs:
 
   per-note-trial:
     if: github.event_name == 'push' && contains(github.event.head_commit.message, '[per-note-trial]')
-    needs: [simulation, source-update]
+    needs: [simulation, source-update, operational-probe]
     runs-on: ubuntu-latest
     permissions:
       contents: read

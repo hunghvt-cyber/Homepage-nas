@@ -1,0 +1,110 @@
+{
+  "kind": "LIVE_GOOGLE_PER_NOTE_NOT_VERCEL_OR_IPAD",
+  "at": "2026-10-16T10:22:34.551Z",
+  "completed": false,
+  "calls": [
+    {
+      "label": "original-health-before",
+      "ok": false,
+      "ms": 5733.265246,
+      "code": "BUSY",
+      "status": 503,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "verify",
+          "ok": false,
+          "postMs": 5528.148673000001,
+          "redirectMs": 198.53229199999987,
+          "bodyMs": 5.766383999999562,
+          "durationMs": 5732.651009,
+          "code": "BUSY"
+        }
+      ]
+    },
+    {
+      "label": "original-health-after",
+      "ok": true,
+      "ms": 11362.235578,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5368.550139,
+          "redirectMs": 5992.191538000001,
+          "bodyMs": 1.3624239999990095,
+          "verifyMs": 0.0938750000022992,
+          "durationMs": 11362.207595
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "originalUnchanged": true
+  },
+  "errors": [
+    {
+      "code": "BUSY",
+      "status": 503
+    }
+  ],
+  "originalAfter": {
+    "service": "notes-prototype",
+    "build": "notes-gas-cache-only-v4",
+    "schema": 1,
+    "revision": 119,
+    "activeNotes": 100,
+    "records": 100,
+    "readVerified": true,
+    "journalAvailable": true,
+    "lastError": {
+      "at": "2026-10-16T08:39:56.611Z",
+      "reference": "GAS-85bfd3de",
+      "build": "notes-gas-profile-v2",
+      "operation": "save",
+      "stage": "validate",
+      "status": 409,
+      "code": "REVISION_CONFLICT",
+      "durationMs": 1155,
+      "timings": {
+        "auth": 67,
+        "lockWait": 76,
+        "auditStart": 129,
+        "headRead": 30,
+        "fileLookup": 115,
+        "fileValidation": 388,
+        "snapshotRead": 220,
+        "loadTotal": 770,
+        "core": 31
+      }
+    }
+  },
+  "summary": {
+    "ping": {
+      "attempted": 0,
+      "success": 0,
+      "p50": null,
+      "p95": null
+    },
+    "list-100": {
+      "attempted": 0,
+      "success": 0,
+      "p50": null,
+      "p95": null
+    },
+    "get-100": {
+      "attempted": 0,
+      "success": 0,
+      "p50": null,
+      "p95": null
+    },
+    "save-100": {
+      "attempted": 0,
+      "success": 0,
+      "p50": null,
+      "p95": null
+    }
+  },
+  "live500": "NOT_RUN: first validate n100; no automatic stress escalation"
+}
