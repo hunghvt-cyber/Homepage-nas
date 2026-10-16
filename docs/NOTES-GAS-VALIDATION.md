@@ -10,7 +10,7 @@ Ngày 16/10/2026. Base main: `a09b63b2c520312a70c8e13b645537f62fb7711a`.
 | Python hiện có | `python3 -m unittest discover -s tests -p 'test_*.py'`: 12/12 pass |
 | Syntax và liên kết | Tất cả JS/MJS parse được; HTML nội bộ không có resource hỏng |
 | Build | `python3 scripts/build.py`: 6 guides, QR enabled |
-| Prototype | `node --test experiments/notes-gas/test/*.test.mjs`: 14/14 pass (mô phỏng) |
+| Prototype | `node --test experiments/notes-gas/test/*.test.mjs`: 18/18 pass (mô phỏng, gồm logging/health/operations) |
 | Google triển khai | CHƯA — cần tạo project và consent Google |
 | Benchmark Google thật | CHƯA — không có p50/p95 mạng được xác minh |
 | Vercel Preview end-to-end | CHƯA — adapter hiện là template không deploy |
@@ -37,3 +37,5 @@ Ngưỡng sau là đề xuất để quyết định sau benchmark, chưa phải
 - Xác nhận lại quota/pricing ngày triển khai. Không cam kết Google không ngừng dịch vụ hoặc miễn phí mãi.
 
 Nếu không đạt, giữ nhánh Google làm bằng chứng và đánh giá D1/Firestore theo cùng workload và điều kiện bảo toàn dữ liệu. Không tự chuyển provider production.
+
+Bổ sung: journal giới hạn 30 event/8.000 byte; không lộ Note/secret; log failure không đổi kết quả commit; log vẫn đọc được khi HEAD hỏng; share bị chặn ops; auth/BUSY không flood Properties; editor check chạy lặp không đổi HEAD; operations tiếp tục lấy log khi health lỗi và lọc output. Job Google operational-probe thiếu secrets chỉ SKIP, không phải live pass. Google init do người dùng xác nhận, chưa có độc lập health/hash readback.

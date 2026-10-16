@@ -2,6 +2,7 @@
 
 **Trạng thái: thử nghiệm, CHƯA đủ điều kiện chuyển production.** Không migration dữ liệu thật. Không thay hoặc xóa Blob. Mã này không kết nối chi tiêu/Gemini, không dùng NAS.
 
+- [Quản lý chung Homepage và logging](../../docs/NOTES-GAS-HOMEPAGE-OPERATIONS.md)
 - [Audit, quota và quyết định kiến trúc](../../docs/NOTES-GAS-AUDIT-20261016.md)
 - [Cấp quyền, triển khai thử, backup và rollback](../../docs/NOTES-GAS-RUNBOOK.md)
 - [Kết quả kiểm thử và điều kiện nghiệm thu](../../docs/NOTES-GAS-VALIDATION.md)
@@ -54,6 +55,7 @@ Vercel xác minh session chủ sở hữu hoặc gửi `actor: share` với capa
 | `shareCreate` | noteId hoặc folder; adapter điền shareId/tokenHash | owner; link xem/sửa không hết hạn |
 | `shareRevoke` | shareId | owner |
 | `shareList` | noteId hoặc folder | owner; chỉ metadata link |
+| `health` / `logs` | rỗng | owner; health kiểm snapshot, logs đọc journal độc lập HEAD |
 | `backup` | rỗng | owner; chỉ dữ liệu thử, có giới hạn response |
 
 Mọi lần gọi có requestId UUID. Mọi mutation còn cần issuedAt. Khi tạo Note mới, adapter dùng requestId làm id nếu thiếu; idempotency mới nghĩa là thao tác mới. Client phải giữ requestId + issuedAt + payload đến khi biết kết quả; sau 24 giờ tải lại trước khi quyết định, không tự phát lại thành thao tác mới.

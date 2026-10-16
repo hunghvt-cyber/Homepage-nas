@@ -3,3 +3,5 @@
 .clasp.json
 benchmark-result.local.json
 *.backup.json
+
+ops-result.local.json

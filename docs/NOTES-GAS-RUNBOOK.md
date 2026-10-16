@@ -75,3 +75,7 @@ Prototype chưa đụng production nên rollback triển khai = tắt NOTES_GAS_
 Rollback code Google chỉ dùng version schema tương thích đã kiểm thử, luôn giữ HEAD mới nhất và danh sách thu hồi. Không đưa HEAD về bản cũ. Nếu code/schema không tương thích, dừng web app trước, không thử sửa dữ liệu cho chạy bằng được.
 
 Chưa có kế hoạch cutover/migration được phép chạy. Chỉ sau phê duyệt riêng mới thiết kế export Blob read-only, kiểm kê/hash, rehearsal vào namespace thử, read-only freeze, đối soát, cutover có rollback. Không dual-write dữ liệu thật trong prototype.
+
+## 8. Bản cập nhật vận hành sau khi đã init
+
+Xem [quản lý chung Homepage](NOTES-GAS-HOMEPAGE-OPERATIONS.md). Chỉ thay Server.gs bằng Server.js mới của PR, lưu, chạy checkNotesPrototype. Không chạy initializeNotesPrototype lần hai, không đổi HMAC/HEAD/folder/manifest. Console và journal chỉ metadata. Sau deploy mới đặt GitHub secrets để AI đọc kết quả health/log qua workflow. Tự cập nhật source bằng OAuth/clasp chưa cấu hình.

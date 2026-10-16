@@ -18,4 +18,29 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: node --test experiments/notes-gas/test/*.test.mjs
       - run: find experiments/notes-gas -name '*.js' -o -name '*.mjs' | xargs -n1 node --check
-# No Google credentials, live benchmark, deployment, migration or production writes.
+# Simulation needs no secrets. Optional operational probe below is read-only; no deployment or migration.
+  operational-probe:
+    if: github.event_name == 'push'
+    needs: simulation
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Read-only Google health and diagnostic metadata (skip when unconfigured)
+        env:
+          NOTES_GAS_URL: ${{ secrets.NOTES_GAS_URL }}
+          NOTES_GAS_HMAC_KEY: ${{ secrets.NOTES_GAS_HMAC_KEY }}
+        run: node experiments/notes-gas/scripts/operations.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: notes-prototype-operational-metadata
+          path: experiments/notes-gas/ops-result.local.json
+          if-no-files-found: ignore
+          retention-days: 7
+# Probe only runs on the authorized prototype branch push, never on fork pull_request.

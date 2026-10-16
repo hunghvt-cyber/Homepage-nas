@@ -153,3 +153,35 @@ test('wire response capacity fails before commit; bounded receipts reject overlo
   const output=context.NotesCore.execute(state,h.request('save',note()),env);assert.equal(Object.keys(output.state.receipts).length,1);
   assert.equal(h.call('save',{...note(),checklist:[{id:42,text:'bad',checked:true}]}).status,400);
 });
+
+test('bounded durable journal has no note/token/secret content; health never mutates Notes',()=>{
+  const h=harness(),secretText='PRIVATE NOTE MUST NOT BE LOGGED',req=h.request('save',{...note(),text:secretText});
+  ok(h.send(req));const head=h.props.get('NOTES_HEAD'),files=h.files.size;
+  const health=ok(h.call('health'));assert.equal(health.readVerified,true);assert.equal(health.revision,1);
+  for(let i=0;i<35;i++)ok(h.call('logs'));
+  const journal=ok(h.call('logs'));assert.ok(journal.events.length<=30);assert.ok(Buffer.byteLength(h.props.get('NOTES_OPS_LOG'))<=8000);
+  const all=JSON.stringify(journal)+h.consoleRows.join('\n');assert.equal(all.includes(secretText),false);assert.equal(all.includes(req.payload.id),false);assert.equal(all.includes(key),false);
+  assert.equal(h.props.get('NOTES_HEAD'),head);assert.equal(h.files.size,files);
+  const token=shared(h,{noteId:req.payload.id});assert.equal(h.call('logs',{token},'share').status,403);assert.equal(h.call('health',{token},'share').status,403);
+});
+
+test('journal survives HEAD corruption; log failure cannot turn a committed save into a failure',()=>{
+  const h=harness();h.setFailure('audit');const result=h.send(h.request('save',note()));assert.equal(result.ok,true);assert.equal(result.observability.persisted,false);assert.equal(h.state().revision,1);
+  h.setFailure('');const head=JSON.parse(h.props.get('NOTES_HEAD'));h.files.get(head.id).data='corrupted';
+  assert.equal(h.call('health').status,503);const journal=ok(h.call('logs'));assert.ok(journal.events.some(x=>x.code==='SNAPSHOT_CORRUPT'&&x.stage==='read'));
+  assert.equal(JSON.parse(h.props.get('NOTES_LAST_ERROR')).code,'SNAPSHOT_CORRUPT');
+});
+
+test('bad authentication and lock contention cannot flood durable journal; editor check is idempotent',()=>{
+  const h=harness(),req=h.request('list');const prior=h.props.get('NOTES_OPS_LOG');
+  assert.equal(h.send(req,{signature:'0'.repeat(64)}).status,401);assert.equal(h.props.get('NOTES_OPS_LOG'),prior);
+  h.setLocked(true);const busy=h.send(req);assert.equal(busy.status,503);assert.equal(busy.observability.persisted,false);assert.equal(h.props.get('NOTES_OPS_LOG'),prior);h.setLocked(false);
+  const head=h.props.get('NOTES_HEAD');h.context.checkNotesPrototype();h.context.checkNotesPrototype();assert.equal(h.props.get('NOTES_HEAD'),head);
+  assert.ok(h.consoleRows.some(x=>x.includes('readVerified')));
+});
+
+test('operational probe continues to fetch journal when health fails and returns no Note bodies',async()=>{
+  const {inspect}=await import('../scripts/operations.mjs');const calls=[];
+  const report=await inspect(async req=>{calls.push(req.op);if(req.op==='health')throw Object.assign(new Error('SNAPSHOT_CORRUPT'),{status:503});return {events:[{at:'2026-10-16T04:00:00.000Z',reference:'GAS-1234abcd',operation:'health',stage:'read',status:503,code:'SNAPSHOT_CORRUPT',durationMs:8,text:'DO NOT EXPORT',token:'DO NOT EXPORT'}]};});
+  assert.deepEqual(calls,['health','logs']);assert.equal(report.healthy,false);assert.equal(report.journal.events.length,1);assert.equal(JSON.stringify(report).includes('DO NOT EXPORT'),false);
+});

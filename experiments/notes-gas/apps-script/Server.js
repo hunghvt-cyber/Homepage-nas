@@ -42,11 +42,56 @@ function ngRepository_(props) {
     }
   };
 }
+// Bounded operational journal; independent of Drive/HEAD so corruption remains diagnosable.
+var NG_BUILD_ = 'notes-gas-ops-v1';
+function ngAuditRead_(props) {
+  var raw=props.getProperty('NOTES_OPS_LOG');
+  if(!raw)return {schema:1,events:[]};
+  var log=JSON.parse(raw);
+  if(log.schema!==1||!Array.isArray(log.events))ngError_(503,'AUDIT_UNAVAILABLE');
+  return log;
+}
+function ngAudit_(props,event,held,authenticated) {
+  // Construct a fresh allowlisted record. Never stringify a request or raw error.
+  var row={at:new Date().toISOString(),reference:event.reference,build:NG_BUILD_,
+    operation:event.operation,stage:event.stage,status:event.status,code:event.code,
+    durationMs:Math.max(0,Date.now()-event.started)};
+  try {console.log(JSON.stringify(row));}catch(_){}
+  // Reject noise before persisting. Do not acquire/wait for another lock just to log.
+  if(!held||!authenticated)return false;
+  try {
+    var log;try{log=ngAuditRead_(props);}catch(_){return false;}
+    log.events.push(row);log.events=log.events.slice(-30);
+    while(ngBytes_(JSON.stringify(log))>8000&&log.events.length>1)log.events.shift();
+    props.setProperty('NOTES_OPS_LOG',JSON.stringify(log));
+    if(row.status>=400)props.setProperty('NOTES_LAST_ERROR',JSON.stringify(row));
+    return true;
+  }catch(_){return false;}
+}
+function ngHealth_(props,repo) {
+  var current=repo.load(),last=props.getProperty('NOTES_LAST_ERROR');
+  return {service:'notes-prototype',build:NG_BUILD_,schema:current.state.schema,
+    revision:current.state.revision,activeNotes:current.state.index.length,
+    records:Object.keys(current.state.notes).length,readVerified:true,
+    journalAvailable:!!props.getProperty('NOTES_OPS_LOG'),lastError:last?JSON.parse(last):null};
+}
+// Safe editor check for existing stores. Does not reinitialize or change HEAD.
+function checkNotesPrototype() {
+  var props=PropertiesService.getScriptProperties(),lock=LockService.getScriptLock();
+  lock.waitLock(1500);
+  var event={reference:'GAS-'+Utilities.getUuid().slice(0,8),operation:'health',stage:'read',status:200,code:'OK',started:Date.now()};
+  try {
+    var health=ngHealth_(props,ngRepository_(props));
+    console.log(JSON.stringify(health));
+  }catch(err){event.status=err.status||503;event.code=err.status?err.message:'STORAGE_UNAVAILABLE';throw new Error(event.code);}
+  finally{ngAudit_(props,event,true,true);lock.releaseLock();}
+}
 function doGet() {
   return ContentService.createTextOutput(JSON.stringify({ok:false,status:405,code:'POST_REQUIRED'})).setMimeType(ContentService.MimeType.JSON);
 }
 function doPost(e) {
-  var key,requestId='',result,lock;
+  var key,requestId='',result,lock,authenticated=false;
+  var event={reference:'GAS-'+Utilities.getUuid().slice(0,8),operation:'unknown',stage:'auth',status:503,code:'STORAGE_UNAVAILABLE',started:Date.now()};
   try {
     var props=PropertiesService.getScriptProperties();
     key=props.getProperty('NOTES_HMAC_KEY');
@@ -58,19 +103,35 @@ function doPost(e) {
     if(!ngEqual_(ngMac_('request\n'+envelope.sentAt+'\n'+envelope.request,key),envelope.signature))ngError_(401,'AUTH_INVALID');
     var req;try{req=JSON.parse(envelope.request);}catch(_){ngError_(400,'INVALID_JSON');}
     if(!/^[0-9a-f-]{36}$/.test(req.requestId||''))ngError_(400,'REQUEST_ID_REQUIRED');
-    requestId=req.requestId;
+    requestId=req.requestId;authenticated=true;
+    var ops=['list','get','save','delete','restore','folderDelete','shareCreate','shareRevoke','shareList','backup','search','health','logs'];
+    event.operation=ops.indexOf(req.op)>=0?req.op:'unsupported';event.stage='lock';
     // Lock reads too: permission validation and snapshot publication share one order.
     lock=LockService.getScriptLock();if(!lock.tryLock(1500))ngError_(503,'BUSY');
-    var repo=ngRepository_(props),current=repo.load();
-    var output=NotesCore.execute(current.state,req,{now:Date.now,hash:ngHash_,equal:ngEqual_,bytes:ngBytes_});
-    result={ok:true,status:200,result:output.result};
+    ngAudit_(props,{reference:event.reference,operation:event.operation,stage:'start',status:102,code:'STARTED',started:event.started},true,true);
+    var repo=ngRepository_(props),output;event.stage='read';
+    if(req.op==='health'||req.op==='logs'){
+      if(req.actor!=='owner')ngError_(403,'OP_FORBIDDEN');
+      result={ok:true,status:200,result:req.op==='health'?ngHealth_(props,repo):ngAuditRead_(props)};
+    }else{
+      var current=repo.load();event.stage='validate';
+      output=NotesCore.execute(current.state,req,{now:Date.now,hash:ngHash_,equal:ngEqual_,bytes:ngBytes_});
+      result={ok:true,status:200,result:output.result};
+    }
     // Reject oversized wire responses before publishing any mutation.
-    if(ngBytes_(JSON.stringify({body:JSON.stringify(result),signature:'0'.repeat(64)}))>4000000)ngError_(413,'RESPONSE_TOO_LARGE');
-    if(output.changed)repo.commit(output.state,current);
+    if(ngBytes_(JSON.stringify({body:JSON.stringify(result),signature:'0'.repeat(64)}))>3999000)ngError_(413,'RESPONSE_TOO_LARGE');
+    if(output&&output.changed){event.stage='commit';repo.commit(output.state,current);}
+    event.stage='complete';event.status=200;event.code='OK';
   } catch(err) {
     // No raw Drive errors, secrets, IDs or note content in logs/responses.
     result={ok:false,status:err.status||503,code:err.status?err.message:'STORAGE_UNAVAILABLE'};
-  } finally {if(lock&&lock.hasLock())lock.releaseLock();}
+    event.status=result.status;event.code=result.code;
+  } finally {
+    var held=!!(lock&&lock.hasLock());
+    var persisted=ngAudit_(props,event,held,authenticated);
+    if(result)result.observability={reference:event.reference,persisted:persisted};
+    if(held)lock.releaseLock();
+  }
   var body=JSON.stringify(result);
   return ContentService.createTextOutput(JSON.stringify({body:body,signature:key?ngMac_('response\n'+requestId+'\n'+body,key):''})).setMimeType(ContentService.MimeType.JSON);
 }
@@ -86,5 +147,7 @@ function initializeNotesPrototype() {
     props.setProperty('NOTES_ROOT_FOLDER_ID',folder.getId());
     // A failure leaves the project blocked for inspection, never silently reset.
     ngRepository_(props).commit(NotesCore.empty(),{raw:null,head:{id:null}});
+    ngAudit_(props,{reference:'GAS-'+Utilities.getUuid().slice(0,8),operation:'initialize',stage:'complete',status:200,code:'OK',started:Date.now()},true,true);
+    console.log('Prototype initialized: private folder and empty revision 0.');
   } finally {lock.releaseLock();}
 }

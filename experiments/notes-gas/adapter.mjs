@@ -2,7 +2,7 @@ import {createHmac,createHash,randomUUID,timingSafeEqual} from 'node:crypto';
 const mac=(key,s)=>createHmac('sha256',key).update(s).digest('hex');
 const equal=(a,b)=>typeof a==='string'&&typeof b==='string'&&a.length===b.length&&timingSafeEqual(Buffer.from(a),Buffer.from(b));
 export class BackendError extends Error {constructor(status,code){super(code);this.status=status;}}
-export function createGasClient({url,key,fetcher=fetch,timeoutMs=12000,attempts=2,wait=ms=>new Promise(r=>setTimeout(r,ms))}) {
+export function createGasClient({url,key,fetcher=fetch,timeoutMs=12000,attempts=2,observe=()=>{},wait=ms=>new Promise(r=>setTimeout(r,ms))}) {
   if(!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(url||'')||!/^[a-f0-9]{64}$/.test(key||''))throw new BackendError(503,'PROTOTYPE_NOT_CONFIGURED');
   return async function call(req) {
     if(!/^[0-9a-f-]{36}$/.test(req.requestId||''))throw new BackendError(400,'REQUEST_ID_REQUIRED');
@@ -26,6 +26,7 @@ export function createGasClient({url,key,fetcher=fetch,timeoutMs=12000,attempts=
         let wire;try{wire=JSON.parse(text);}catch{throw new BackendError(502,'UPSTREAM_NOT_JSON');}
         if(typeof wire.body!=='string'||!equal(wire.signature,mac(key,'response\n'+req.requestId+'\n'+wire.body)))throw new BackendError(502,'RESPONSE_AUTH_INVALID');
         const data=JSON.parse(wire.body);
+        if(data.observability){try{observe(data.observability);}catch{}}
         if(!data.ok)throw new BackendError(data.status||503,data.code||'UPSTREAM_ERROR');
         return data.result;
       } catch(e) {

@@ -13,7 +13,7 @@ export function createPrototypeHandler({authorize=owner,client,env=process.env}=
       if(!b.token)await authorize(req,res);
       const key=env.NOTES_GAS_HMAC_KEY;
       const {req:command,token}=prepareRequest(b,key);
-      const call=client||createGasClient({url:env.NOTES_GAS_URL,key});
+      const call=client||createGasClient({url:env.NOTES_GAS_URL,key,observe:info=>{res.setHeader('X-Prototype-Request',info.reference);res.setHeader('X-Prototype-Log',info.persisted?'persisted':'unavailable');}});
       const result=await call(command);
       return reply(res,200,{...result,...(token?{token}:{})});
     }catch(e){return fail(res,new HttpError(e.status||503,e.status?e.message:'Prototype unavailable.'));}
