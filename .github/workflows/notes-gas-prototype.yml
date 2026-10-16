@@ -166,3 +166,28 @@ jobs:
           path: experiments/notes-gas/final-trial-result.local.json
           if-no-files-found: ignore
           retention-days: 7
+
+  final-integrity:
+    if: always() && github.event_name == 'push' && contains(github.event.head_commit.message, '[verify-final-gas]') && needs.simulation.result == 'success'
+    needs: [simulation, source-update]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Read-only integrity of exactly 100 retained synthetic Notes
+        env:
+          NOTES_GAS_URL: 'https://script.google.com/macros/s/AKfycbwnIO4-cED9dRdNH0ik4FR9os_9kM4XDXqaNdn0iorb5JoiNRIg8dgp0fWEJYurLWAwPA/exec'
+          NOTES_GAS_HMAC_KEY: ${{ secrets.NOTES_GAS_HMAC_KEY }}
+        run: node experiments/notes-gas/scripts/verify-final.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: notes-prototype-final-integrity
+          path: experiments/notes-gas/final-integrity-result.local.json
+          if-no-files-found: ignore
+          retention-days: 7

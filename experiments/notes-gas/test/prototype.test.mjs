@@ -201,12 +201,12 @@ test('transport profiling emits attempt stages without payload or URLs and obser
 });
 
 test('optimized owner index is keyed by current HEAD; eviction/corruption fail back and details read Drive',()=>{
- const h=harness();ok(h.call('save',{...note(),optimized:true}));
- let r=h.call('list',{optimized:true,profile:true});assert.equal(r.observability.timings.indexCacheHit,1);assert.equal(r.observability.timings.loadTotal,undefined);
- h.cache.clear();r=h.call('list',{optimized:true,profile:true});assert.equal(r.observability.timings.indexCacheHit,0);assert.equal(r.result.notes.length,1);
- const chunk=[...h.cache.keys()].find(k=>k.endsWith('-0'));h.cache.set(chunk,'broken');r=h.call('list',{optimized:true,profile:true});assert.equal(r.observability.timings.indexCacheHit,0);
- const oldKeys=[...h.cache.keys()];ok(h.call('save',{...note(),optimized:true}));r=h.call('list',{optimized:true,profile:true});assert.equal(r.result.notes.length,2);
- const head=JSON.parse(h.props.get('NOTES_HEAD'));h.files.get(head.id).data='corrupt';assert.equal(h.call('health').status,503);assert.equal(h.call('get',{id:r.result.notes[0].id,optimized:true}).status,503);
+ const h=harness();ok(h.call('save',{...note(),optimized:true,poolTrial:true}));
+ let r=h.call('list',{optimized:true,poolTrial:true,profile:true});assert.equal(r.observability.timings.indexCacheHit,1);assert.equal(r.observability.timings.loadTotal,undefined);
+ h.cache.clear();r=h.call('list',{optimized:true,poolTrial:true,profile:true});assert.equal(r.observability.timings.indexCacheHit,0);assert.equal(r.result.notes.length,1);
+ const chunk=[...h.cache.keys()].find(k=>k.endsWith('-0'));h.cache.set(chunk,'broken');r=h.call('list',{optimized:true,poolTrial:true,profile:true});assert.equal(r.observability.timings.indexCacheHit,0);
+ const oldKeys=[...h.cache.keys()];ok(h.call('save',{...note(),optimized:true,poolTrial:true}));r=h.call('list',{optimized:true,poolTrial:true,profile:true});assert.equal(r.result.notes.length,2);
+ const head=JSON.parse(h.props.get('NOTES_HEAD'));h.files.get(head.id).data='corrupt';assert.equal(h.call('health').status,503);assert.equal(h.call('get',{id:r.result.notes[0].id,optimized:true,poolTrial:true}).status,503);
  assert.ok(oldKeys.length>0);
 });
 test('rotating trial slots never overwrite current/previous or the immutable baseline; retry after ambiguous commit is idempotent',()=>{
@@ -214,23 +214,44 @@ test('rotating trial slots never overwrite current/previous or the immutable bas
  ok(h.call('preparePool'));const slots=JSON.parse(h.props.get('NOTES_POOL'));assert.equal(slots.length,3);
  for(let i=0;i<8;i++){
   const before=JSON.parse(h.props.get('NOTES_HEAD')),bytes=h.files.get(before.id).data,prev=before.previous&&h.files.get(before.previous)?.data;
-  ok(h.call('save',{...note(),optimized:true}));const after=JSON.parse(h.props.get('NOTES_HEAD'));
+  ok(h.call('save',{...note(),optimized:true,poolTrial:true}));const after=JSON.parse(h.props.get('NOTES_HEAD'));
   assert.notEqual(after.id,before.id);assert.notEqual(after.id,before.previous);assert.equal(h.files.get(before.id).data,bytes);if(prev)assert.equal(h.files.get(before.previous).data,prev);
  }
  assert.equal(h.files.get(anchorId).data,JSON.stringify(NotesCoreEmpty()));
- const req=h.request('save',{...note(),optimized:true});h.setFailure('afterHead');assert.equal(h.send(req).ok,false);h.setFailure('');const revision=h.state().revision;ok(h.send(req));assert.equal(h.state().revision,revision);
+ const req=h.request('save',{...note(),optimized:true,poolTrial:true});h.setFailure('afterHead');assert.equal(h.send(req).ok,false);h.setFailure('');const revision=h.state().revision;ok(h.send(req));assert.equal(h.state().revision,revision);
  function NotesCoreEmpty(){return {schema:1,revision:0,notes:{},shares:{},index:[],receipts:{}};}
 });
 test('pool overwrite/pre-publication faults preserve committed state; cache failure never changes save success',()=>{
  for(const point of ['overwrite','afterOverwrite','beforeHead']){
-  const h=harness();ok(h.call('preparePool'));ok(h.call('save',{...note(),optimized:true}));const before=h.props.get('NOTES_HEAD'),data=h.files.get(JSON.parse(before).id).data;
-  const req=h.request('save',{...note(),optimized:true});h.setFailure(point);assert.equal(h.send(req).ok,false);assert.equal(h.props.get('NOTES_HEAD'),before);assert.equal(h.files.get(JSON.parse(before).id).data,data);
+  const h=harness();ok(h.call('preparePool'));ok(h.call('save',{...note(),optimized:true,poolTrial:true}));const before=h.props.get('NOTES_HEAD'),data=h.files.get(JSON.parse(before).id).data;
+  const req=h.request('save',{...note(),optimized:true,poolTrial:true});h.setFailure(point);assert.equal(h.send(req).ok,false);assert.equal(h.props.get('NOTES_HEAD'),before);assert.equal(h.files.get(JSON.parse(before).id).data,data);
   h.setFailure('');ok(h.send(req));assert.equal(Object.keys(h.state().notes).length,2);
  }
- const h=harness();h.setFailure('cache');ok(h.call('save',{...note(),optimized:true}));assert.equal(h.call('list',{optimized:true}).result.notes.length,1);
+ const h=harness();h.setFailure('cache');ok(h.call('save',{...note(),optimized:true,poolTrial:true}));assert.equal(h.call('list',{optimized:true,poolTrial:true}).result.notes.length,1);
 });
 test('optimized list cannot bypass workspace ACL or show owner cached index to a shared actor',()=>{
- const h=harness(),n=ok(h.call('save',{...note(),optimized:true})),secret=shared(h,{noteId:n.id});
- assert.equal(h.call('list',{optimized:true,token:secret},'share').status,403);
- const work=shared(h,{folder:n.folder});ok(h.call('shareRevoke',{shareId:work.split('.')[0],optimized:true}));assert.equal(h.call('list',{optimized:true,token:work},'share').status,404);
+ const h=harness(),n=ok(h.call('save',{...note(),optimized:true,poolTrial:true})),secret=shared(h,{noteId:n.id});
+ assert.equal(h.call('list',{optimized:true,poolTrial:true,token:secret},'share').status,403);
+ const work=shared(h,{folder:n.folder});ok(h.call('shareRevoke',{shareId:work.split('.')[0],optimized:true,poolTrial:true}));assert.equal(h.call('list',{optimized:true,poolTrial:true,token:work},'share').status,404);
 });
+
+test('100 synthetic Notes survive pool rotation and cache previews with Unicode checklist revision and history intact',()=>{
+ const h=harness(),call=(op,payload={})=>h.call(op,{...payload,optimized:true,poolTrial:true}),made=[];
+ for(let i=0;i<100;i++)made.push(ok(call('save',{...note(),title:'SYNTHETIC '+i,text:('Tiếng Việt 日本語 🧡\n').repeat(30)})));
+ assert.equal(ok(call('list')).notes.length,100);assert.equal(h.files.size,4); // baseline + three dedicated slots
+ let first=ok(call('get',{id:made[0].id}));const edited=ok(call('save',{...first,text:'Đã sửa 🧡',checklist:[{id:'a',text:'Đã tick',checked:true}]}));assert.equal(edited.checklist[0].checked,true);
+ assert.equal(call('save',{...first,text:'stale'}).status,409);
+ const restored=ok(call('restore',{id:first.id,revision:edited.revision,historyIndex:0}));assert.equal(restored.text,first.text);
+ h.cache.clear();assert.equal(ok(call('list')).notes.length,100);assert.equal(ok(call('backup')).revision,h.state().revision);
+ ok(call('delete',{id:made[1].id,revision:made[1].revision}));assert.equal(ok(call('list')).notes.length,99);assert.equal(call('get',{id:made[1].id}).status,404);
+});
+
+test('moved or trashed pool candidate blocks overwrite without moving HEAD',()=>{
+ for(const broken of ['trashed','moved']){
+  const h=harness();ok(h.call('preparePool'));const candidate=JSON.parse(h.props.get('NOTES_POOL'))[0],before=h.props.get('NOTES_HEAD'),bytes=h.files.get(candidate).data;
+  if(broken==='trashed')h.files.get(candidate).trashed=true;else h.files.get(candidate).parent='different-folder';
+  const r=h.call('save',{...note(),optimized:true,poolTrial:true});assert.equal(r.status,503);assert.equal(h.props.get('NOTES_HEAD'),before);assert.equal(h.files.get(candidate).data,bytes);
+ }
+});
+
+test('optimized preview flag alone cannot activate the rejected pooled writer',()=>{const h=harness();ok(h.call('save',{...note(),optimized:true}));assert.equal(h.props.has('NOTES_POOL'),false);assert.equal(h.files.size,2);assert.equal(h.call('list',{optimized:true,profile:true}).observability.timings.indexCacheHit,1);});

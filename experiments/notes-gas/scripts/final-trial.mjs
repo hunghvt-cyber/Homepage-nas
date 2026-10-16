@@ -1,4 +1,4 @@
-/* Authorized last GAS trial: existing synthetic store only. No reset or production. */
+/* Historical v3 workload: refuses new builds/state; do not blindly rerun. Authorized last GAS trial: existing synthetic store only. No reset or production. */
 import assert from 'node:assert/strict';
 import {writeFile} from 'node:fs/promises';
 import {randomUUID} from 'node:crypto';

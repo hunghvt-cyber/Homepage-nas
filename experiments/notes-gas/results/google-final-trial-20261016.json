@@ -1,0 +1,6693 @@
+{
+  "kind": "LIVE_GOOGLE_CACHE_POOL_AB",
+  "at": "2026-10-16T09:34:01.340Z",
+  "completed": false,
+  "samples": [
+    {
+      "phase": "warmup",
+      "operation": "health",
+      "mode": "control",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "post",
+          "ok": false,
+          "durationMs": 12011.365079000003,
+          "code": "NETWORK_OR_TIMEOUT"
+        },
+        {
+          "attempt": 2,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 10833.105820000004,
+          "durationMs": 12000.866469,
+          "code": "NETWORK_OR_TIMEOUT"
+        }
+      ],
+      "ok": false,
+      "code": "NETWORK_OR_TIMEOUT",
+      "status": 503,
+      "elapsedMs": 24310.665877999996,
+      "reconciled": true
+    },
+    {
+      "phase": "warmup",
+      "operation": "health",
+      "mode": "control",
+      "diagnostic": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1904.227476,
+          "redirectMs": 84.17459000000235,
+          "bodyMs": 4.930759000002581,
+          "verifyMs": 0.16430799999943702,
+          "durationMs": 1993.5180829999954
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1993.5529979999992,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 36,
+        "lockWait": 51,
+        "auditStart": 90,
+        "headRead": 28,
+        "fileLookup": 173,
+        "fileValidation": 169,
+        "snapshotRead": 271,
+        "auditEnd": 98,
+        "serverTotal": 1102
+      },
+      "reference": "GAS-9434649d"
+    },
+    {
+      "phase": "warmup",
+      "operation": "preparePool",
+      "mode": "control",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5493.920533999997,
+          "redirectMs": 85.48984700000437,
+          "bodyMs": 1.6719069999962812,
+          "verifyMs": 0.10448599999654107,
+          "durationMs": 5581.194026999998
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5581.213222999999,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 42,
+        "lockWait": 56,
+        "auditStart": 138,
+        "auditEnd": 129,
+        "serverTotal": 4727
+      },
+      "reference": "GAS-46f2d9c2"
+    },
+    {
+      "phase": "warmup",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2968.9692089999953,
+          "redirectMs": 71.10343399999692,
+          "bodyMs": 1.319865999998001,
+          "verifyMs": 0.18504699999903096,
+          "durationMs": 3041.583507999996
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 3041.599608000004,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 88,
+        "lockWait": 152,
+        "auditStart": 146,
+        "indexCacheRead": 172,
+        "indexCacheHit": 0,
+        "headRead": 55,
+        "fileLookup": 349,
+        "fileValidation": 267,
+        "snapshotRead": 410,
+        "loadTotal": 1085,
+        "core": 2,
+        "indexCacheSeed": 172,
+        "auditEnd": 266,
+        "serverTotal": 2516
+      },
+      "reference": "GAS-b3e707b9"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1521.8874950000027,
+          "redirectMs": 74.58691699999326,
+          "bodyMs": 1.7880350000050385,
+          "verifyMs": 0.23367799998959526,
+          "durationMs": 1598.503257999997
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1598.5195789999998,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 33,
+        "lockWait": 46,
+        "auditStart": 118,
+        "indexCacheHit": 0,
+        "headRead": 42,
+        "fileLookup": 137,
+        "fileValidation": 198,
+        "snapshotRead": 253,
+        "loadTotal": 641,
+        "core": 4,
+        "auditEnd": 85,
+        "serverTotal": 1049
+      },
+      "reference": "GAS-e73b0db7"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1791.1706709999999,
+          "redirectMs": 65.1680239999987,
+          "bodyMs": 1.0380670000013197,
+          "verifyMs": 0.14010299999790732,
+          "durationMs": 1857.5232479999977
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1857.5538960000122,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 95,
+        "lockWait": 149,
+        "auditStart": 213,
+        "indexCacheRead": 157,
+        "indexCacheHit": 1,
+        "core": 1,
+        "auditEnd": 175,
+        "serverTotal": 1122
+      },
+      "reference": "GAS-a97aee39"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1790.9199020000087,
+          "redirectMs": 77.92480700000306,
+          "bodyMs": 2.118665999994846,
+          "verifyMs": 0.12017600001126993,
+          "durationMs": 1871.089380000005
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1871.1075739999942,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 43,
+        "lockWait": 158,
+        "auditStart": 153,
+        "indexCacheRead": 244,
+        "indexCacheHit": 1,
+        "core": 1,
+        "auditEnd": 231,
+        "serverTotal": 1140
+      },
+      "reference": "GAS-a8278753"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2282.2000350000017,
+          "redirectMs": 71.19720300000336,
+          "bodyMs": 1.2262699999992037,
+          "verifyMs": 0.17925600000307895,
+          "durationMs": 2354.8112809999875
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2354.8430709999957,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 44,
+        "lockWait": 157,
+        "auditStart": 197,
+        "indexCacheHit": 0,
+        "headRead": 83,
+        "fileLookup": 234,
+        "fileValidation": 243,
+        "snapshotRead": 267,
+        "loadTotal": 832,
+        "core": 2,
+        "auditEnd": 191,
+        "serverTotal": 1762
+      },
+      "reference": "GAS-9bd9d756"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1426.2141200000042,
+          "redirectMs": 78.42264900000009,
+          "bodyMs": 1.0889639999950305,
+          "verifyMs": 0.17083000000275206,
+          "durationMs": 1505.914195999998
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1505.939824999994,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 29,
+        "lockWait": 39,
+        "auditStart": 79,
+        "indexCacheHit": 0,
+        "headRead": 30,
+        "fileLookup": 140,
+        "fileValidation": 157,
+        "snapshotRead": 286,
+        "loadTotal": 620,
+        "core": 2,
+        "auditEnd": 93,
+        "serverTotal": 963
+      },
+      "reference": "GAS-9f4e675e"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 992.6715729999996,
+          "redirectMs": 70.57384199999797,
+          "bodyMs": 1.4725739999994403,
+          "verifyMs": 0.12471400000504218,
+          "durationMs": 1064.8467189999938
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1064.8639919999987,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 52,
+        "lockWait": 51,
+        "auditStart": 105,
+        "indexCacheRead": 134,
+        "indexCacheHit": 1,
+        "core": 1,
+        "auditEnd": 104,
+        "serverTotal": 545
+      },
+      "reference": "GAS-4cbc07f0"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1057.1279219999997,
+          "redirectMs": 68.62726000000839,
+          "bodyMs": 1.1010289999976521,
+          "verifyMs": 0.12830100000428502,
+          "durationMs": 1126.9882199999993
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1127.0037490000104,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 44,
+        "lockWait": 51,
+        "auditStart": 108,
+        "indexCacheRead": 112,
+        "indexCacheHit": 1,
+        "core": 1,
+        "auditEnd": 88,
+        "serverTotal": 502
+      },
+      "reference": "GAS-bcb5beb6"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1611.3504010000033,
+          "redirectMs": 81.16871899999387,
+          "bodyMs": 1.2964930000016466,
+          "verifyMs": 0.20188900000357535,
+          "durationMs": 1694.0223209999967
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1694.0414369999926,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 50,
+        "lockWait": 50,
+        "auditStart": 112,
+        "indexCacheHit": 0,
+        "headRead": 38,
+        "fileLookup": 119,
+        "fileValidation": 127,
+        "snapshotRead": 216,
+        "loadTotal": 509,
+        "core": 6,
+        "auditEnd": 105,
+        "serverTotal": 943
+      },
+      "reference": "GAS-5ec66746"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1786.482130999997,
+          "redirectMs": 69.94486099999631,
+          "bodyMs": 1.835133999993559,
+          "verifyMs": 0.12185899999167304,
+          "durationMs": 1858.3877720000019
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1858.3998639999918,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 56,
+        "lockWait": 53,
+        "auditStart": 123,
+        "indexCacheHit": 0,
+        "headRead": 31,
+        "fileLookup": 122,
+        "fileValidation": 218,
+        "snapshotRead": 209,
+        "loadTotal": 586,
+        "core": 4,
+        "auditEnd": 101,
+        "serverTotal": 1030
+      },
+      "reference": "GAS-54e61347"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1067.5443919999962,
+          "redirectMs": 70.58122400000866,
+          "bodyMs": 1.3521880000043893,
+          "verifyMs": 0.12055600000894628,
+          "durationMs": 1139.6030790000077
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1139.6153420000046,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 46,
+        "lockWait": 45,
+        "auditStart": 76,
+        "indexCacheRead": 242,
+        "indexCacheHit": 1,
+        "core": 2,
+        "auditEnd": 75,
+        "serverTotal": 576
+      },
+      "reference": "GAS-ec1845b3"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 861.2393190000003,
+          "redirectMs": 65.24384300000384,
+          "bodyMs": 0.8191169999918202,
+          "verifyMs": 0.1268090000085067,
+          "durationMs": 927.4332739999954
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 927.4445159999887,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 24,
+        "lockWait": 73,
+        "auditStart": 57,
+        "indexCacheRead": 44,
+        "indexCacheHit": 1,
+        "core": 1,
+        "auditEnd": 39,
+        "serverTotal": 392
+      },
+      "reference": "GAS-b9f00a04"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2734.2382700000016,
+          "redirectMs": 67.01128999999491,
+          "bodyMs": 1.8558110000012675,
+          "verifyMs": 0.11971400000038557,
+          "durationMs": 2803.2292650000018
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2803.240697000001,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 112,
+        "lockWait": 182,
+        "auditStart": 186,
+        "indexCacheHit": 0,
+        "headRead": 41,
+        "fileLookup": 291,
+        "fileValidation": 246,
+        "snapshotRead": 309,
+        "loadTotal": 894,
+        "core": 3,
+        "auditEnd": 250,
+        "serverTotal": 1934
+      },
+      "reference": "GAS-cd325aec"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1995.1082550000137,
+          "redirectMs": 84.80201100000704,
+          "bodyMs": 2.0846009999950184,
+          "verifyMs": 0.12380200000188779,
+          "durationMs": 2082.1224660000007
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2082.133647999988,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 13,
+        "lockWait": 82,
+        "auditStart": 34,
+        "indexCacheHit": 0,
+        "headRead": 5,
+        "fileLookup": 231,
+        "fileValidation": 147,
+        "snapshotRead": 263,
+        "loadTotal": 651,
+        "core": 3,
+        "auditEnd": 173,
+        "serverTotal": 1121
+      },
+      "reference": "GAS-6cba838d"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1118.81655399999,
+          "redirectMs": 68.9589069999929,
+          "bodyMs": 1.5655669999978272,
+          "verifyMs": 0.11840199999278411,
+          "durationMs": 1189.4639800000004
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1189.4753899999923,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 58,
+        "lockWait": 62,
+        "auditStart": 97,
+        "indexCacheRead": 126,
+        "indexCacheHit": 1,
+        "core": 3,
+        "auditEnd": 93,
+        "serverTotal": 553
+      },
+      "reference": "GAS-887f60e8"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1889.2827890000044,
+          "redirectMs": 73.0556329999963,
+          "bodyMs": 1.3139550000050804,
+          "verifyMs": 0.14252700000361074,
+          "durationMs": 1963.7986920000112
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1963.811056000006,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 49,
+        "lockWait": 55,
+        "auditStart": 123,
+        "indexCacheRead": 127,
+        "indexCacheHit": 1,
+        "core": 2,
+        "auditEnd": 103,
+        "serverTotal": 571
+      },
+      "reference": "GAS-e86b24f4"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1557.101508000007,
+          "redirectMs": 72.13612799999828,
+          "bodyMs": 0.6895170000061626,
+          "verifyMs": 0.13153699999384116,
+          "durationMs": 1630.0619259999949
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1630.0730270000058,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 44,
+        "lockWait": 61,
+        "auditStart": 104,
+        "indexCacheHit": 0,
+        "headRead": 19,
+        "fileLookup": 171,
+        "fileValidation": 168,
+        "snapshotRead": 296,
+        "loadTotal": 660,
+        "core": 4,
+        "auditEnd": 79,
+        "serverTotal": 1034
+      },
+      "reference": "GAS-269ea47f"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1570.0702319999982,
+          "redirectMs": 64.6014920000016,
+          "bodyMs": 0.686719000004814,
+          "verifyMs": 0.1315770000073826,
+          "durationMs": 1635.4937859999918
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1635.5053389999957,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 28,
+        "lockWait": 57,
+        "auditStart": 95,
+        "indexCacheHit": 0,
+        "headRead": 18,
+        "fileLookup": 120,
+        "fileValidation": 149,
+        "snapshotRead": 265,
+        "loadTotal": 560,
+        "core": 4,
+        "auditEnd": 114,
+        "serverTotal": 957
+      },
+      "reference": "GAS-b344871a"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 803.7927749999944,
+          "redirectMs": 68.54874300000665,
+          "bodyMs": 1.2943990000057966,
+          "verifyMs": 0.15813700000580866,
+          "durationMs": 873.7983509999904
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 873.8100929999928,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 41,
+        "lockWait": 42,
+        "auditStart": 80,
+        "indexCacheRead": 107,
+        "indexCacheHit": 1,
+        "core": 0,
+        "auditEnd": 89,
+        "serverTotal": 440
+      },
+      "reference": "GAS-56978fde"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 963.9822720000084,
+          "redirectMs": 76.9235500000068,
+          "bodyMs": 1.224486999999499,
+          "verifyMs": 0.14115399999718647,
+          "durationMs": 1042.2754710000008
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1042.289637000009,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 31,
+        "lockWait": 40,
+        "auditStart": 104,
+        "indexCacheRead": 126,
+        "indexCacheHit": 1,
+        "core": 1,
+        "auditEnd": 88,
+        "serverTotal": 471
+      },
+      "reference": "GAS-dfd1e496"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1886.1859179999883,
+          "redirectMs": 75.16202600000543,
+          "bodyMs": 1.2099699999962468,
+          "verifyMs": 0.16448799999488983,
+          "durationMs": 1962.7258989999973
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1962.7374199999904,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 25,
+        "lockWait": 110,
+        "auditStart": 65,
+        "indexCacheHit": 0,
+        "headRead": 19,
+        "fileLookup": 193,
+        "fileValidation": 219,
+        "snapshotRead": 312,
+        "loadTotal": 755,
+        "core": 5,
+        "auditEnd": 108,
+        "serverTotal": 1218
+      },
+      "reference": "GAS-608d983e"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1480.895628000013,
+          "redirectMs": 86.63920799999323,
+          "bodyMs": 1.661567000002833,
+          "verifyMs": 0.12523499999952037,
+          "durationMs": 1569.324965000007
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1569.3352740000119,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 38,
+        "lockWait": 47,
+        "auditStart": 93,
+        "indexCacheHit": 0,
+        "headRead": 26,
+        "fileLookup": 154,
+        "fileValidation": 157,
+        "snapshotRead": 242,
+        "loadTotal": 587,
+        "core": 5,
+        "auditEnd": 110,
+        "serverTotal": 987
+      },
+      "reference": "GAS-b19de623"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 975.5125609999959,
+          "redirectMs": 212.1730099999986,
+          "bodyMs": 1.815956999998889,
+          "verifyMs": 0.12125799999921583,
+          "durationMs": 1189.626351999992
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1189.636931999994,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 16,
+        "lockWait": 70,
+        "auditStart": 44,
+        "indexCacheRead": 50,
+        "indexCacheHit": 1,
+        "core": 2,
+        "auditEnd": 78,
+        "serverTotal": 401
+      },
+      "reference": "GAS-c6796e2e"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 885.8776230000076,
+          "redirectMs": 65.49792400001024,
+          "bodyMs": 1.1369330000015907,
+          "verifyMs": 0.11787100000947248,
+          "durationMs": 952.6336980000051
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 952.6454200000007,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 10,
+        "lockWait": 85,
+        "auditStart": 36,
+        "indexCacheRead": 33,
+        "indexCacheHit": 1,
+        "core": 0,
+        "auditEnd": 35,
+        "serverTotal": 355
+      },
+      "reference": "GAS-26f22f8f"
+    },
+    {
+      "phase": "ab-list",
+      "operation": "list",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1784.5684620000102,
+          "redirectMs": 60.27568699998665,
+          "bodyMs": 2.1925040000060108,
+          "verifyMs": 0.1239320000022417,
+          "durationMs": 1847.1644230000093
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1847.1771870000084,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 55,
+        "lockWait": 62,
+        "auditStart": 116,
+        "indexCacheHit": 0,
+        "headRead": 39,
+        "fileLookup": 121,
+        "fileValidation": 173,
+        "snapshotRead": 332,
+        "loadTotal": 673,
+        "core": 4,
+        "auditEnd": 124,
+        "serverTotal": 1152
+      },
+      "reference": "GAS-89599a62"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5376.916031999994,
+          "redirectMs": 83.5489280000038,
+          "bodyMs": 1.4699780000082683,
+          "verifyMs": 0.1466050000017276,
+          "durationMs": 5462.085369999986
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5462.119735,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 84,
+        "lockWait": 139,
+        "auditStart": 250,
+        "indexCacheHit": 0,
+        "headRead": 48,
+        "fileLookup": 228,
+        "fileValidation": 255,
+        "snapshotRead": 342,
+        "loadTotal": 880,
+        "core": 97,
+        "snapshotSerialize": 3,
+        "folderLookup": 369,
+        "snapshotCreate": 1771,
+        "snapshotReadback": 390,
+        "headPrecondition": 46,
+        "headPublish": 238,
+        "commitTotal": 2888,
+        "auditEnd": 171,
+        "serverTotal": 4848
+      },
+      "reference": "GAS-1fd3c2db"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 4685.435022000005,
+          "durationMs": 11999.996373000002,
+          "code": "NETWORK_OR_TIMEOUT"
+        },
+        {
+          "attempt": 2,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2548.6661890000105,
+          "redirectMs": 243.08624000000418,
+          "bodyMs": 1.3335420000075828,
+          "verifyMs": 0.09127099999750499,
+          "durationMs": 2793.1814890000096
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 15048.542111999996,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 44,
+        "lockWait": 180,
+        "auditStart": 167,
+        "indexCacheHit": 0,
+        "headRead": 77,
+        "fileLookup": 222,
+        "fileValidation": 253,
+        "snapshotRead": 411,
+        "loadTotal": 967,
+        "core": 2,
+        "auditEnd": 154,
+        "serverTotal": 1843
+      },
+      "reference": "GAS-d2fcd158"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4723.968022999994,
+          "redirectMs": 90.33166500000516,
+          "bodyMs": 1.457404000000679,
+          "verifyMs": 0.18283299999893643,
+          "durationMs": 4815.944482999999
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4815.985299999986,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 41,
+        "lockWait": 40,
+        "auditStart": 85,
+        "indexCacheHit": 0,
+        "headRead": 23,
+        "fileLookup": 131,
+        "fileValidation": 214,
+        "snapshotRead": 274,
+        "loadTotal": 649,
+        "core": 91,
+        "snapshotSerialize": 1,
+        "folderLookup": 129,
+        "snapshotOverwrite": 1842,
+        "snapshotReadback": 306,
+        "headPrecondition": 40,
+        "headPublish": 65,
+        "commitTotal": 2885,
+        "indexCacheSeed": 147,
+        "auditEnd": 84,
+        "serverTotal": 4122
+      },
+      "reference": "GAS-227055cf"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4051.6823060000024,
+          "redirectMs": 73.46599300001981,
+          "bodyMs": 2.2417049999930896,
+          "verifyMs": 0.12158799997996539,
+          "durationMs": 4127.515379000019
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4127.540344999987,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 42,
+        "lockWait": 78,
+        "auditStart": 94,
+        "indexCacheHit": 0,
+        "headRead": 33,
+        "fileLookup": 142,
+        "fileValidation": 227,
+        "snapshotRead": 243,
+        "loadTotal": 656,
+        "core": 104,
+        "snapshotSerialize": 1,
+        "folderLookup": 195,
+        "snapshotCreate": 1319,
+        "snapshotReadback": 299,
+        "headPrecondition": 38,
+        "headPublish": 89,
+        "commitTotal": 2022,
+        "auditEnd": 113,
+        "serverTotal": 3255
+      },
+      "reference": "GAS-7550d214"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3783.7887709999923,
+          "redirectMs": 63.523921999993036,
+          "bodyMs": 1.7087660000252072,
+          "verifyMs": 0.17797399999108166,
+          "durationMs": 3849.2039519999817
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 3849.228117999999,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 51,
+        "lockWait": 60,
+        "auditStart": 102,
+        "indexCacheHit": 0,
+        "headRead": 48,
+        "fileLookup": 123,
+        "fileValidation": 194,
+        "snapshotRead": 338,
+        "loadTotal": 710,
+        "core": 121,
+        "snapshotSerialize": 1,
+        "folderLookup": 153,
+        "snapshotCreate": 1197,
+        "snapshotReadback": 411,
+        "headPrecondition": 40,
+        "headPublish": 108,
+        "commitTotal": 1980,
+        "auditEnd": 125,
+        "serverTotal": 3289
+      },
+      "reference": "GAS-ed9971e6"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4099.156275000016,
+          "redirectMs": 3183.5486429999874,
+          "bodyMs": 1.5072870000149123,
+          "verifyMs": 0.08931700000539422,
+          "durationMs": 7284.305179999996
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 7284.333423000004,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 38,
+        "lockWait": 56,
+        "auditStart": 105,
+        "indexCacheHit": 0,
+        "headRead": 39,
+        "fileLookup": 168,
+        "fileValidation": 178,
+        "snapshotRead": 232,
+        "loadTotal": 623,
+        "core": 73,
+        "snapshotSerialize": 1,
+        "folderLookup": 172,
+        "snapshotOverwrite": 1293,
+        "snapshotReadback": 262,
+        "headPrecondition": 31,
+        "headPublish": 99,
+        "commitTotal": 2350,
+        "indexCacheSeed": 170,
+        "auditEnd": 102,
+        "serverTotal": 3633
+      },
+      "reference": "GAS-24680924"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5164.089623000007,
+          "redirectMs": 69.47018600002048,
+          "bodyMs": 0.8676579999737442,
+          "verifyMs": 0.106339999998454,
+          "durationMs": 5234.537293000001
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5234.559925999987,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 18,
+        "lockWait": 80,
+        "auditStart": 56,
+        "indexCacheHit": 0,
+        "headRead": 15,
+        "fileLookup": 259,
+        "fileValidation": 210,
+        "snapshotRead": 374,
+        "loadTotal": 870,
+        "core": 107,
+        "snapshotSerialize": 2,
+        "folderLookup": 162,
+        "snapshotOverwrite": 2070,
+        "snapshotReadback": 362,
+        "headPrecondition": 15,
+        "headPublish": 51,
+        "commitTotal": 3134,
+        "indexCacheSeed": 102,
+        "auditEnd": 59,
+        "serverTotal": 4604
+      },
+      "reference": "GAS-34dcb066"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3730.829529999988,
+          "redirectMs": 69.47514199998113,
+          "bodyMs": 1.1574510000064038,
+          "verifyMs": 0.18230200000107288,
+          "durationMs": 3801.6485239999893
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 3801.672289000009,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 51,
+        "lockWait": 47,
+        "auditStart": 105,
+        "indexCacheHit": 0,
+        "headRead": 43,
+        "fileLookup": 125,
+        "fileValidation": 189,
+        "snapshotRead": 314,
+        "loadTotal": 682,
+        "core": 101,
+        "snapshotSerialize": 2,
+        "folderLookup": 179,
+        "snapshotCreate": 1214,
+        "snapshotReadback": 317,
+        "headPrecondition": 44,
+        "headPublish": 101,
+        "commitTotal": 1928,
+        "auditEnd": 108,
+        "serverTotal": 3130
+      },
+      "reference": "GAS-43b159b4"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4196.809903999994,
+          "redirectMs": 117.11640699999407,
+          "bodyMs": 0.5791770000068936,
+          "verifyMs": 0.09827400001813658,
+          "durationMs": 4314.607457999984
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4314.630692000006,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 33,
+        "lockWait": 52,
+        "auditStart": 88,
+        "indexCacheHit": 0,
+        "headRead": 32,
+        "fileLookup": 143,
+        "fileValidation": 164,
+        "snapshotRead": 331,
+        "loadTotal": 677,
+        "core": 92,
+        "snapshotSerialize": 2,
+        "folderLookup": 164,
+        "snapshotCreate": 1746,
+        "snapshotReadback": 276,
+        "headPrecondition": 34,
+        "headPublish": 66,
+        "commitTotal": 2350,
+        "auditEnd": 117,
+        "serverTotal": 3503
+      },
+      "reference": "GAS-1d5270b8"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4766.626189000002,
+          "redirectMs": 104.77493799998774,
+          "bodyMs": 0.6492380000127014,
+          "verifyMs": 0.12926299998071045,
+          "durationMs": 4872.183575999981
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4872.206548999995,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 40,
+        "lockWait": 40,
+        "auditStart": 91,
+        "indexCacheHit": 0,
+        "headRead": 17,
+        "fileLookup": 147,
+        "fileValidation": 204,
+        "snapshotRead": 315,
+        "loadTotal": 699,
+        "core": 126,
+        "snapshotSerialize": 2,
+        "folderLookup": 157,
+        "snapshotOverwrite": 1718,
+        "snapshotReadback": 309,
+        "headPrecondition": 39,
+        "headPublish": 78,
+        "commitTotal": 2815,
+        "indexCacheSeed": 176,
+        "auditEnd": 103,
+        "serverTotal": 4174
+      },
+      "reference": "GAS-d7bb49e2"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4922.84922600002,
+          "redirectMs": 75.75651899998775,
+          "bodyMs": 1.0909669999964535,
+          "verifyMs": 0.10510799998883158,
+          "durationMs": 4999.805536
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4999.8287490000075,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 37,
+        "lockWait": 54,
+        "auditStart": 73,
+        "indexCacheHit": 0,
+        "headRead": 24,
+        "fileLookup": 116,
+        "fileValidation": 158,
+        "snapshotRead": 306,
+        "loadTotal": 611,
+        "core": 82,
+        "snapshotSerialize": 1,
+        "folderLookup": 181,
+        "snapshotOverwrite": 2004,
+        "snapshotReadback": 266,
+        "headPrecondition": 20,
+        "headPublish": 85,
+        "commitTotal": 3048,
+        "indexCacheSeed": 215,
+        "auditEnd": 72,
+        "serverTotal": 4297
+      },
+      "reference": "GAS-2e5af5f4"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3616.163448999985,
+          "redirectMs": 63.362857000000076,
+          "bodyMs": 0.970300999993924,
+          "verifyMs": 0.16368699999293312,
+          "durationMs": 3680.665232999978
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 3680.6905209999823,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 47,
+        "lockWait": 112,
+        "auditStart": 119,
+        "indexCacheHit": 0,
+        "headRead": 21,
+        "fileLookup": 131,
+        "fileValidation": 177,
+        "snapshotRead": 224,
+        "loadTotal": 562,
+        "core": 90,
+        "snapshotSerialize": 2,
+        "folderLookup": 186,
+        "snapshotCreate": 1155,
+        "snapshotReadback": 311,
+        "headPrecondition": 45,
+        "headPublish": 90,
+        "commitTotal": 1852,
+        "auditEnd": 95,
+        "serverTotal": 3033
+      },
+      "reference": "GAS-1c6501dd"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4848.177244999999,
+          "redirectMs": 80.37049500001012,
+          "bodyMs": 1.115312999987509,
+          "verifyMs": 0.13006399999721907,
+          "durationMs": 4929.7971039999975
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4929.821289000014,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 40,
+        "lockWait": 59,
+        "auditStart": 108,
+        "indexCacheHit": 0,
+        "headRead": 47,
+        "fileLookup": 155,
+        "fileValidation": 180,
+        "snapshotRead": 323,
+        "loadTotal": 713,
+        "core": 130,
+        "snapshotSerialize": 2,
+        "folderLookup": 202,
+        "snapshotOverwrite": 1504,
+        "snapshotReadback": 464,
+        "headPrecondition": 35,
+        "headPublish": 103,
+        "commitTotal": 2919,
+        "indexCacheSeed": 120,
+        "auditEnd": 111,
+        "serverTotal": 4356
+      },
+      "reference": "GAS-3ec08740"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5807.388227999996,
+          "redirectMs": 83.81003699998837,
+          "bodyMs": 1.643372000020463,
+          "verifyMs": 0.10706999999820255,
+          "durationMs": 5892.952404999989
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5892.9788849999895,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 42,
+        "lockWait": 169,
+        "auditStart": 193,
+        "indexCacheHit": 0,
+        "headRead": 39,
+        "fileLookup": 248,
+        "fileValidation": 264,
+        "snapshotRead": 417,
+        "loadTotal": 980,
+        "core": 148,
+        "snapshotSerialize": 3,
+        "folderLookup": 243,
+        "snapshotCreate": 2012,
+        "snapshotReadback": 399,
+        "headPrecondition": 71,
+        "headPublish": 140,
+        "commitTotal": 2976,
+        "auditEnd": 141,
+        "serverTotal": 4983
+      },
+      "reference": "GAS-d00f1b7d"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3718.329236999998,
+          "redirectMs": 101.53683499997715,
+          "bodyMs": 0.9151659999915864,
+          "verifyMs": 0.1594489999988582,
+          "durationMs": 3820.9451760000084
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 3820.9709340000118,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 55,
+        "lockWait": 60,
+        "auditStart": 84,
+        "indexCacheHit": 0,
+        "headRead": 26,
+        "fileLookup": 159,
+        "fileValidation": 138,
+        "snapshotRead": 371,
+        "loadTotal": 700,
+        "core": 88,
+        "snapshotSerialize": 3,
+        "folderLookup": 168,
+        "snapshotCreate": 1353,
+        "snapshotReadback": 314,
+        "headPrecondition": 22,
+        "headPublish": 96,
+        "commitTotal": 2024,
+        "auditEnd": 97,
+        "serverTotal": 3238
+      },
+      "reference": "GAS-c5aa6a96"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 7342.041163000016,
+          "redirectMs": 88.35072299998137,
+          "bodyMs": 3.172822000022279,
+          "verifyMs": 0.14334900001995265,
+          "durationMs": 7433.712786999997
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 7433.749585999991,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 53,
+        "lockWait": 161,
+        "auditStart": 279,
+        "indexCacheHit": 0,
+        "headRead": 47,
+        "fileLookup": 218,
+        "fileValidation": 287,
+        "snapshotRead": 424,
+        "loadTotal": 1005,
+        "core": 396,
+        "snapshotSerialize": 3,
+        "folderLookup": 298,
+        "snapshotOverwrite": 1948,
+        "snapshotReadback": 337,
+        "headPrecondition": 47,
+        "headPublish": 146,
+        "commitTotal": 3746,
+        "indexCacheSeed": 236,
+        "auditEnd": 175,
+        "serverTotal": 6394
+      },
+      "reference": "GAS-faebdb62"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6194.52777700001,
+          "redirectMs": 100.62286599999061,
+          "bodyMs": 1.5335670000058599,
+          "verifyMs": 0.11266100002103485,
+          "durationMs": 6296.80098900001
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6296.837316000019,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 45,
+        "lockWait": 161,
+        "auditStart": 206,
+        "indexCacheHit": 0,
+        "headRead": 38,
+        "fileLookup": 162,
+        "fileValidation": 270,
+        "snapshotRead": 250,
+        "loadTotal": 733,
+        "core": 140,
+        "snapshotSerialize": 3,
+        "folderLookup": 239,
+        "snapshotOverwrite": 2030,
+        "snapshotReadback": 410,
+        "headPrecondition": 50,
+        "headPublish": 146,
+        "commitTotal": 3609,
+        "indexCacheSeed": 242,
+        "auditEnd": 164,
+        "serverTotal": 5625
+      },
+      "reference": "GAS-b573a427"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3736.9419209999905,
+          "redirectMs": 61.34332899999572,
+          "bodyMs": 1.0324770000006538,
+          "verifyMs": 0.12129800001275726,
+          "durationMs": 3799.44743
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 3799.47108399999,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 41,
+        "lockWait": 53,
+        "auditStart": 125,
+        "indexCacheHit": 0,
+        "headRead": 29,
+        "fileLookup": 131,
+        "fileValidation": 183,
+        "snapshotRead": 460,
+        "loadTotal": 808,
+        "core": 88,
+        "snapshotSerialize": 3,
+        "folderLookup": 158,
+        "snapshotCreate": 1128,
+        "snapshotReadback": 275,
+        "headPrecondition": 27,
+        "headPublish": 99,
+        "commitTotal": 1754,
+        "auditEnd": 112,
+        "serverTotal": 3087
+      },
+      "reference": "GAS-9996464d"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4169.015713000001,
+          "redirectMs": 81.95627300001797,
+          "bodyMs": 0.6411329999973532,
+          "verifyMs": 0.11883299998589791,
+          "durationMs": 4251.735037999984
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4251.760175000003,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 47,
+        "lockWait": 60,
+        "auditStart": 122,
+        "indexCacheHit": 0,
+        "headRead": 44,
+        "fileLookup": 161,
+        "fileValidation": 170,
+        "snapshotRead": 475,
+        "loadTotal": 862,
+        "core": 109,
+        "snapshotSerialize": 30,
+        "folderLookup": 218,
+        "snapshotCreate": 1334,
+        "snapshotReadback": 431,
+        "headPrecondition": 34,
+        "headPublish": 98,
+        "commitTotal": 2236,
+        "auditEnd": 131,
+        "serverTotal": 3701
+      },
+      "reference": "GAS-8d9e3360"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 11878.241321999987,
+          "durationMs": 12000.713336999994,
+          "code": "NETWORK_OR_TIMEOUT"
+        },
+        {
+          "attempt": 2,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4975.1983670000045,
+          "redirectMs": 996.4289070000232,
+          "bodyMs": 1.1410009999817703,
+          "verifyMs": 0.1871009999886155,
+          "durationMs": 5972.959693000012
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 18250.80307600001,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 58,
+        "lockWait": 61,
+        "auditStart": 102,
+        "indexCacheHit": 0,
+        "headRead": 31,
+        "fileLookup": 172,
+        "fileValidation": 163,
+        "snapshotRead": 363,
+        "loadTotal": 740,
+        "core": 5,
+        "auditEnd": 97,
+        "serverTotal": 1179
+      },
+      "reference": "GAS-25ea4b93"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6833.974045999988,
+          "redirectMs": 1689.9301730000007,
+          "bodyMs": 1.1932589999923948,
+          "verifyMs": 0.11792099999729544,
+          "durationMs": 8525.219165999995
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 8525.244082999998,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 57,
+        "lockWait": 68,
+        "auditStart": 106,
+        "indexCacheHit": 0,
+        "headRead": 40,
+        "fileLookup": 185,
+        "fileValidation": 197,
+        "snapshotRead": 537,
+        "loadTotal": 965,
+        "core": 78,
+        "snapshotSerialize": 2,
+        "folderLookup": 166,
+        "snapshotOverwrite": 1558,
+        "snapshotReadback": 515,
+        "headPrecondition": 27,
+        "headPublish": 101,
+        "commitTotal": 2801,
+        "indexCacheSeed": 119,
+        "auditEnd": 117,
+        "serverTotal": 4442
+      },
+      "reference": "GAS-023dc5ea"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4231.489484999998,
+          "redirectMs": 120.1288249999925,
+          "bodyMs": 0.9404250000079628,
+          "verifyMs": 0.18725099999574013,
+          "durationMs": 4352.750834999984
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4352.776202999987,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 43,
+        "lockWait": 66,
+        "auditStart": 78,
+        "indexCacheHit": 0,
+        "headRead": 19,
+        "fileLookup": 156,
+        "fileValidation": 158,
+        "snapshotRead": 320,
+        "loadTotal": 662,
+        "core": 122,
+        "snapshotSerialize": 2,
+        "folderLookup": 170,
+        "snapshotCreate": 1515,
+        "snapshotReadback": 332,
+        "headPrecondition": 37,
+        "headPublish": 83,
+        "commitTotal": 2228,
+        "auditEnd": 85,
+        "serverTotal": 3356
+      },
+      "reference": "GAS-cd50066a"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "post",
+          "ok": false,
+          "durationMs": 12000.27139899999,
+          "code": "NETWORK_OR_TIMEOUT"
+        },
+        {
+          "attempt": 2,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 5248.193117999996,
+          "durationMs": 12001.636002999992,
+          "code": "NETWORK_OR_TIMEOUT"
+        }
+      ],
+      "ok": false,
+      "code": "NETWORK_OR_TIMEOUT",
+      "status": 503,
+      "elapsedMs": 24287.055469999992,
+      "reconciled": true
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "baseline",
+      "diagnostic": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3154.7227399999974,
+          "redirectMs": 191.06056000001263,
+          "bodyMs": 0.9726749999681488,
+          "verifyMs": 0.17621099995449185,
+          "durationMs": 3346.9367240000283
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 3346.97775000002,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 51,
+        "lockWait": 194,
+        "auditStart": 153,
+        "indexCacheHit": 0,
+        "headRead": 41,
+        "fileLookup": 264,
+        "fileValidation": 283,
+        "snapshotRead": 441,
+        "loadTotal": 1041,
+        "core": 5,
+        "auditEnd": 282,
+        "serverTotal": 2040
+      },
+      "reference": "GAS-fc3e0564"
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "post",
+          "ok": false,
+          "durationMs": 12000.294332999969,
+          "code": "NETWORK_OR_TIMEOUT"
+        },
+        {
+          "attempt": 2,
+          "stage": "post",
+          "ok": false,
+          "durationMs": 12000.456012999988,
+          "code": "NETWORK_OR_TIMEOUT"
+        }
+      ],
+      "ok": false,
+      "code": "NETWORK_OR_TIMEOUT",
+      "status": 503,
+      "elapsedMs": 24261.174864,
+      "reconciled": true
+    },
+    {
+      "phase": "ab-write",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 10113.885109999974,
+          "redirectMs": 223.60288399999263,
+          "bodyMs": 1.6772370000253431,
+          "verifyMs": 0.12061600002925843,
+          "durationMs": 10339.289864999999
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 10339.32435999997,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 98,
+        "lockWait": 209,
+        "auditStart": 196,
+        "indexCacheHit": 0,
+        "headRead": 38,
+        "fileLookup": 215,
+        "fileValidation": 235,
+        "snapshotRead": 433,
+        "loadTotal": 940,
+        "core": 9,
+        "auditEnd": 147,
+        "serverTotal": 1903
+      },
+      "reference": "GAS-26c4feea"
+    },
+    {
+      "phase": "ab-get",
+      "operation": "get",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4387.772767000017,
+          "redirectMs": 104.6748849999858,
+          "bodyMs": 1.1760169999906793,
+          "verifyMs": 0.1911790000158362,
+          "durationMs": 4493.819736000034
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4493.831298000005,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 28,
+        "lockWait": 89,
+        "auditStart": 122,
+        "indexCacheHit": 0,
+        "headRead": 36,
+        "fileLookup": 1178,
+        "fileValidation": 154,
+        "snapshotRead": 256,
+        "loadTotal": 1642,
+        "core": 5,
+        "auditEnd": 89,
+        "serverTotal": 2097
+      },
+      "reference": "GAS-fc4fdb3f"
+    },
+    {
+      "phase": "ab-get",
+      "operation": "get",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2383.7609979999834,
+          "redirectMs": 252.8026260000188,
+          "bodyMs": 1.3810820000362583,
+          "verifyMs": 0.1224200000287965,
+          "durationMs": 2638.070833000005
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2638.082183999999,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 33,
+        "lockWait": 34,
+        "auditStart": 82,
+        "indexCacheHit": 0,
+        "headRead": 25,
+        "fileLookup": 154,
+        "fileValidation": 228,
+        "snapshotRead": 285,
+        "loadTotal": 706,
+        "core": 5,
+        "auditEnd": 100,
+        "serverTotal": 1030
+      },
+      "reference": "GAS-1e35dace"
+    },
+    {
+      "phase": "ab-get",
+      "operation": "get",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2368.307349999959,
+          "redirectMs": 163.97351199999684,
+          "bodyMs": 1.9865279999794438,
+          "verifyMs": 0.11488599999574944,
+          "durationMs": 2534.385651999968
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2534.396852999984,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 35,
+        "lockWait": 38,
+        "auditStart": 91,
+        "indexCacheHit": 0,
+        "headRead": 23,
+        "fileLookup": 139,
+        "fileValidation": 148,
+        "snapshotRead": 298,
+        "loadTotal": 627,
+        "core": 7,
+        "auditEnd": 81,
+        "serverTotal": 956
+      },
+      "reference": "GAS-981eee22"
+    },
+    {
+      "phase": "ab-get",
+      "operation": "get",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1920.2839590000222,
+          "redirectMs": 99.69061699998565,
+          "bodyMs": 1.047995999979321,
+          "verifyMs": 0.13130700000328943,
+          "durationMs": 2021.1582460000063
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2021.1697680000216,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 37,
+        "lockWait": 46,
+        "auditStart": 91,
+        "indexCacheHit": 0,
+        "headRead": 26,
+        "fileLookup": 140,
+        "fileValidation": 164,
+        "snapshotRead": 307,
+        "loadTotal": 654,
+        "core": 7,
+        "auditEnd": 81,
+        "serverTotal": 1013
+      },
+      "reference": "GAS-eea4cd9d"
+    },
+    {
+      "phase": "ab-get",
+      "operation": "get",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1878.0358099999721,
+          "redirectMs": 104.83840299997246,
+          "bodyMs": 0.7901819999678992,
+          "verifyMs": 0.12643800000660121,
+          "durationMs": 1983.7951919999905
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1983.8071440000203,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 35,
+        "lockWait": 59,
+        "auditStart": 108,
+        "indexCacheHit": 0,
+        "headRead": 28,
+        "fileLookup": 187,
+        "fileValidation": 185,
+        "snapshotRead": 344,
+        "loadTotal": 753,
+        "core": 3,
+        "auditEnd": 113,
+        "serverTotal": 1196
+      },
+      "reference": "GAS-5c09047c"
+    },
+    {
+      "phase": "ab-get",
+      "operation": "get",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2149.7875399999903,
+          "redirectMs": 105.66816699999617,
+          "bodyMs": 1.6843319999752566,
+          "verifyMs": 0.11797100002877414,
+          "durationMs": 2257.2616879999987
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2257.2733299999963,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 29,
+        "lockWait": 39,
+        "auditStart": 81,
+        "indexCacheHit": 0,
+        "headRead": 53,
+        "fileLookup": 143,
+        "fileValidation": 153,
+        "snapshotRead": 276,
+        "loadTotal": 636,
+        "core": 4,
+        "auditEnd": 77,
+        "serverTotal": 955
+      },
+      "reference": "GAS-4762a125"
+    },
+    {
+      "phase": "ab-get",
+      "operation": "get",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1866.5477269999683,
+          "redirectMs": 127.54263799998444,
+          "bodyMs": 1.4075839999713935,
+          "verifyMs": 0.12232999998377636,
+          "durationMs": 1995.6241859999718
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1995.6363180000335,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 12,
+        "lockWait": 74,
+        "auditStart": 34,
+        "indexCacheHit": 0,
+        "headRead": 8,
+        "fileLookup": 233,
+        "fileValidation": 175,
+        "snapshotRead": 244,
+        "loadTotal": 666,
+        "core": 4,
+        "auditEnd": 41,
+        "serverTotal": 990
+      },
+      "reference": "GAS-049b2396"
+    },
+    {
+      "phase": "ab-get",
+      "operation": "get",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2581.982132999983,
+          "redirectMs": 109.53149099997245,
+          "bodyMs": 1.2060119999805465,
+          "verifyMs": 0.1230210000067018,
+          "durationMs": 2692.846572999959
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2692.8589559999527,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 45,
+        "lockWait": 168,
+        "auditStart": 156,
+        "indexCacheHit": 0,
+        "headRead": 39,
+        "fileLookup": 224,
+        "fileValidation": 245,
+        "snapshotRead": 366,
+        "loadTotal": 888,
+        "core": 4,
+        "auditEnd": 178,
+        "serverTotal": 1767
+      },
+      "reference": "GAS-bd637e42"
+    },
+    {
+      "phase": "ab-get",
+      "operation": "get",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 9296.447227000026,
+          "redirectMs": 195.36356199998409,
+          "bodyMs": 1.935492999968119,
+          "verifyMs": 0.1067499999771826,
+          "durationMs": 9493.857250000001
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 9493.868911999976,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 54,
+        "lockWait": 59,
+        "auditStart": 127,
+        "indexCacheHit": 0,
+        "headRead": 46,
+        "fileLookup": 124,
+        "fileValidation": 149,
+        "snapshotRead": 504,
+        "loadTotal": 831,
+        "core": 3,
+        "auditEnd": 115,
+        "serverTotal": 1315
+      },
+      "reference": "GAS-7a0e145e"
+    },
+    {
+      "phase": "ab-get",
+      "operation": "get",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2401.9899399999995,
+          "redirectMs": 106.05243699997663,
+          "bodyMs": 1.9352190000354312,
+          "verifyMs": 0.17856500000925735,
+          "durationMs": 2510.160128999967
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2510.1747469999827,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 54,
+        "lockWait": 163,
+        "auditStart": 142,
+        "indexCacheHit": 0,
+        "headRead": 53,
+        "fileLookup": 232,
+        "fileValidation": 245,
+        "snapshotRead": 322,
+        "loadTotal": 867,
+        "core": 6,
+        "auditEnd": 161,
+        "serverTotal": 1682
+      },
+      "reference": "GAS-9c3bcfb6"
+    },
+    {
+      "phase": "ab-get",
+      "operation": "get",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1786.9910929999896,
+          "redirectMs": 97.84546000004048,
+          "bodyMs": 1.2008139999816194,
+          "verifyMs": 0.12098700000206009,
+          "durationMs": 1886.162370999984
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1886.1740430000355,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 37,
+        "lockWait": 52,
+        "auditStart": 104,
+        "indexCacheHit": 0,
+        "headRead": 25,
+        "fileLookup": 136,
+        "fileValidation": 158,
+        "snapshotRead": 268,
+        "loadTotal": 601,
+        "core": 5,
+        "auditEnd": 101,
+        "serverTotal": 995
+      },
+      "reference": "GAS-855c3036"
+    },
+    {
+      "phase": "ab-get",
+      "operation": "get",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1581.7694989999873,
+          "redirectMs": 119.37659599998733,
+          "bodyMs": 0.8811140000470914,
+          "verifyMs": 0.13129699998535216,
+          "durationMs": 1702.1623929999769
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1702.1743550000247,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 49,
+        "lockWait": 42,
+        "auditStart": 115,
+        "indexCacheHit": 0,
+        "headRead": 36,
+        "fileLookup": 136,
+        "fileValidation": 166,
+        "snapshotRead": 196,
+        "loadTotal": 555,
+        "core": 13,
+        "auditEnd": 104,
+        "serverTotal": 982
+      },
+      "reference": "GAS-5e72ad6e"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "health",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1892.9720320000197,
+          "redirectMs": 108.4811139999656,
+          "bodyMs": 1.088008999999147,
+          "verifyMs": 0.0765539999702014,
+          "durationMs": 2002.6214560000226
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2002.6332180000027,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 44,
+        "lockWait": 53,
+        "auditStart": 101,
+        "headRead": 25,
+        "fileLookup": 203,
+        "fileValidation": 174,
+        "snapshotRead": 251,
+        "auditEnd": 92,
+        "serverTotal": 1124
+      },
+      "reference": "GAS-a356f4f2"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4979.365476000006,
+          "redirectMs": 113.08871099998942,
+          "bodyMs": 1.2682900000363588,
+          "verifyMs": 0.12251999997533858,
+          "durationMs": 5093.848653000023
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5093.881014999992,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 46,
+        "lockWait": 64,
+        "auditStart": 106,
+        "indexCacheHit": 0,
+        "headRead": 49,
+        "fileLookup": 162,
+        "fileValidation": 196,
+        "snapshotRead": 271,
+        "loadTotal": 694,
+        "core": 203,
+        "snapshotSerialize": 7,
+        "folderLookup": 250,
+        "snapshotOverwrite": 1372,
+        "snapshotReadback": 296,
+        "headPrecondition": 27,
+        "headPublish": 103,
+        "commitTotal": 2729,
+        "indexCacheSeed": 175,
+        "auditEnd": 88,
+        "serverTotal": 4235
+      },
+      "reference": "GAS-967eb4d0"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6589.82323899999,
+          "redirectMs": 115.20934499998111,
+          "bodyMs": 1.5808860000106506,
+          "verifyMs": 0.09044899995205924,
+          "durationMs": 6706.707946999988
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6706.733735000016,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 50,
+        "lockWait": 164,
+        "auditStart": 174,
+        "indexCacheHit": 0,
+        "headRead": 54,
+        "fileLookup": 231,
+        "fileValidation": 268,
+        "snapshotRead": 417,
+        "loadTotal": 983,
+        "core": 140,
+        "snapshotSerialize": 3,
+        "folderLookup": 278,
+        "snapshotOverwrite": 1842,
+        "snapshotReadback": 396,
+        "headPrecondition": 46,
+        "headPublish": 138,
+        "commitTotal": 3729,
+        "indexCacheSeed": 177,
+        "auditEnd": 220,
+        "serverTotal": 5963
+      },
+      "reference": "GAS-86492717"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5061.805507999961,
+          "redirectMs": 118.01973999995971,
+          "bodyMs": 1.0022799999569543,
+          "verifyMs": 0.09034900000551715,
+          "durationMs": 5180.921633999969
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5180.945209000027,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 41,
+        "lockWait": 49,
+        "auditStart": 108,
+        "indexCacheHit": 0,
+        "headRead": 34,
+        "fileLookup": 186,
+        "fileValidation": 187,
+        "snapshotRead": 406,
+        "loadTotal": 829,
+        "core": 192,
+        "snapshotSerialize": 3,
+        "folderLookup": 166,
+        "snapshotOverwrite": 1535,
+        "snapshotReadback": 274,
+        "headPrecondition": 35,
+        "headPublish": 92,
+        "commitTotal": 2677,
+        "indexCacheSeed": 172,
+        "auditEnd": 96,
+        "serverTotal": 4292
+      },
+      "reference": "GAS-3967b6ef"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5159.151248999988,
+          "redirectMs": 225.09361000003992,
+          "bodyMs": 0.9247839999734424,
+          "verifyMs": 0.09609000000637025,
+          "durationMs": 5385.269229999976
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5385.293304999999,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 25,
+        "lockWait": 32,
+        "auditStart": 95,
+        "indexCacheHit": 0,
+        "headRead": 36,
+        "fileLookup": 157,
+        "fileValidation": 161,
+        "snapshotRead": 365,
+        "loadTotal": 731,
+        "core": 162,
+        "snapshotSerialize": 4,
+        "folderLookup": 152,
+        "snapshotOverwrite": 1897,
+        "snapshotReadback": 391,
+        "headPrecondition": 25,
+        "headPublish": 69,
+        "commitTotal": 3152,
+        "indexCacheSeed": 102,
+        "auditEnd": 94,
+        "serverTotal": 4473
+      },
+      "reference": "GAS-fe0a94f9"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "post",
+          "ok": false,
+          "durationMs": 11999.671915000014,
+          "code": "NETWORK_OR_TIMEOUT"
+        },
+        {
+          "attempt": 2,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2454.7081059999764,
+          "redirectMs": 132.52933500002837,
+          "bodyMs": 1.8232679999782704,
+          "verifyMs": 0.09497800003737211,
+          "durationMs": 2589.1596439999994
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 14858.129084000015,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 48,
+        "lockWait": 71,
+        "auditStart": 141,
+        "indexCacheHit": 0,
+        "headRead": 44,
+        "fileLookup": 125,
+        "fileValidation": 166,
+        "snapshotRead": 460,
+        "loadTotal": 822,
+        "core": 26,
+        "auditEnd": 129,
+        "serverTotal": 1387
+      },
+      "reference": "GAS-6a785963"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6228.617457999964,
+          "redirectMs": 89.63587200001348,
+          "bodyMs": 1.8944339999579825,
+          "verifyMs": 0.1178819999913685,
+          "durationMs": 6320.269803999981
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6320.294068999996,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 39,
+        "lockWait": 57,
+        "auditStart": 131,
+        "indexCacheHit": 0,
+        "headRead": 37,
+        "fileLookup": 162,
+        "fileValidation": 153,
+        "snapshotRead": 327,
+        "loadTotal": 693,
+        "core": 150,
+        "snapshotSerialize": 4,
+        "folderLookup": 187,
+        "snapshotOverwrite": 1558,
+        "snapshotReadback": 629,
+        "headPrecondition": 40,
+        "headPublish": 108,
+        "commitTotal": 3135,
+        "indexCacheSeed": 1130,
+        "auditEnd": 117,
+        "serverTotal": 5569
+      },
+      "reference": "GAS-0c1439ef"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6358.272692999977,
+          "redirectMs": 184.2616750000161,
+          "bodyMs": 1.5537309999926947,
+          "verifyMs": 0.10372499999357387,
+          "durationMs": 6544.195070000016
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6544.224746000022,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 54,
+        "lockWait": 171,
+        "auditStart": 142,
+        "indexCacheHit": 0,
+        "headRead": 45,
+        "fileLookup": 215,
+        "fileValidation": 253,
+        "snapshotRead": 427,
+        "loadTotal": 956,
+        "core": 210,
+        "snapshotSerialize": 4,
+        "folderLookup": 228,
+        "snapshotOverwrite": 1787,
+        "snapshotReadback": 343,
+        "headPrecondition": 45,
+        "headPublish": 160,
+        "commitTotal": 3327,
+        "indexCacheSeed": 190,
+        "auditEnd": 149,
+        "serverTotal": 5559
+      },
+      "reference": "GAS-84d3195d"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4233.20837800001,
+          "redirectMs": 113.30600300000515,
+          "bodyMs": 0.8318209999706596,
+          "verifyMs": 0.09043899999232963,
+          "durationMs": 4347.440207000007
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4347.464222000039,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 49,
+        "lockWait": 50,
+        "auditStart": 87,
+        "indexCacheHit": 0,
+        "headRead": 38,
+        "fileLookup": 124,
+        "fileValidation": 169,
+        "snapshotRead": 368,
+        "loadTotal": 706,
+        "core": 96,
+        "snapshotSerialize": 2,
+        "folderLookup": 144,
+        "snapshotOverwrite": 1396,
+        "snapshotReadback": 295,
+        "headPrecondition": 45,
+        "headPublish": 99,
+        "commitTotal": 2496,
+        "indexCacheSeed": 111,
+        "auditEnd": 101,
+        "serverTotal": 3799
+      },
+      "reference": "GAS-c8003ca4"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4606.514648000011,
+          "redirectMs": 139.12890499999048,
+          "bodyMs": 2.212106999999378,
+          "verifyMs": 0.12582499999552965,
+          "durationMs": 4747.98516099999
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4748.009076999966,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 40,
+        "lockWait": 42,
+        "auditStart": 86,
+        "indexCacheHit": 0,
+        "headRead": 35,
+        "fileLookup": 133,
+        "fileValidation": 179,
+        "snapshotRead": 253,
+        "loadTotal": 612,
+        "core": 148,
+        "snapshotSerialize": 4,
+        "folderLookup": 152,
+        "snapshotOverwrite": 1794,
+        "snapshotReadback": 321,
+        "headPrecondition": 22,
+        "headPublish": 90,
+        "commitTotal": 2900,
+        "indexCacheSeed": 97,
+        "auditEnd": 79,
+        "serverTotal": 4109
+      },
+      "reference": "GAS-cc214244"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6737.097844000033,
+          "redirectMs": 109.22517700004391,
+          "bodyMs": 1.6750589999719523,
+          "verifyMs": 0.08804500004043803,
+          "durationMs": 6848.089641000028
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6848.115460000001,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 36,
+        "lockWait": 42,
+        "auditStart": 111,
+        "indexCacheHit": 0,
+        "headRead": 32,
+        "fileLookup": 133,
+        "fileValidation": 192,
+        "snapshotRead": 298,
+        "loadTotal": 666,
+        "core": 135,
+        "snapshotSerialize": 7,
+        "folderLookup": 181,
+        "snapshotOverwrite": 1528,
+        "snapshotReadback": 345,
+        "headPrecondition": 24,
+        "headPublish": 109,
+        "commitTotal": 2673,
+        "indexCacheSeed": 2134,
+        "auditEnd": 92,
+        "serverTotal": 5983
+      },
+      "reference": "GAS-522ad601"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5442.814786000003,
+          "redirectMs": 119.39396899996791,
+          "bodyMs": 1.2425399999483489,
+          "verifyMs": 0.09396600001491606,
+          "durationMs": 5563.548748000001
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5563.574176000024,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 36,
+        "lockWait": 62,
+        "auditStart": 120,
+        "indexCacheHit": 0,
+        "headRead": 48,
+        "fileLookup": 120,
+        "fileValidation": 171,
+        "snapshotRead": 469,
+        "loadTotal": 821,
+        "core": 197,
+        "snapshotSerialize": 8,
+        "folderLookup": 156,
+        "snapshotOverwrite": 1619,
+        "snapshotReadback": 486,
+        "headPrecondition": 47,
+        "headPublish": 111,
+        "commitTotal": 3024,
+        "indexCacheSeed": 114,
+        "auditEnd": 122,
+        "serverTotal": 4639
+      },
+      "reference": "GAS-07e990d4"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5436.630836000026,
+          "redirectMs": 82.46780799998669,
+          "bodyMs": 1.2673359999898821,
+          "verifyMs": 0.08899699995527044,
+          "durationMs": 5520.458434000029
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5520.483200000017,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 41,
+        "lockWait": 54,
+        "auditStart": 92,
+        "indexCacheHit": 0,
+        "headRead": 41,
+        "fileLookup": 132,
+        "fileValidation": 238,
+        "snapshotRead": 257,
+        "loadTotal": 680,
+        "core": 142,
+        "snapshotSerialize": 5,
+        "folderLookup": 183,
+        "snapshotOverwrite": 1604,
+        "snapshotReadback": 326,
+        "headPrecondition": 31,
+        "headPublish": 83,
+        "commitTotal": 2853,
+        "indexCacheSeed": 148,
+        "auditEnd": 85,
+        "serverTotal": 4201
+      },
+      "reference": "GAS-cced85be"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5351.509117999987,
+          "redirectMs": 138.6936969999806,
+          "bodyMs": 1.1525869999895804,
+          "verifyMs": 0.09502800001064315,
+          "durationMs": 5491.454197000014
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5491.483131000015,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 44,
+        "lockWait": 40,
+        "auditStart": 90,
+        "indexCacheHit": 0,
+        "headRead": 41,
+        "fileLookup": 153,
+        "fileValidation": 192,
+        "snapshotRead": 282,
+        "loadTotal": 686,
+        "core": 213,
+        "snapshotSerialize": 8,
+        "folderLookup": 153,
+        "snapshotOverwrite": 1879,
+        "snapshotReadback": 352,
+        "headPrecondition": 21,
+        "headPublish": 67,
+        "commitTotal": 3052,
+        "indexCacheSeed": 165,
+        "auditEnd": 96,
+        "serverTotal": 4479
+      },
+      "reference": "GAS-22d90109"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5014.369024000014,
+          "redirectMs": 110.02760099997977,
+          "bodyMs": 1.2686150000081398,
+          "verifyMs": 0.09048999997321516,
+          "durationMs": 5125.759918000025
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5125.786987999978,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 34,
+        "lockWait": 63,
+        "auditStart": 88,
+        "indexCacheHit": 0,
+        "headRead": 32,
+        "fileLookup": 133,
+        "fileValidation": 181,
+        "snapshotRead": 235,
+        "loadTotal": 597,
+        "core": 191,
+        "snapshotSerialize": 6,
+        "folderLookup": 149,
+        "snapshotOverwrite": 1924,
+        "snapshotReadback": 311,
+        "headPrecondition": 29,
+        "headPublish": 90,
+        "commitTotal": 3099,
+        "indexCacheSeed": 147,
+        "auditEnd": 76,
+        "serverTotal": 4385
+      },
+      "reference": "GAS-d9352b95"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5225.763358000026,
+          "redirectMs": 234.10415199998533,
+          "bodyMs": 1.0601869999663904,
+          "verifyMs": 0.13044500001706183,
+          "durationMs": 5461.062159000023
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5461.090652999992,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 27,
+        "lockWait": 64,
+        "auditStart": 84,
+        "indexCacheHit": 0,
+        "headRead": 25,
+        "fileLookup": 159,
+        "fileValidation": 185,
+        "snapshotRead": 312,
+        "loadTotal": 694,
+        "core": 198,
+        "snapshotSerialize": 7,
+        "folderLookup": 184,
+        "snapshotOverwrite": 1871,
+        "snapshotReadback": 412,
+        "headPrecondition": 25,
+        "headPublish": 75,
+        "commitTotal": 3171,
+        "indexCacheSeed": 81,
+        "auditEnd": 94,
+        "serverTotal": 4490
+      },
+      "reference": "GAS-2e9509ee"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 7853.085406999977,
+          "redirectMs": 107.92327800003113,
+          "bodyMs": 1.2788770000333898,
+          "verifyMs": 0.0947370000067167,
+          "durationMs": 7962.386597000004
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 7962.4118339999695,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 57,
+        "lockWait": 145,
+        "auditStart": 157,
+        "indexCacheHit": 0,
+        "headRead": 55,
+        "fileLookup": 225,
+        "fileValidation": 240,
+        "snapshotRead": 436,
+        "loadTotal": 970,
+        "core": 139,
+        "snapshotSerialize": 6,
+        "folderLookup": 238,
+        "snapshotOverwrite": 3205,
+        "snapshotReadback": 421,
+        "headPrecondition": 48,
+        "headPublish": 134,
+        "commitTotal": 4815,
+        "indexCacheSeed": 205,
+        "auditEnd": 174,
+        "serverTotal": 7238
+      },
+      "reference": "GAS-15e427db"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4837.928487999947,
+          "redirectMs": 117.61725900002057,
+          "bodyMs": 1.449886999966111,
+          "verifyMs": 0.08954800001811236,
+          "durationMs": 4957.0891299999785
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4957.1156399999745,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 32,
+        "lockWait": 59,
+        "auditStart": 95,
+        "indexCacheHit": 0,
+        "headRead": 29,
+        "fileLookup": 152,
+        "fileValidation": 166,
+        "snapshotRead": 461,
+        "loadTotal": 820,
+        "core": 149,
+        "snapshotSerialize": 7,
+        "folderLookup": 167,
+        "snapshotOverwrite": 1442,
+        "snapshotReadback": 279,
+        "headPrecondition": 31,
+        "headPublish": 88,
+        "commitTotal": 2711,
+        "indexCacheSeed": 102,
+        "auditEnd": 96,
+        "serverTotal": 4167
+      },
+      "reference": "GAS-add6471a"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5845.566877999983,
+          "redirectMs": 107.8792320000357,
+          "bodyMs": 0.8439929999876767,
+          "verifyMs": 0.16331600002013147,
+          "durationMs": 5954.457585999975
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5954.482943000039,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 12,
+        "lockWait": 105,
+        "auditStart": 57,
+        "indexCacheHit": 0,
+        "headRead": 14,
+        "fileLookup": 188,
+        "fileValidation": 162,
+        "snapshotRead": 388,
+        "loadTotal": 767,
+        "core": 175,
+        "snapshotSerialize": 6,
+        "folderLookup": 175,
+        "snapshotOverwrite": 2271,
+        "snapshotReadback": 384,
+        "headPrecondition": 7,
+        "headPublish": 46,
+        "commitTotal": 3630,
+        "indexCacheSeed": 62,
+        "auditEnd": 75,
+        "serverTotal": 5031
+      },
+      "reference": "GAS-da79d6fe"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "post",
+          "ok": false,
+          "durationMs": 12001.461609999998,
+          "code": "NETWORK_OR_TIMEOUT"
+        },
+        {
+          "attempt": 2,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2922.7620180000085,
+          "redirectMs": 234.2914129999699,
+          "bodyMs": 1.2507639999967068,
+          "verifyMs": 0.10305299999890849,
+          "durationMs": 3158.411617000005
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 15444.13173100003,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 32,
+        "lockWait": 1438,
+        "auditStart": 111,
+        "indexCacheHit": 0,
+        "headRead": 24,
+        "fileLookup": 133,
+        "fileValidation": 167,
+        "snapshotRead": 236,
+        "loadTotal": 580,
+        "core": 9,
+        "auditEnd": 97,
+        "serverTotal": 2374
+      },
+      "reference": "GAS-56bf68d7"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5176.1333079999895,
+          "redirectMs": 115.46881800005212,
+          "bodyMs": 1.6091489999671467,
+          "verifyMs": 0.08951700001489371,
+          "durationMs": 5293.304749000003
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5293.332090999989,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 32,
+        "lockWait": 47,
+        "auditStart": 107,
+        "indexCacheHit": 0,
+        "headRead": 35,
+        "fileLookup": 156,
+        "fileValidation": 151,
+        "snapshotRead": 276,
+        "loadTotal": 636,
+        "core": 207,
+        "snapshotSerialize": 6,
+        "folderLookup": 152,
+        "snapshotOverwrite": 1665,
+        "snapshotReadback": 373,
+        "headPrecondition": 30,
+        "headPublish": 89,
+        "commitTotal": 3033,
+        "indexCacheSeed": 119,
+        "auditEnd": 109,
+        "serverTotal": 4402
+      },
+      "reference": "GAS-550f0180"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 7458.075587999949,
+          "redirectMs": 192.0987450000248,
+          "bodyMs": 0.9558710000128485,
+          "verifyMs": 0.09640100004617125,
+          "durationMs": 7651.230802999984
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 7651.256240999966,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 47,
+        "lockWait": 66,
+        "auditStart": 99,
+        "indexCacheHit": 0,
+        "headRead": 44,
+        "fileLookup": 2585,
+        "fileValidation": 202,
+        "snapshotRead": 401,
+        "loadTotal": 3250,
+        "core": 214,
+        "snapshotSerialize": 6,
+        "folderLookup": 138,
+        "snapshotOverwrite": 1663,
+        "snapshotReadback": 281,
+        "headPrecondition": 45,
+        "headPublish": 94,
+        "commitTotal": 2918,
+        "indexCacheSeed": 132,
+        "auditEnd": 111,
+        "serverTotal": 6931
+      },
+      "reference": "GAS-faa4cac7"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5545.62112700002,
+          "redirectMs": 113.4371810000157,
+          "bodyMs": 0.8736580000258982,
+          "verifyMs": 0.09304499998688698,
+          "durationMs": 5660.028165000025
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5660.0544150000205,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 16,
+        "lockWait": 80,
+        "auditStart": 48,
+        "indexCacheHit": 0,
+        "headRead": 13,
+        "fileLookup": 216,
+        "fileValidation": 186,
+        "snapshotRead": 398,
+        "loadTotal": 826,
+        "core": 196,
+        "snapshotSerialize": 5,
+        "folderLookup": 179,
+        "snapshotOverwrite": 2304,
+        "snapshotReadback": 347,
+        "headPrecondition": 16,
+        "headPublish": 67,
+        "commitTotal": 3537,
+        "indexCacheSeed": 46,
+        "auditEnd": 50,
+        "serverTotal": 4967
+      },
+      "reference": "GAS-23d67437"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4648.741916000028,
+          "redirectMs": 200.32305100001395,
+          "bodyMs": 0.6510899999993853,
+          "verifyMs": 0.0962400000425987,
+          "durationMs": 4849.816866000008
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4849.841040999978,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 52,
+        "lockWait": 56,
+        "auditStart": 99,
+        "indexCacheHit": 0,
+        "headRead": 46,
+        "fileLookup": 182,
+        "fileValidation": 208,
+        "snapshotRead": 337,
+        "loadTotal": 782,
+        "core": 105,
+        "snapshotSerialize": 3,
+        "folderLookup": 162,
+        "snapshotOverwrite": 1507,
+        "snapshotReadback": 329,
+        "headPrecondition": 43,
+        "headPublish": 90,
+        "commitTotal": 2647,
+        "indexCacheSeed": 156,
+        "auditEnd": 90,
+        "serverTotal": 4083
+      },
+      "reference": "GAS-cf822f34"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6259.2644169999985,
+          "redirectMs": 187.91440100001637,
+          "bodyMs": 1.2377720000222325,
+          "verifyMs": 0.08714400004828349,
+          "durationMs": 6448.507149000012
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6448.534189000027,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 33,
+        "lockWait": 67,
+        "auditStart": 93,
+        "indexCacheHit": 0,
+        "headRead": 8,
+        "fileLookup": 244,
+        "fileValidation": 174,
+        "snapshotRead": 380,
+        "loadTotal": 834,
+        "core": 252,
+        "snapshotSerialize": 6,
+        "folderLookup": 138,
+        "snapshotOverwrite": 2214,
+        "snapshotReadback": 528,
+        "headPrecondition": 15,
+        "headPublish": 37,
+        "commitTotal": 3827,
+        "indexCacheSeed": 98,
+        "auditEnd": 57,
+        "serverTotal": 5411
+      },
+      "reference": "GAS-96393bd8"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6847.023603999987,
+          "redirectMs": 109.11267599998973,
+          "bodyMs": 0.8475099999923259,
+          "verifyMs": 0.09032899996964261,
+          "durationMs": 6957.077254000003
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6957.103413999954,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 53,
+        "lockWait": 158,
+        "auditStart": 164,
+        "indexCacheHit": 0,
+        "headRead": 46,
+        "fileLookup": 234,
+        "fileValidation": 233,
+        "snapshotRead": 397,
+        "loadTotal": 933,
+        "core": 281,
+        "snapshotSerialize": 8,
+        "folderLookup": 215,
+        "snapshotOverwrite": 2040,
+        "snapshotReadback": 422,
+        "headPrecondition": 39,
+        "headPublish": 143,
+        "commitTotal": 3833,
+        "indexCacheSeed": 193,
+        "auditEnd": 156,
+        "serverTotal": 6099
+      },
+      "reference": "GAS-3bcf2bb6"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 7969.555441999983,
+          "redirectMs": 138.35722900001565,
+          "bodyMs": 1.5718090000445955,
+          "verifyMs": 0.09067999996477738,
+          "durationMs": 8109.579316999996
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 8109.606670000008,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 103,
+        "lockWait": 43,
+        "auditStart": 164,
+        "indexCacheHit": 0,
+        "headRead": 42,
+        "fileLookup": 153,
+        "fileValidation": 215,
+        "snapshotRead": 596,
+        "loadTotal": 1072,
+        "core": 578,
+        "snapshotSerialize": 13,
+        "folderLookup": 198,
+        "snapshotOverwrite": 2031,
+        "snapshotReadback": 421,
+        "headPrecondition": 38,
+        "headPublish": 85,
+        "commitTotal": 4440,
+        "indexCacheSeed": 187,
+        "auditEnd": 112,
+        "serverTotal": 6834
+      },
+      "reference": "GAS-cb134586"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4949.669951999967,
+          "redirectMs": 181.33239200001117,
+          "bodyMs": 1.079174000013154,
+          "verifyMs": 0.12311099999351427,
+          "durationMs": 5132.208686999977
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5132.239193999965,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 34,
+        "lockWait": 47,
+        "auditStart": 78,
+        "indexCacheHit": 0,
+        "headRead": 25,
+        "fileLookup": 107,
+        "fileValidation": 145,
+        "snapshotRead": 291,
+        "loadTotal": 578,
+        "core": 135,
+        "snapshotSerialize": 5,
+        "folderLookup": 178,
+        "snapshotOverwrite": 1705,
+        "snapshotReadback": 317,
+        "headPrecondition": 32,
+        "headPublish": 98,
+        "commitTotal": 2869,
+        "indexCacheSeed": 179,
+        "auditEnd": 127,
+        "serverTotal": 4236
+      },
+      "reference": "GAS-d051f0b0"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6766.933817999961,
+          "redirectMs": 147.43219799996587,
+          "bodyMs": 1.7067199999582954,
+          "verifyMs": 0.09676099999342114,
+          "durationMs": 6916.174546999973
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6916.201526999997,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 56,
+        "lockWait": 146,
+        "auditStart": 134,
+        "indexCacheHit": 0,
+        "headRead": 61,
+        "fileLookup": 194,
+        "fileValidation": 234,
+        "snapshotRead": 519,
+        "loadTotal": 1018,
+        "core": 114,
+        "snapshotSerialize": 5,
+        "folderLookup": 225,
+        "snapshotOverwrite": 2216,
+        "snapshotReadback": 436,
+        "headPrecondition": 43,
+        "headPublish": 147,
+        "commitTotal": 3754,
+        "indexCacheSeed": 237,
+        "auditEnd": 157,
+        "serverTotal": 5972
+      },
+      "reference": "GAS-b7c10cbe"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5771.413950000075,
+          "redirectMs": 109.58572400000412,
+          "bodyMs": 1.4626730000600219,
+          "verifyMs": 0.08811599994078279,
+          "durationMs": 5882.554039000068
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5882.581129999948,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 37,
+        "lockWait": 58,
+        "auditStart": 102,
+        "indexCacheHit": 0,
+        "headRead": 35,
+        "fileLookup": 158,
+        "fileValidation": 189,
+        "snapshotRead": 541,
+        "loadTotal": 935,
+        "core": 214,
+        "snapshotSerialize": 8,
+        "folderLookup": 180,
+        "snapshotOverwrite": 1976,
+        "snapshotReadback": 327,
+        "headPrecondition": 19,
+        "headPublish": 74,
+        "commitTotal": 3347,
+        "indexCacheSeed": 133,
+        "auditEnd": 84,
+        "serverTotal": 5012
+      },
+      "reference": "GAS-7bd4caca"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5186.984317000024,
+          "redirectMs": 112.28602900006808,
+          "bodyMs": 0.9755490000825375,
+          "verifyMs": 0.08994899992831051,
+          "durationMs": 5300.339020000072
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5300.36418699997,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 48,
+        "lockWait": 46,
+        "auditStart": 124,
+        "indexCacheHit": 0,
+        "headRead": 27,
+        "fileLookup": 145,
+        "fileValidation": 171,
+        "snapshotRead": 299,
+        "loadTotal": 666,
+        "core": 217,
+        "snapshotSerialize": 9,
+        "folderLookup": 172,
+        "snapshotOverwrite": 1707,
+        "snapshotReadback": 298,
+        "headPrecondition": 46,
+        "headPublish": 97,
+        "commitTotal": 3026,
+        "indexCacheSeed": 255,
+        "auditEnd": 120,
+        "serverTotal": 4604
+      },
+      "reference": "GAS-85f2e529"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5771.261832999997,
+          "redirectMs": 112.37268800009042,
+          "bodyMs": 1.4341789999743924,
+          "verifyMs": 0.08626200002618134,
+          "durationMs": 5885.15840700001
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5885.183085000026,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 21,
+        "lockWait": 83,
+        "auditStart": 80,
+        "indexCacheHit": 0,
+        "headRead": 7,
+        "fileLookup": 161,
+        "fileValidation": 140,
+        "snapshotRead": 416,
+        "loadTotal": 744,
+        "core": 254,
+        "snapshotSerialize": 11,
+        "folderLookup": 144,
+        "snapshotOverwrite": 2028,
+        "snapshotReadback": 469,
+        "headPrecondition": 15,
+        "headPublish": 42,
+        "commitTotal": 3484,
+        "indexCacheSeed": 71,
+        "auditEnd": 59,
+        "serverTotal": 4980
+      },
+      "reference": "GAS-68974385"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6812.174536000006,
+          "redirectMs": 111.68206200003624,
+          "bodyMs": 1.811496999929659,
+          "verifyMs": 0.08943699998781085,
+          "durationMs": 6925.761630999972
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6925.785955999978,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 45,
+        "lockWait": 160,
+        "auditStart": 157,
+        "indexCacheHit": 0,
+        "headRead": 49,
+        "fileLookup": 196,
+        "fileValidation": 215,
+        "snapshotRead": 322,
+        "loadTotal": 802,
+        "core": 169,
+        "snapshotSerialize": 7,
+        "folderLookup": 238,
+        "snapshotOverwrite": 2223,
+        "snapshotReadback": 502,
+        "headPrecondition": 79,
+        "headPublish": 146,
+        "commitTotal": 4019,
+        "indexCacheSeed": 198,
+        "auditEnd": 155,
+        "serverTotal": 6064
+      },
+      "reference": "GAS-2f34ab26"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 7822.621967999963,
+          "redirectMs": 124.47259599994868,
+          "bodyMs": 1.4467220000224188,
+          "verifyMs": 0.08974900003522635,
+          "durationMs": 7948.634661999997
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 7948.659367999993,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 44,
+        "lockWait": 172,
+        "auditStart": 163,
+        "indexCacheHit": 0,
+        "headRead": 45,
+        "fileLookup": 230,
+        "fileValidation": 257,
+        "snapshotRead": 318,
+        "loadTotal": 865,
+        "core": 206,
+        "snapshotSerialize": 7,
+        "folderLookup": 218,
+        "snapshotOverwrite": 2595,
+        "snapshotReadback": 439,
+        "headPrecondition": 38,
+        "headPublish": 143,
+        "commitTotal": 4274,
+        "indexCacheSeed": 195,
+        "auditEnd": 155,
+        "serverTotal": 6384
+      },
+      "reference": "GAS-16759d32"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5559.892280000029,
+          "redirectMs": 114.10440000006929,
+          "bodyMs": 1.197546000010334,
+          "verifyMs": 0.10385399998631328,
+          "durationMs": 5675.302158999955
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5675.357782999985,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 43,
+        "lockWait": 54,
+        "auditStart": 98,
+        "indexCacheHit": 0,
+        "headRead": 28,
+        "fileLookup": 121,
+        "fileValidation": 178,
+        "snapshotRead": 514,
+        "loadTotal": 860,
+        "core": 204,
+        "snapshotSerialize": 7,
+        "folderLookup": 150,
+        "snapshotOverwrite": 1755,
+        "snapshotReadback": 398,
+        "headPrecondition": 30,
+        "headPublish": 102,
+        "commitTotal": 3191,
+        "indexCacheSeed": 257,
+        "auditEnd": 94,
+        "serverTotal": 4900
+      },
+      "reference": "GAS-1bce57be"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6142.382014999981,
+          "redirectMs": 113.40348800003994,
+          "bodyMs": 1.3958169999532402,
+          "verifyMs": 0.08732399996370077,
+          "durationMs": 6257.271568999975
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6257.2955039999215,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 20,
+        "lockWait": 71,
+        "auditStart": 54,
+        "indexCacheHit": 0,
+        "headRead": 11,
+        "fileLookup": 281,
+        "fileValidation": 159,
+        "snapshotRead": 440,
+        "loadTotal": 915,
+        "core": 338,
+        "snapshotSerialize": 11,
+        "folderLookup": 152,
+        "snapshotOverwrite": 2224,
+        "snapshotReadback": 444,
+        "headPrecondition": 15,
+        "headPublish": 42,
+        "commitTotal": 3802,
+        "indexCacheSeed": 71,
+        "auditEnd": 55,
+        "serverTotal": 5489
+      },
+      "reference": "GAS-ffffb20d"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5082.322607000009,
+          "redirectMs": 251.39355600008275,
+          "bodyMs": 1.2646209999220446,
+          "verifyMs": 0.09239400003571063,
+          "durationMs": 5335.076965000015
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5335.108354000025,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 36,
+        "lockWait": 42,
+        "auditStart": 92,
+        "indexCacheHit": 0,
+        "headRead": 23,
+        "fileLookup": 119,
+        "fileValidation": 162,
+        "snapshotRead": 359,
+        "loadTotal": 681,
+        "core": 208,
+        "snapshotSerialize": 7,
+        "folderLookup": 154,
+        "snapshotOverwrite": 1622,
+        "snapshotReadback": 355,
+        "headPrecondition": 45,
+        "headPublish": 71,
+        "commitTotal": 3076,
+        "indexCacheSeed": 176,
+        "auditEnd": 94,
+        "serverTotal": 4516
+      },
+      "reference": "GAS-3220b1fa"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 7277.062021000078,
+          "redirectMs": 116.43878800002858,
+          "bodyMs": 1.103408999973908,
+          "verifyMs": 0.08610199997201562,
+          "durationMs": 7394.693946000072
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 7394.717871000059,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 66,
+        "lockWait": 145,
+        "auditStart": 241,
+        "indexCacheHit": 0,
+        "headRead": 87,
+        "fileLookup": 230,
+        "fileValidation": 250,
+        "snapshotRead": 562,
+        "loadTotal": 1140,
+        "core": 219,
+        "snapshotSerialize": 4,
+        "folderLookup": 220,
+        "snapshotOverwrite": 2448,
+        "snapshotReadback": 451,
+        "headPrecondition": 47,
+        "headPublish": 134,
+        "commitTotal": 3987,
+        "indexCacheSeed": 198,
+        "auditEnd": 151,
+        "serverTotal": 6474
+      },
+      "reference": "GAS-ef79d959"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5369.557736000046,
+          "redirectMs": 137.86185900005512,
+          "bodyMs": 0.9093550000106916,
+          "verifyMs": 0.08549999992828816,
+          "durationMs": 5508.418177000014
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5508.442102000001,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 51,
+        "lockWait": 51,
+        "auditStart": 94,
+        "indexCacheHit": 0,
+        "headRead": 36,
+        "fileLookup": 148,
+        "fileValidation": 175,
+        "snapshotRead": 501,
+        "loadTotal": 871,
+        "core": 139,
+        "snapshotSerialize": 4,
+        "folderLookup": 150,
+        "snapshotOverwrite": 1890,
+        "snapshotReadback": 441,
+        "headPrecondition": 27,
+        "headPublish": 94,
+        "commitTotal": 3212,
+        "indexCacheSeed": 106,
+        "auditEnd": 112,
+        "serverTotal": 4746
+      },
+      "reference": "GAS-22391a9a"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5229.2677790001035,
+          "redirectMs": 78.88159499992616,
+          "bodyMs": 1.6030759999994189,
+          "verifyMs": 0.10583799995947629,
+          "durationMs": 5309.862647000002
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5309.886270000017,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 33,
+        "lockWait": 54,
+        "auditStart": 118,
+        "indexCacheHit": 0,
+        "headRead": 25,
+        "fileLookup": 150,
+        "fileValidation": 157,
+        "snapshotRead": 318,
+        "loadTotal": 674,
+        "core": 317,
+        "snapshotSerialize": 9,
+        "folderLookup": 167,
+        "snapshotOverwrite": 1605,
+        "snapshotReadback": 313,
+        "headPrecondition": 26,
+        "headPublish": 75,
+        "commitTotal": 2978,
+        "indexCacheSeed": 113,
+        "auditEnd": 113,
+        "serverTotal": 4497
+      },
+      "reference": "GAS-26c4f6c6"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5342.239324999973,
+          "redirectMs": 115.03585200000089,
+          "bodyMs": 1.6085570000577718,
+          "verifyMs": 0.07778599997982383,
+          "durationMs": 5458.964644999942
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5458.988068999955,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 33,
+        "lockWait": 69,
+        "auditStart": 110,
+        "indexCacheHit": 0,
+        "headRead": 28,
+        "fileLookup": 171,
+        "fileValidation": 160,
+        "snapshotRead": 389,
+        "loadTotal": 770,
+        "core": 213,
+        "snapshotSerialize": 9,
+        "folderLookup": 207,
+        "snapshotOverwrite": 1570,
+        "snapshotReadback": 301,
+        "headPrecondition": 28,
+        "headPublish": 95,
+        "commitTotal": 3089,
+        "indexCacheSeed": 125,
+        "auditEnd": 97,
+        "serverTotal": 4624
+      },
+      "reference": "GAS-7e07e210"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 7126.097040000022,
+          "redirectMs": 255.4265369999921,
+          "bodyMs": 1.023077999940142,
+          "verifyMs": 0.08449799998197705,
+          "durationMs": 7382.635011999984
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 7382.658727000002,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 44,
+        "lockWait": 54,
+        "auditStart": 129,
+        "indexCacheHit": 0,
+        "headRead": 46,
+        "fileLookup": 167,
+        "fileValidation": 185,
+        "snapshotRead": 468,
+        "loadTotal": 894,
+        "core": 318,
+        "snapshotSerialize": 12,
+        "folderLookup": 201,
+        "snapshotOverwrite": 2205,
+        "snapshotReadback": 854,
+        "headPrecondition": 42,
+        "headPublish": 108,
+        "commitTotal": 4385,
+        "indexCacheSeed": 145,
+        "auditEnd": 130,
+        "serverTotal": 6249
+      },
+      "reference": "GAS-5f2897ad"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5040.368060000008,
+          "redirectMs": 114.62582199997269,
+          "bodyMs": 0.7910140000749379,
+          "verifyMs": 0.09140100004151464,
+          "durationMs": 5155.879914000048
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5155.903839000035,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 35,
+        "lockWait": 49,
+        "auditStart": 101,
+        "indexCacheHit": 0,
+        "headRead": 26,
+        "fileLookup": 164,
+        "fileValidation": 162,
+        "snapshotRead": 303,
+        "loadTotal": 679,
+        "core": 282,
+        "snapshotSerialize": 7,
+        "folderLookup": 176,
+        "snapshotOverwrite": 1557,
+        "snapshotReadback": 334,
+        "headPrecondition": 33,
+        "headPublish": 89,
+        "commitTotal": 2948,
+        "indexCacheSeed": 116,
+        "auditEnd": 86,
+        "serverTotal": 4433
+      },
+      "reference": "GAS-08b951d1"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 7539.531869999948,
+          "redirectMs": 126.27455199998803,
+          "bodyMs": 0.7205509999766946,
+          "verifyMs": 0.09431700001005083,
+          "durationMs": 7666.62523799995
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 7666.649361999938,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 45,
+        "lockWait": 176,
+        "auditStart": 158,
+        "indexCacheHit": 0,
+        "headRead": 45,
+        "fileLookup": 197,
+        "fileValidation": 254,
+        "snapshotRead": 486,
+        "loadTotal": 1002,
+        "core": 293,
+        "snapshotSerialize": 11,
+        "folderLookup": 241,
+        "snapshotOverwrite": 2310,
+        "snapshotReadback": 525,
+        "headPrecondition": 60,
+        "headPublish": 139,
+        "commitTotal": 4152,
+        "indexCacheSeed": 201,
+        "auditEnd": 169,
+        "serverTotal": 6544
+      },
+      "reference": "GAS-a7f1bfd8"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5638.658163000015,
+          "redirectMs": 104.43373200006317,
+          "bodyMs": 1.142572999931872,
+          "verifyMs": 0.09686100005637854,
+          "durationMs": 5744.33486599999
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5744.396752000088,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 20,
+        "lockWait": 36,
+        "auditStart": 88,
+        "indexCacheHit": 0,
+        "headRead": 20,
+        "fileLookup": 157,
+        "fileValidation": 155,
+        "snapshotRead": 498,
+        "loadTotal": 842,
+        "core": 139,
+        "snapshotSerialize": 4,
+        "folderLookup": 122,
+        "snapshotOverwrite": 2372,
+        "snapshotReadback": 308,
+        "headPrecondition": 22,
+        "headPublish": 72,
+        "commitTotal": 3525,
+        "indexCacheSeed": 86,
+        "auditEnd": 81,
+        "serverTotal": 4892
+      },
+      "reference": "GAS-a3cd92fe"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 7279.737771000015,
+          "redirectMs": 101.16192099999171,
+          "bodyMs": 1.0785519999917597,
+          "verifyMs": 0.0839069999055937,
+          "durationMs": 7382.065598000074
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 7382.093439999968,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 55,
+        "lockWait": 154,
+        "auditStart": 140,
+        "indexCacheHit": 0,
+        "headRead": 45,
+        "fileLookup": 251,
+        "fileValidation": 250,
+        "snapshotRead": 490,
+        "loadTotal": 1069,
+        "core": 371,
+        "snapshotSerialize": 12,
+        "folderLookup": 226,
+        "snapshotOverwrite": 2080,
+        "snapshotReadback": 517,
+        "headPrecondition": 45,
+        "headPublish": 154,
+        "commitTotal": 4043,
+        "indexCacheSeed": 186,
+        "auditEnd": 139,
+        "serverTotal": 6516
+      },
+      "reference": "GAS-4617447c"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5488.603180999984,
+          "redirectMs": 242.32416800002102,
+          "bodyMs": 1.503679999965243,
+          "verifyMs": 0.09164200001396239,
+          "durationMs": 5732.52642800007
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5732.549892000039,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 37,
+        "lockWait": 38,
+        "auditStart": 91,
+        "indexCacheHit": 0,
+        "headRead": 14,
+        "fileLookup": 138,
+        "fileValidation": 139,
+        "snapshotRead": 576,
+        "loadTotal": 886,
+        "core": 195,
+        "snapshotSerialize": 8,
+        "folderLookup": 154,
+        "snapshotOverwrite": 2283,
+        "snapshotReadback": 315,
+        "headPrecondition": 16,
+        "headPublish": 70,
+        "commitTotal": 3532,
+        "indexCacheSeed": 76,
+        "auditEnd": 75,
+        "serverTotal": 5008
+      },
+      "reference": "GAS-70615402"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 7287.0187319999095,
+          "redirectMs": 199.34120100003202,
+          "bodyMs": 1.2821149999508634,
+          "verifyMs": 0.09068999998271465,
+          "durationMs": 7487.737255999935
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 7487.760369000025,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 49,
+        "lockWait": 72,
+        "auditStart": 58,
+        "indexCacheHit": 0,
+        "headRead": 16,
+        "fileLookup": 200,
+        "fileValidation": 157,
+        "snapshotRead": 411,
+        "loadTotal": 804,
+        "core": 294,
+        "snapshotSerialize": 9,
+        "folderLookup": 176,
+        "snapshotOverwrite": 3281,
+        "snapshotReadback": 485,
+        "headPrecondition": 16,
+        "headPublish": 54,
+        "commitTotal": 4805,
+        "indexCacheSeed": 119,
+        "auditEnd": 60,
+        "serverTotal": 6425
+      },
+      "reference": "GAS-d3165c4a"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5590.194654999999,
+          "redirectMs": 116.01354400010314,
+          "bodyMs": 0.7467710000928491,
+          "verifyMs": 0.13362099998630583,
+          "durationMs": 5707.092919000075
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5707.117735000094,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 38,
+        "lockWait": 43,
+        "auditStart": 111,
+        "indexCacheHit": 0,
+        "headRead": 54,
+        "fileLookup": 133,
+        "fileValidation": 162,
+        "snapshotRead": 394,
+        "loadTotal": 765,
+        "core": 264,
+        "snapshotSerialize": 8,
+        "folderLookup": 168,
+        "snapshotOverwrite": 1649,
+        "snapshotReadback": 298,
+        "headPrecondition": 24,
+        "headPublish": 98,
+        "commitTotal": 3107,
+        "indexCacheSeed": 218,
+        "auditEnd": 151,
+        "serverTotal": 4793
+      },
+      "reference": "GAS-6577d0db"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5713.845839000074,
+          "redirectMs": 119.71820400003344,
+          "bodyMs": 1.357977999956347,
+          "verifyMs": 0.10094000003300607,
+          "durationMs": 5835.027328000055
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5835.077711999998,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 60,
+        "lockWait": 67,
+        "auditStart": 112,
+        "indexCacheHit": 0,
+        "headRead": 40,
+        "fileLookup": 129,
+        "fileValidation": 151,
+        "snapshotRead": 524,
+        "loadTotal": 857,
+        "core": 148,
+        "snapshotSerialize": 5,
+        "folderLookup": 161,
+        "snapshotOverwrite": 1556,
+        "snapshotReadback": 680,
+        "headPrecondition": 52,
+        "headPublish": 111,
+        "commitTotal": 3171,
+        "indexCacheSeed": 96,
+        "auditEnd": 123,
+        "serverTotal": 4766
+      },
+      "reference": "GAS-64b7e80b"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6028.166695000022,
+          "redirectMs": 119.23254100000486,
+          "bodyMs": 1.1735300000291318,
+          "verifyMs": 0.09089999995194376,
+          "durationMs": 6148.667454999988
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6148.693434000015,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 33,
+        "lockWait": 46,
+        "auditStart": 105,
+        "indexCacheHit": 0,
+        "headRead": 30,
+        "fileLookup": 121,
+        "fileValidation": 172,
+        "snapshotRead": 326,
+        "loadTotal": 674,
+        "core": 264,
+        "snapshotSerialize": 8,
+        "folderLookup": 151,
+        "snapshotOverwrite": 1966,
+        "snapshotReadback": 314,
+        "headPrecondition": 39,
+        "headPublish": 80,
+        "commitTotal": 3343,
+        "indexCacheSeed": 139,
+        "auditEnd": 90,
+        "serverTotal": 4804
+      },
+      "reference": "GAS-30e6533f"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5899.111925999983,
+          "redirectMs": 108.51726600003894,
+          "bodyMs": 1.2435830000322312,
+          "verifyMs": 0.11419400002341717,
+          "durationMs": 6008.991546000005
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6009.014990999945,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 34,
+        "lockWait": 37,
+        "auditStart": 102,
+        "indexCacheHit": 0,
+        "headRead": 38,
+        "fileLookup": 154,
+        "fileValidation": 151,
+        "snapshotRead": 293,
+        "loadTotal": 660,
+        "core": 300,
+        "snapshotSerialize": 10,
+        "folderLookup": 131,
+        "snapshotOverwrite": 2259,
+        "snapshotReadback": 454,
+        "headPrecondition": 29,
+        "headPublish": 74,
+        "commitTotal": 3750,
+        "indexCacheSeed": 162,
+        "auditEnd": 71,
+        "serverTotal": 5201
+      },
+      "reference": "GAS-26fd8fc3"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 7930.591891000047,
+          "redirectMs": 197.67382100003306,
+          "bodyMs": 1.266304999939166,
+          "verifyMs": 0.10357399994973093,
+          "durationMs": 8129.639408999938
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 8129.663935999968,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 61,
+        "lockWait": 158,
+        "auditStart": 224,
+        "indexCacheHit": 0,
+        "headRead": 72,
+        "fileLookup": 251,
+        "fileValidation": 226,
+        "snapshotRead": 570,
+        "loadTotal": 1153,
+        "core": 368,
+        "snapshotSerialize": 11,
+        "folderLookup": 247,
+        "snapshotOverwrite": 2431,
+        "snapshotReadback": 489,
+        "headPrecondition": 48,
+        "headPublish": 245,
+        "commitTotal": 4625,
+        "indexCacheSeed": 208,
+        "auditEnd": 151,
+        "serverTotal": 7297
+      },
+      "reference": "GAS-68458006"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6151.099259000039,
+          "redirectMs": 335.6458890000358,
+          "bodyMs": 1.3084449999732897,
+          "verifyMs": 0.10580799996387213,
+          "durationMs": 6488.163789000013
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6488.2649380000075,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 22,
+        "lockWait": 82,
+        "auditStart": 62,
+        "indexCacheHit": 0,
+        "headRead": 18,
+        "fileLookup": 251,
+        "fileValidation": 218,
+        "snapshotRead": 426,
+        "loadTotal": 941,
+        "core": 284,
+        "snapshotSerialize": 10,
+        "folderLookup": 176,
+        "snapshotOverwrite": 2238,
+        "snapshotReadback": 416,
+        "headPrecondition": 10,
+        "headPublish": 36,
+        "commitTotal": 3755,
+        "indexCacheSeed": 97,
+        "auditEnd": 52,
+        "serverTotal": 5447
+      },
+      "reference": "GAS-282b0527"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5257.820897000027,
+          "redirectMs": 117.91588099999353,
+          "bodyMs": 1.1986869999673218,
+          "verifyMs": 0.07967000000644475,
+          "durationMs": 5377.0186410000315
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5377.043286000029,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 33,
+        "lockWait": 90,
+        "auditStart": 94,
+        "indexCacheHit": 0,
+        "headRead": 27,
+        "fileLookup": 158,
+        "fileValidation": 144,
+        "snapshotRead": 362,
+        "loadTotal": 711,
+        "core": 244,
+        "snapshotSerialize": 11,
+        "folderLookup": 163,
+        "snapshotOverwrite": 1658,
+        "snapshotReadback": 332,
+        "headPrecondition": 27,
+        "headPublish": 87,
+        "commitTotal": 3053,
+        "indexCacheSeed": 149,
+        "auditEnd": 96,
+        "serverTotal": 4593
+      },
+      "reference": "GAS-3ee4fb69"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5542.271701000049,
+          "redirectMs": 108.59226599999238,
+          "bodyMs": 0.9729349999688566,
+          "verifyMs": 0.08839599997736514,
+          "durationMs": 5651.928413000074
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5651.951686999993,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 32,
+        "lockWait": 55,
+        "auditStart": 110,
+        "indexCacheHit": 0,
+        "headRead": 26,
+        "fileLookup": 139,
+        "fileValidation": 193,
+        "snapshotRead": 303,
+        "loadTotal": 687,
+        "core": 286,
+        "snapshotSerialize": 6,
+        "folderLookup": 141,
+        "snapshotOverwrite": 1727,
+        "snapshotReadback": 405,
+        "headPrecondition": 40,
+        "headPublish": 80,
+        "commitTotal": 3234,
+        "indexCacheSeed": 162,
+        "auditEnd": 105,
+        "serverTotal": 4817
+      },
+      "reference": "GAS-da839f6d"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5242.156755000004,
+          "redirectMs": 127.98983199999202,
+          "bodyMs": 0.8428309999871999,
+          "verifyMs": 0.08708299999125302,
+          "durationMs": 5371.079666999984
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5371.104212999926,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 10,
+        "lockWait": 79,
+        "auditStart": 37,
+        "indexCacheHit": 0,
+        "headRead": 8,
+        "fileLookup": 183,
+        "fileValidation": 192,
+        "snapshotRead": 392,
+        "loadTotal": 788,
+        "core": 174,
+        "snapshotSerialize": 23,
+        "folderLookup": 245,
+        "snapshotOverwrite": 1940,
+        "snapshotReadback": 314,
+        "headPrecondition": 8,
+        "headPublish": 31,
+        "commitTotal": 3183,
+        "indexCacheSeed": 81,
+        "auditEnd": 36,
+        "serverTotal": 4570
+      },
+      "reference": "GAS-a278fd38"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5159.7254740000935,
+          "redirectMs": 100.185009000008,
+          "bodyMs": 0.7171259999740869,
+          "verifyMs": 0.10718099994119257,
+          "durationMs": 5260.738606000086
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5260.785223999992,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 36,
+        "lockWait": 55,
+        "auditStart": 80,
+        "indexCacheHit": 0,
+        "headRead": 31,
+        "fileLookup": 139,
+        "fileValidation": 178,
+        "snapshotRead": 443,
+        "loadTotal": 806,
+        "core": 246,
+        "snapshotSerialize": 7,
+        "folderLookup": 181,
+        "snapshotOverwrite": 1680,
+        "snapshotReadback": 328,
+        "headPrecondition": 29,
+        "headPublish": 80,
+        "commitTotal": 3072,
+        "indexCacheSeed": 142,
+        "auditEnd": 111,
+        "serverTotal": 4665
+      },
+      "reference": "GAS-b0d7f7a1"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 7744.56090599997,
+          "redirectMs": 114.8936869999161,
+          "bodyMs": 1.3154880000511184,
+          "verifyMs": 0.083485999959521,
+          "durationMs": 7860.8565630000085
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 7860.879675999982,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 45,
+        "lockWait": 150,
+        "auditStart": 174,
+        "indexCacheHit": 0,
+        "headRead": 44,
+        "fileLookup": 233,
+        "fileValidation": 292,
+        "snapshotRead": 479,
+        "loadTotal": 1064,
+        "core": 196,
+        "snapshotSerialize": 4,
+        "folderLookup": 234,
+        "snapshotOverwrite": 2372,
+        "snapshotReadback": 417,
+        "headPrecondition": 39,
+        "headPublish": 197,
+        "commitTotal": 4320,
+        "indexCacheSeed": 708,
+        "auditEnd": 165,
+        "serverTotal": 7144
+      },
+      "reference": "GAS-a76d041f"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6098.736631999956,
+          "redirectMs": 113.69341599999461,
+          "bodyMs": 1.301882000057958,
+          "verifyMs": 0.08414799999445677,
+          "durationMs": 6213.819735000026
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6213.843729999964,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 18,
+        "lockWait": 83,
+        "auditStart": 49,
+        "indexCacheHit": 0,
+        "headRead": 8,
+        "fileLookup": 185,
+        "fileValidation": 199,
+        "snapshotRead": 351,
+        "loadTotal": 783,
+        "core": 457,
+        "snapshotSerialize": 9,
+        "folderLookup": 168,
+        "snapshotOverwrite": 1917,
+        "snapshotReadback": 399,
+        "headPrecondition": 8,
+        "headPublish": 31,
+        "commitTotal": 3578,
+        "indexCacheSeed": 100,
+        "auditEnd": 72,
+        "serverTotal": 5323
+      },
+      "reference": "GAS-0c92c7c7"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6342.123871000018,
+          "redirectMs": 160.2483329999959,
+          "bodyMs": 0.6153140000533313,
+          "verifyMs": 0.08358599990606308,
+          "durationMs": 6503.0742010000395
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6503.097233999986,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 44,
+        "lockWait": 59,
+        "auditStart": 117,
+        "indexCacheHit": 0,
+        "headRead": 34,
+        "fileLookup": 121,
+        "fileValidation": 148,
+        "snapshotRead": 735,
+        "loadTotal": 1056,
+        "core": 246,
+        "snapshotSerialize": 7,
+        "folderLookup": 133,
+        "snapshotOverwrite": 1764,
+        "snapshotReadback": 579,
+        "headPrecondition": 45,
+        "headPublish": 98,
+        "commitTotal": 3350,
+        "indexCacheSeed": 161,
+        "auditEnd": 126,
+        "serverTotal": 5388
+      },
+      "reference": "GAS-bc0c4a9a"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5647.433242999949,
+          "redirectMs": 124.69244700006675,
+          "bodyMs": 1.815125000081025,
+          "verifyMs": 0.1010089999763295,
+          "durationMs": 5774.0466329999035
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5774.081267999951,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 28,
+        "lockWait": 36,
+        "auditStart": 88,
+        "indexCacheHit": 0,
+        "headRead": 25,
+        "fileLookup": 130,
+        "fileValidation": 168,
+        "snapshotRead": 418,
+        "loadTotal": 768,
+        "core": 385,
+        "snapshotSerialize": 8,
+        "folderLookup": 146,
+        "snapshotOverwrite": 1706,
+        "snapshotReadback": 535,
+        "headPrecondition": 18,
+        "headPublish": 88,
+        "commitTotal": 3447,
+        "indexCacheSeed": 95,
+        "auditEnd": 88,
+        "serverTotal": 5014
+      },
+      "reference": "GAS-82d9a85d"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5860.821971000056,
+          "redirectMs": 114.8394950000802,
+          "bodyMs": 0.9818419999210164,
+          "verifyMs": 0.08636200008913875,
+          "durationMs": 5976.733277000021
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5976.756690999959,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 66,
+        "lockWait": 52,
+        "auditStart": 125,
+        "indexCacheHit": 0,
+        "headRead": 23,
+        "fileLookup": 157,
+        "fileValidation": 184,
+        "snapshotRead": 383,
+        "loadTotal": 780,
+        "core": 273,
+        "snapshotSerialize": 8,
+        "folderLookup": 148,
+        "snapshotOverwrite": 2016,
+        "snapshotReadback": 381,
+        "headPrecondition": 31,
+        "headPublish": 79,
+        "commitTotal": 3395,
+        "indexCacheSeed": 124,
+        "auditEnd": 112,
+        "serverTotal": 5085
+      },
+      "reference": "GAS-a25d590e"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 4839.104703999939,
+          "redirectMs": 115.94195700006094,
+          "bodyMs": 0.79040299996268,
+          "verifyMs": 0.08752399997320026,
+          "durationMs": 4955.927934999927
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 4955.950987000018,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 32,
+        "lockWait": 60,
+        "auditStart": 94,
+        "indexCacheHit": 0,
+        "headRead": 29,
+        "fileLookup": 119,
+        "fileValidation": 129,
+        "snapshotRead": 213,
+        "loadTotal": 504,
+        "core": 154,
+        "snapshotSerialize": 5,
+        "folderLookup": 114,
+        "snapshotOverwrite": 1738,
+        "snapshotReadback": 314,
+        "headPrecondition": 53,
+        "headPublish": 88,
+        "commitTotal": 2832,
+        "indexCacheSeed": 126,
+        "auditEnd": 104,
+        "serverTotal": 4016
+      },
+      "reference": "GAS-df4e0308"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5853.315698999912,
+          "redirectMs": 183.27296500001103,
+          "bodyMs": 1.0526649999665096,
+          "verifyMs": 0.11516599997412413,
+          "durationMs": 6037.761272999924
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6037.789266000036,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 40,
+        "lockWait": 43,
+        "auditStart": 99,
+        "indexCacheHit": 0,
+        "headRead": 29,
+        "fileLookup": 138,
+        "fileValidation": 161,
+        "snapshotRead": 311,
+        "loadTotal": 666,
+        "core": 333,
+        "snapshotSerialize": 10,
+        "folderLookup": 133,
+        "snapshotOverwrite": 2217,
+        "snapshotReadback": 322,
+        "headPrecondition": 32,
+        "headPublish": 102,
+        "commitTotal": 3832,
+        "indexCacheSeed": 124,
+        "auditEnd": 114,
+        "serverTotal": 5383
+      },
+      "reference": "GAS-ab046203"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6764.3942080000415,
+          "redirectMs": 109.7840739999665,
+          "bodyMs": 1.2394550000317395,
+          "verifyMs": 0.0847389999544248,
+          "durationMs": 6875.506074000034
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6875.529467000044,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 51,
+        "lockWait": 147,
+        "auditStart": 129,
+        "indexCacheHit": 0,
+        "headRead": 44,
+        "fileLookup": 211,
+        "fileValidation": 249,
+        "snapshotRead": 479,
+        "loadTotal": 998,
+        "core": 202,
+        "snapshotSerialize": 5,
+        "folderLookup": 269,
+        "snapshotOverwrite": 2119,
+        "snapshotReadback": 489,
+        "headPrecondition": 46,
+        "headPublish": 131,
+        "commitTotal": 3845,
+        "indexCacheSeed": 180,
+        "auditEnd": 137,
+        "serverTotal": 6040
+      },
+      "reference": "GAS-e6dbe59d"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6030.931932999985,
+          "redirectMs": 124.05842999997549,
+          "bodyMs": 1.6376600000075996,
+          "verifyMs": 0.1269979999633506,
+          "durationMs": 6156.759276999976
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6156.78445399995,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 56,
+        "lockWait": 57,
+        "auditStart": 90,
+        "indexCacheHit": 0,
+        "headRead": 48,
+        "fileLookup": 140,
+        "fileValidation": 150,
+        "snapshotRead": 490,
+        "loadTotal": 853,
+        "core": 314,
+        "snapshotSerialize": 7,
+        "folderLookup": 156,
+        "snapshotOverwrite": 1960,
+        "snapshotReadback": 372,
+        "headPrecondition": 25,
+        "headPublish": 77,
+        "commitTotal": 3359,
+        "indexCacheSeed": 241,
+        "auditEnd": 82,
+        "serverTotal": 5160
+      },
+      "reference": "GAS-b73794b9"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5956.691664000042,
+          "redirectMs": 127.65471099992283,
+          "bodyMs": 1.0481170000275597,
+          "verifyMs": 0.13090600003488362,
+          "durationMs": 6085.529865000048
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6085.570901999949,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 28,
+        "lockWait": 48,
+        "auditStart": 85,
+        "indexCacheHit": 0,
+        "headRead": 34,
+        "fileLookup": 120,
+        "fileValidation": 167,
+        "snapshotRead": 309,
+        "loadTotal": 660,
+        "core": 379,
+        "snapshotSerialize": 12,
+        "folderLookup": 136,
+        "snapshotOverwrite": 2079,
+        "snapshotReadback": 404,
+        "headPrecondition": 39,
+        "headPublish": 72,
+        "commitTotal": 3757,
+        "indexCacheSeed": 105,
+        "auditEnd": 80,
+        "serverTotal": 5237
+      },
+      "reference": "GAS-508305c2"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5854.959371000063,
+          "redirectMs": 115.38126000005286,
+          "bodyMs": 1.2866240000585094,
+          "verifyMs": 0.08262600004673004,
+          "durationMs": 5971.713917999994
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5971.737211000058,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 33,
+        "lockWait": 61,
+        "auditStart": 97,
+        "indexCacheHit": 0,
+        "headRead": 31,
+        "fileLookup": 137,
+        "fileValidation": 151,
+        "snapshotRead": 287,
+        "loadTotal": 634,
+        "core": 289,
+        "snapshotSerialize": 7,
+        "folderLookup": 168,
+        "snapshotOverwrite": 1838,
+        "snapshotReadback": 387,
+        "headPrecondition": 35,
+        "headPublish": 80,
+        "commitTotal": 3394,
+        "indexCacheSeed": 186,
+        "auditEnd": 132,
+        "serverTotal": 4948
+      },
+      "reference": "GAS-8f614221"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 5672.694335000007,
+          "redirectMs": 109.60735000006389,
+          "bodyMs": 1.316579999984242,
+          "verifyMs": 0.08330699999351054,
+          "durationMs": 5783.705788999912
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5783.728500999976,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 28,
+        "lockWait": 41,
+        "auditStart": 98,
+        "indexCacheHit": 0,
+        "headRead": 30,
+        "fileLookup": 128,
+        "fileValidation": 170,
+        "snapshotRead": 368,
+        "loadTotal": 718,
+        "core": 274,
+        "snapshotSerialize": 6,
+        "folderLookup": 187,
+        "snapshotOverwrite": 2029,
+        "snapshotReadback": 416,
+        "headPrecondition": 23,
+        "headPublish": 69,
+        "commitTotal": 3566,
+        "indexCacheSeed": 91,
+        "auditEnd": 82,
+        "serverTotal": 4989
+      },
+      "reference": "GAS-89d2e129"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6909.208303999971,
+          "redirectMs": 106.0841060000239,
+          "bodyMs": 1.1917360000079498,
+          "verifyMs": 0.10171099996659905,
+          "durationMs": 7016.589643000043
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 7016.638033999945,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 52,
+        "lockWait": 160,
+        "auditStart": 168,
+        "indexCacheHit": 0,
+        "headRead": 37,
+        "fileLookup": 202,
+        "fileValidation": 236,
+        "snapshotRead": 525,
+        "loadTotal": 1018,
+        "core": 227,
+        "snapshotSerialize": 4,
+        "folderLookup": 302,
+        "snapshotOverwrite": 2029,
+        "snapshotReadback": 477,
+        "headPrecondition": 48,
+        "headPublish": 123,
+        "commitTotal": 3849,
+        "indexCacheSeed": 207,
+        "auditEnd": 136,
+        "serverTotal": 6126
+      },
+      "reference": "GAS-a1c51d02"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 7341.8177279999945,
+          "redirectMs": 515.1902520000003,
+          "bodyMs": 0.8694220000179484,
+          "verifyMs": 0.08737500000279397,
+          "durationMs": 7857.968202000018
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 7857.991947000031,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 93,
+        "lockWait": 154,
+        "auditStart": 156,
+        "indexCacheHit": 0,
+        "headRead": 47,
+        "fileLookup": 204,
+        "fileValidation": 203,
+        "snapshotRead": 356,
+        "loadTotal": 832,
+        "core": 291,
+        "snapshotSerialize": 9,
+        "folderLookup": 190,
+        "snapshotOverwrite": 2201,
+        "snapshotReadback": 483,
+        "headPrecondition": 49,
+        "headPublish": 117,
+        "commitTotal": 4025,
+        "indexCacheSeed": 164,
+        "auditEnd": 128,
+        "serverTotal": 6163
+      },
+      "reference": "GAS-91a5d0aa"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "save",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 6616.037262000027,
+          "redirectMs": 452.5289880000055,
+          "bodyMs": 1.02995200001169,
+          "verifyMs": 0.08336699998471886,
+          "durationMs": 7069.6829549999675
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 7069.706078000017,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 41,
+        "lockWait": 58,
+        "auditStart": 90,
+        "indexCacheHit": 0,
+        "headRead": 23,
+        "fileLookup": 139,
+        "fileValidation": 152,
+        "snapshotRead": 569,
+        "loadTotal": 904,
+        "core": 306,
+        "snapshotSerialize": 8,
+        "folderLookup": 150,
+        "snapshotOverwrite": 2378,
+        "snapshotReadback": 361,
+        "headPrecondition": 38,
+        "headPublish": 81,
+        "commitTotal": 4037,
+        "indexCacheSeed": 93,
+        "auditEnd": 70,
+        "serverTotal": 5704
+      },
+      "reference": "GAS-e0541ea3"
+    },
+    {
+      "phase": "fill-100",
+      "operation": "health",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2233.57336499996,
+          "redirectMs": 116.15649399999529,
+          "bodyMs": 1.1183879999443889,
+          "verifyMs": 0.12568599998485297,
+          "durationMs": 2350.978520000004
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 2350.9906929999124,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 49,
+        "lockWait": 61,
+        "auditStart": 124,
+        "headRead": 45,
+        "fileLookup": 139,
+        "fileValidation": 142,
+        "snapshotRead": 683,
+        "auditEnd": 109,
+        "serverTotal": 1580
+      },
+      "reference": "GAS-bd4f9673"
+    },
+    {
+      "phase": "at100-list",
+      "operation": "list",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 2763.870340000023,
+          "durationMs": 10429.630568000022,
+          "code": "NETWORK_OR_TIMEOUT"
+        },
+        {
+          "attempt": 2,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1992.2386539999861,
+          "redirectMs": 3295.541414999985,
+          "bodyMs": 1.4916380000067875,
+          "verifyMs": 0.422842999920249,
+          "durationMs": 5289.698027000064
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 16050.03321299993,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 49,
+        "lockWait": 83,
+        "auditStart": 108,
+        "indexCacheHit": 0,
+        "headRead": 31,
+        "fileLookup": 130,
+        "fileValidation": 174,
+        "snapshotRead": 364,
+        "loadTotal": 716,
+        "core": 7,
+        "auditEnd": 117,
+        "serverTotal": 1189
+      },
+      "reference": "GAS-7a7705c8"
+    },
+    {
+      "phase": "at100-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1283.8674420000752,
+          "redirectMs": 3905.40075000003,
+          "bodyMs": 1.9595259999623522,
+          "verifyMs": 0.33298499998636544,
+          "durationMs": 5191.564610000001
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 5191.5790079999715,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 25,
+        "lockWait": 48,
+        "auditStart": 97,
+        "indexCacheRead": 89,
+        "indexCacheHit": 1,
+        "core": 1,
+        "auditEnd": 88,
+        "serverTotal": 457
+      },
+      "reference": "GAS-4350f842"
+    },
+    {
+      "phase": "at100-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1790.1444009999977,
+          "redirectMs": 4849.791006000014,
+          "bodyMs": 1.2691110000014305,
+          "verifyMs": 0.3893909999169409,
+          "durationMs": 6641.598327000043
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6641.610028999974,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 51,
+        "lockWait": 158,
+        "auditStart": 158,
+        "indexCacheRead": 203,
+        "indexCacheHit": 1,
+        "core": 2,
+        "auditEnd": 151,
+        "serverTotal": 1044
+      },
+      "reference": "GAS-82f5c7ae"
+    },
+    {
+      "phase": "at100-list",
+      "operation": "list",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 2501.6580390000017,
+          "redirectMs": 4884.659928000066,
+          "bodyMs": 1.9861360000213608,
+          "verifyMs": 0.35466499999165535,
+          "durationMs": 7388.66285600001
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 7388.674377999967,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 51,
+        "lockWait": 164,
+        "auditStart": 150,
+        "indexCacheHit": 0,
+        "headRead": 39,
+        "fileLookup": 262,
+        "fileValidation": 199,
+        "snapshotRead": 380,
+        "loadTotal": 909,
+        "core": 11,
+        "auditEnd": 131,
+        "serverTotal": 1738
+      },
+      "reference": "GAS-97639913"
+    },
+    {
+      "phase": "at100-list",
+      "operation": "list",
+      "mode": "baseline",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 3191.7331469999626,
+          "redirectMs": 3404.4991479999153,
+          "bodyMs": 2.363342999946326,
+          "verifyMs": 0.357670999947004,
+          "durationMs": 6598.957438000012
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 6598.969840000034,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 127,
+        "lockWait": 92,
+        "auditStart": 134,
+        "indexCacheHit": 0,
+        "headRead": 18,
+        "fileLookup": 242,
+        "fileValidation": 204,
+        "snapshotRead": 448,
+        "loadTotal": 1001,
+        "core": 45,
+        "auditEnd": 108,
+        "serverTotal": 1799
+      },
+      "reference": "GAS-f8e54ab8"
+    },
+    {
+      "phase": "at100-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "complete",
+          "ok": true,
+          "postMs": 1684.2612840000074,
+          "redirectMs": 121.399327000021,
+          "bodyMs": 1.8996240000706166,
+          "verifyMs": 0.32471900002565235,
+          "durationMs": 1807.888520999928
+        }
+      ],
+      "ok": true,
+      "elapsedMs": 1807.9004040000727,
+      "build": "notes-gas-final-trial-v3",
+      "timings": {
+        "auth": 43,
+        "lockWait": 154,
+        "auditStart": 150,
+        "indexCacheRead": 165,
+        "indexCacheHit": 1,
+        "core": 1,
+        "auditEnd": 140,
+        "serverTotal": 985
+      },
+      "reference": "GAS-36c12e0e"
+    },
+    {
+      "phase": "at100-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": false,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 1002.9765159999952,
+          "durationMs": 12000.735299999942,
+          "code": "NETWORK_OR_TIMEOUT"
+        },
+        {
+          "attempt": 2,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 1285.6469490000745,
+          "durationMs": 12000.800634999992,
+          "code": "NETWORK_OR_TIMEOUT"
+        }
+      ],
+      "ok": false,
+      "code": "NETWORK_OR_TIMEOUT",
+      "status": 503,
+      "elapsedMs": 24262.811176999938
+    },
+    {
+      "phase": "at100-list",
+      "operation": "list",
+      "mode": "optimized",
+      "diagnostic": true,
+      "attempts": [
+        {
+          "attempt": 1,
+          "stage": "redirect",
+          "ok": false,
+          "postMs": 837.2386870000046,
+          "durationMs": 12066.043874000083,
+          "code": "NETWORK_OR_TIMEOUT"
+        }
+      ],
+      "ok": false,
+      "code": "NETWORK_OR_TIMEOUT",
+      "status": 503,
+      "elapsedMs": 12066.125585999922
+    }
+  ],
+  "assertions": {},
+  "caveats": [
+    "GitHub runner -> GAS/Drive, not iPad/Vercel.",
+    "Preview cache is owner-list only; details/writes/ACL still load Drive.",
+    "Pool has three dedicated trial slots; only current/previous snapshots retained in these slots; old immutable baseline untouched.",
+    "A/B interleaved, store grows; no claim of randomized controlled experiment.",
+    "12-second primary failures retained; 60-second same-request resolution separate."
+  ],
+  "initial": {
+    "revision": 23,
+    "activeNotes": 16,
+    "build": "notes-gas-final-trial-v3"
+  },
+  "at100": {
+    "revision": 119,
+    "activeNotes": 100
+  },
+  "error": {
+    "code": "NETWORK_OR_TIMEOUT",
+    "status": 503
+  },
+  "journalError": "NETWORK_OR_TIMEOUT",
+  "summary": {
+    "warmup/health/control": {
+      "count": 1,
+      "success": 0,
+      "failures": 1,
+      "p50Ms": null,
+      "p95Ms": null,
+      "cacheHits": 0,
+      "retries": 1,
+      "stages": {}
+    },
+    "warmup/preparePool/control": {
+      "count": 1,
+      "success": 1,
+      "failures": 0,
+      "p50Ms": 5581.213222999999,
+      "p95Ms": 5581.213222999999,
+      "cacheHits": 0,
+      "retries": 0,
+      "stages": {
+        "auth": {
+          "p50Ms": 42,
+          "p95Ms": 42
+        },
+        "lockWait": {
+          "p50Ms": 56,
+          "p95Ms": 56
+        },
+        "auditStart": {
+          "p50Ms": 138,
+          "p95Ms": 138
+        },
+        "auditEnd": {
+          "p50Ms": 129,
+          "p95Ms": 129
+        },
+        "serverTotal": {
+          "p50Ms": 4727,
+          "p95Ms": 4727
+        }
+      }
+    },
+    "warmup/list/optimized": {
+      "count": 1,
+      "success": 1,
+      "failures": 0,
+      "p50Ms": 3041.599608000004,
+      "p95Ms": 3041.599608000004,
+      "cacheHits": 0,
+      "retries": 0,
+      "stages": {
+        "auth": {
+          "p50Ms": 88,
+          "p95Ms": 88
+        },
+        "lockWait": {
+          "p50Ms": 152,
+          "p95Ms": 152
+        },
+        "auditStart": {
+          "p50Ms": 146,
+          "p95Ms": 146
+        },
+        "indexCacheRead": {
+          "p50Ms": 172,
+          "p95Ms": 172
+        },
+        "headRead": {
+          "p50Ms": 55,
+          "p95Ms": 55
+        },
+        "fileLookup": {
+          "p50Ms": 349,
+          "p95Ms": 349
+        },
+        "fileValidation": {
+          "p50Ms": 267,
+          "p95Ms": 267
+        },
+        "snapshotRead": {
+          "p50Ms": 410,
+          "p95Ms": 410
+        },
+        "loadTotal": {
+          "p50Ms": 1085,
+          "p95Ms": 1085
+        },
+        "core": {
+          "p50Ms": 2,
+          "p95Ms": 2
+        },
+        "indexCacheSeed": {
+          "p50Ms": 172,
+          "p95Ms": 172
+        },
+        "auditEnd": {
+          "p50Ms": 266,
+          "p95Ms": 266
+        },
+        "serverTotal": {
+          "p50Ms": 2516,
+          "p95Ms": 2516
+        }
+      }
+    },
+    "ab-list/list/baseline": {
+      "count": 12,
+      "success": 12,
+      "failures": 0,
+      "p50Ms": 1694.0414369999926,
+      "p95Ms": 2803.240697000001,
+      "cacheHits": 0,
+      "retries": 0,
+      "stages": {
+        "auth": {
+          "p50Ms": 38,
+          "p95Ms": 112
+        },
+        "lockWait": {
+          "p50Ms": 57,
+          "p95Ms": 182
+        },
+        "auditStart": {
+          "p50Ms": 104,
+          "p95Ms": 197
+        },
+        "headRead": {
+          "p50Ms": 30,
+          "p95Ms": 83
+        },
+        "fileLookup": {
+          "p50Ms": 140,
+          "p95Ms": 291
+        },
+        "fileValidation": {
+          "p50Ms": 168,
+          "p95Ms": 246
+        },
+        "snapshotRead": {
+          "p50Ms": 265,
+          "p95Ms": 332
+        },
+        "loadTotal": {
+          "p50Ms": 641,
+          "p95Ms": 894
+        },
+        "core": {
+          "p50Ms": 4,
+          "p95Ms": 6
+        },
+        "auditEnd": {
+          "p50Ms": 108,
+          "p95Ms": 250
+        },
+        "serverTotal": {
+          "p50Ms": 1034,
+          "p95Ms": 1934
+        }
+      }
+    },
+    "ab-list/list/optimized": {
+      "count": 12,
+      "success": 12,
+      "failures": 0,
+      "p50Ms": 1127.0037490000104,
+      "p95Ms": 1963.811056000006,
+      "cacheHits": 12,
+      "retries": 0,
+      "stages": {
+        "auth": {
+          "p50Ms": 43,
+          "p95Ms": 95
+        },
+        "lockWait": {
+          "p50Ms": 55,
+          "p95Ms": 158
+        },
+        "auditStart": {
+          "p50Ms": 97,
+          "p95Ms": 213
+        },
+        "indexCacheRead": {
+          "p50Ms": 126,
+          "p95Ms": 244
+        },
+        "core": {
+          "p50Ms": 1,
+          "p95Ms": 3
+        },
+        "auditEnd": {
+          "p50Ms": 88,
+          "p95Ms": 231
+        },
+        "serverTotal": {
+          "p50Ms": 502,
+          "p95Ms": 1140
+        }
+      }
+    },
+    "ab-write/save/baseline": {
+      "count": 12,
+      "success": 11,
+      "failures": 1,
+      "p50Ms": 4127.540344999987,
+      "p95Ms": 5892.9788849999895,
+      "cacheHits": 0,
+      "retries": 1,
+      "stages": {
+        "auth": {
+          "p50Ms": 47,
+          "p95Ms": 84
+        },
+        "lockWait": {
+          "p50Ms": 60,
+          "p95Ms": 169
+        },
+        "auditStart": {
+          "p50Ms": 105,
+          "p95Ms": 250
+        },
+        "headRead": {
+          "p50Ms": 33,
+          "p95Ms": 48
+        },
+        "fileLookup": {
+          "p50Ms": 143,
+          "p95Ms": 248
+        },
+        "fileValidation": {
+          "p50Ms": 183,
+          "p95Ms": 264
+        },
+        "snapshotRead": {
+          "p50Ms": 338,
+          "p95Ms": 475
+        },
+        "loadTotal": {
+          "p50Ms": 700,
+          "p95Ms": 980
+        },
+        "core": {
+          "p50Ms": 101,
+          "p95Ms": 148
+        },
+        "snapshotSerialize": {
+          "p50Ms": 2,
+          "p95Ms": 30
+        },
+        "folderLookup": {
+          "p50Ms": 179,
+          "p95Ms": 369
+        },
+        "snapshotCreate": {
+          "p50Ms": 1334,
+          "p95Ms": 2012
+        },
+        "snapshotReadback": {
+          "p50Ms": 317,
+          "p95Ms": 431
+        },
+        "headPrecondition": {
+          "p50Ms": 38,
+          "p95Ms": 71
+        },
+        "headPublish": {
+          "p50Ms": 98,
+          "p95Ms": 238
+        },
+        "commitTotal": {
+          "p50Ms": 2024,
+          "p95Ms": 2976
+        },
+        "auditEnd": {
+          "p50Ms": 113,
+          "p95Ms": 171
+        },
+        "serverTotal": {
+          "p50Ms": 3289,
+          "p95Ms": 4983
+        }
+      }
+    },
+    "ab-write/save/optimized": {
+      "count": 12,
+      "success": 11,
+      "failures": 1,
+      "p50Ms": 6296.837316000019,
+      "p95Ms": 18250.80307600001,
+      "cacheHits": 0,
+      "retries": 3,
+      "stages": {
+        "auth": {
+          "p50Ms": 41,
+          "p95Ms": 58
+        },
+        "lockWait": {
+          "p50Ms": 61,
+          "p95Ms": 180
+        },
+        "auditStart": {
+          "p50Ms": 105,
+          "p95Ms": 279
+        },
+        "headRead": {
+          "p50Ms": 38,
+          "p95Ms": 77
+        },
+        "fileLookup": {
+          "p50Ms": 168,
+          "p95Ms": 259
+        },
+        "fileValidation": {
+          "p50Ms": 204,
+          "p95Ms": 287
+        },
+        "snapshotRead": {
+          "p50Ms": 323,
+          "p95Ms": 537
+        },
+        "loadTotal": {
+          "p50Ms": 733,
+          "p95Ms": 1005
+        },
+        "core": {
+          "p50Ms": 91,
+          "p95Ms": 396
+        },
+        "auditEnd": {
+          "p50Ms": 103,
+          "p95Ms": 175
+        },
+        "serverTotal": {
+          "p50Ms": 4297,
+          "p95Ms": 6394
+        },
+        "snapshotSerialize": {
+          "p50Ms": 2,
+          "p95Ms": 3
+        },
+        "folderLookup": {
+          "p50Ms": 172,
+          "p95Ms": 298
+        },
+        "snapshotOverwrite": {
+          "p50Ms": 1842,
+          "p95Ms": 2070
+        },
+        "snapshotReadback": {
+          "p50Ms": 337,
+          "p95Ms": 515
+        },
+        "headPrecondition": {
+          "p50Ms": 35,
+          "p95Ms": 50
+        },
+        "headPublish": {
+          "p50Ms": 99,
+          "p95Ms": 146
+        },
+        "commitTotal": {
+          "p50Ms": 2919,
+          "p95Ms": 3746
+        },
+        "indexCacheSeed": {
+          "p50Ms": 170,
+          "p95Ms": 242
+        }
+      }
+    },
+    "ab-get/get/baseline": {
+      "count": 6,
+      "success": 6,
+      "failures": 0,
+      "p50Ms": 1995.6363180000335,
+      "p95Ms": 9493.868911999976,
+      "cacheHits": 0,
+      "retries": 0,
+      "stages": {
+        "auth": {
+          "p50Ms": 35,
+          "p95Ms": 54
+        },
+        "lockWait": {
+          "p50Ms": 59,
+          "p95Ms": 89
+        },
+        "auditStart": {
+          "p50Ms": 104,
+          "p95Ms": 127
+        },
+        "headRead": {
+          "p50Ms": 25,
+          "p95Ms": 46
+        },
+        "fileLookup": {
+          "p50Ms": 139,
+          "p95Ms": 1178
+        },
+        "fileValidation": {
+          "p50Ms": 154,
+          "p95Ms": 185
+        },
+        "snapshotRead": {
+          "p50Ms": 268,
+          "p95Ms": 504
+        },
+        "loadTotal": {
+          "p50Ms": 666,
+          "p95Ms": 1642
+        },
+        "core": {
+          "p50Ms": 4,
+          "p95Ms": 7
+        },
+        "auditEnd": {
+          "p50Ms": 89,
+          "p95Ms": 115
+        },
+        "serverTotal": {
+          "p50Ms": 995,
+          "p95Ms": 2097
+        }
+      }
+    },
+    "ab-get/get/optimized": {
+      "count": 6,
+      "success": 6,
+      "failures": 0,
+      "p50Ms": 2257.2733299999963,
+      "p95Ms": 2692.8589559999527,
+      "cacheHits": 0,
+      "retries": 0,
+      "stages": {
+        "auth": {
+          "p50Ms": 37,
+          "p95Ms": 54
+        },
+        "lockWait": {
+          "p50Ms": 42,
+          "p95Ms": 168
+        },
+        "auditStart": {
+          "p50Ms": 91,
+          "p95Ms": 156
+        },
+        "headRead": {
+          "p50Ms": 36,
+          "p95Ms": 53
+        },
+        "fileLookup": {
+          "p50Ms": 143,
+          "p95Ms": 232
+        },
+        "fileValidation": {
+          "p50Ms": 166,
+          "p95Ms": 245
+        },
+        "snapshotRead": {
+          "p50Ms": 285,
+          "p95Ms": 366
+        },
+        "loadTotal": {
+          "p50Ms": 654,
+          "p95Ms": 888
+        },
+        "core": {
+          "p50Ms": 5,
+          "p95Ms": 13
+        },
+        "auditEnd": {
+          "p50Ms": 100,
+          "p95Ms": 178
+        },
+        "serverTotal": {
+          "p50Ms": 1013,
+          "p95Ms": 1767
+        }
+      }
+    },
+    "fill-100/health/optimized": {
+      "count": 2,
+      "success": 2,
+      "failures": 0,
+      "p50Ms": 2002.6332180000027,
+      "p95Ms": 2350.9906929999124,
+      "cacheHits": 0,
+      "retries": 0,
+      "stages": {
+        "auth": {
+          "p50Ms": 44,
+          "p95Ms": 49
+        },
+        "lockWait": {
+          "p50Ms": 53,
+          "p95Ms": 61
+        },
+        "auditStart": {
+          "p50Ms": 101,
+          "p95Ms": 124
+        },
+        "headRead": {
+          "p50Ms": 25,
+          "p95Ms": 45
+        },
+        "fileLookup": {
+          "p50Ms": 139,
+          "p95Ms": 203
+        },
+        "fileValidation": {
+          "p50Ms": 142,
+          "p95Ms": 174
+        },
+        "snapshotRead": {
+          "p50Ms": 251,
+          "p95Ms": 683
+        },
+        "auditEnd": {
+          "p50Ms": 92,
+          "p95Ms": 109
+        },
+        "serverTotal": {
+          "p50Ms": 1124,
+          "p95Ms": 1580
+        }
+      }
+    },
+    "fill-100/save/optimized": {
+      "count": 72,
+      "success": 72,
+      "failures": 0,
+      "p50Ms": 5954.482943000039,
+      "p95Ms": 8109.606670000008,
+      "cacheHits": 0,
+      "retries": 2,
+      "stages": {
+        "auth": {
+          "p50Ms": 39,
+          "p95Ms": 66
+        },
+        "lockWait": {
+          "p50Ms": 59,
+          "p95Ms": 171
+        },
+        "auditStart": {
+          "p50Ms": 101,
+          "p95Ms": 174
+        },
+        "headRead": {
+          "p50Ms": 34,
+          "p95Ms": 55
+        },
+        "fileLookup": {
+          "p50Ms": 157,
+          "p95Ms": 251
+        },
+        "fileValidation": {
+          "p50Ms": 175,
+          "p95Ms": 254
+        },
+        "snapshotRead": {
+          "p50Ms": 392,
+          "p95Ms": 570
+        },
+        "loadTotal": {
+          "p50Ms": 802,
+          "p95Ms": 1072
+        },
+        "core": {
+          "p50Ms": 213,
+          "p95Ms": 379
+        },
+        "snapshotSerialize": {
+          "p50Ms": 7,
+          "p95Ms": 12
+        },
+        "folderLookup": {
+          "p50Ms": 168,
+          "p95Ms": 250
+        },
+        "snapshotOverwrite": {
+          "p50Ms": 1917,
+          "p95Ms": 2448
+        },
+        "snapshotReadback": {
+          "p50Ms": 387,
+          "p95Ms": 579
+        },
+        "headPrecondition": {
+          "p50Ms": 32,
+          "p95Ms": 52
+        },
+        "headPublish": {
+          "p50Ms": 89,
+          "p95Ms": 154
+        },
+        "commitTotal": {
+          "p50Ms": 3350,
+          "p95Ms": 4440
+        },
+        "indexCacheSeed": {
+          "p50Ms": 145,
+          "p95Ms": 257
+        },
+        "auditEnd": {
+          "p50Ms": 97,
+          "p95Ms": 165
+        },
+        "serverTotal": {
+          "p50Ms": 4989,
+          "p95Ms": 6931
+        }
+      }
+    },
+    "at100-list/list/baseline": {
+      "count": 3,
+      "success": 3,
+      "failures": 0,
+      "p50Ms": 7388.674377999967,
+      "p95Ms": 16050.03321299993,
+      "cacheHits": 0,
+      "retries": 1,
+      "stages": {
+        "auth": {
+          "p50Ms": 51,
+          "p95Ms": 127
+        },
+        "lockWait": {
+          "p50Ms": 92,
+          "p95Ms": 164
+        },
+        "auditStart": {
+          "p50Ms": 134,
+          "p95Ms": 150
+        },
+        "headRead": {
+          "p50Ms": 31,
+          "p95Ms": 39
+        },
+        "fileLookup": {
+          "p50Ms": 242,
+          "p95Ms": 262
+        },
+        "fileValidation": {
+          "p50Ms": 199,
+          "p95Ms": 204
+        },
+        "snapshotRead": {
+          "p50Ms": 380,
+          "p95Ms": 448
+        },
+        "loadTotal": {
+          "p50Ms": 909,
+          "p95Ms": 1001
+        },
+        "core": {
+          "p50Ms": 11,
+          "p95Ms": 45
+        },
+        "auditEnd": {
+          "p50Ms": 117,
+          "p95Ms": 131
+        },
+        "serverTotal": {
+          "p50Ms": 1738,
+          "p95Ms": 1799
+        }
+      }
+    },
+    "at100-list/list/optimized": {
+      "count": 4,
+      "success": 3,
+      "failures": 1,
+      "p50Ms": 5191.5790079999715,
+      "p95Ms": 6641.610028999974,
+      "cacheHits": 3,
+      "retries": 1,
+      "stages": {
+        "auth": {
+          "p50Ms": 43,
+          "p95Ms": 51
+        },
+        "lockWait": {
+          "p50Ms": 154,
+          "p95Ms": 158
+        },
+        "auditStart": {
+          "p50Ms": 150,
+          "p95Ms": 158
+        },
+        "indexCacheRead": {
+          "p50Ms": 165,
+          "p95Ms": 203
+        },
+        "core": {
+          "p50Ms": 1,
+          "p95Ms": 2
+        },
+        "auditEnd": {
+          "p50Ms": 140,
+          "p95Ms": 151
+        },
+        "serverTotal": {
+          "p50Ms": 985,
+          "p95Ms": 1044
+        }
+      }
+    }
+  },
+  "checkpointSummary": {
+    "count": 97,
+    "note": "Exact synthetic owner payloads remain in original workflow artifact; share secrets were omitted."
+  }
+}

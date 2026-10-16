@@ -85,7 +85,7 @@ function ngRepository_(props,timings,options) {
   };
 }
 // Bounded operational journal; independent of Drive/HEAD so corruption remains diagnosable.
-var NG_BUILD_ = 'notes-gas-final-trial-v3';
+var NG_BUILD_ = 'notes-gas-cache-only-v4';
 function ngAuditRead_(props) {
   var raw=props.getProperty('NOTES_OPS_LOG');
   if(!raw)return {schema:1,events:[]};
@@ -152,7 +152,7 @@ function doPost(e) {
     // Lock reads too: permission validation and snapshot publication share one order.
     lock=LockService.getScriptLock();ngTimed_(timings,'lockWait',function(){if(!lock.tryLock(1500))ngError_(503,'BUSY');});
     ngTimed_(timings,'auditStart',function(){ngAudit_(props,{reference:event.reference,operation:event.operation,stage:'start',status:102,code:'STARTED',started:event.started},true,true);});
-    var optimized=!!(req.payload&&req.payload.optimized===true),repo=ngRepository_(props,timings,{pool:optimized}),output;event.stage='read';
+    var optimized=!!(req.payload&&req.payload.optimized===true),repo=ngRepository_(props,timings,{pool:optimized&&req.payload.poolTrial===true}),output;event.stage='read';
     if(req.op==='health'||req.op==='logs'||req.op==='ping'||req.op==='preparePool'){
       if(req.actor!=='owner')ngError_(403,'OP_FORBIDDEN');
       result={ok:true,status:200,result:req.op==='preparePool'?{prepared:ngPreparePool_(props).length===3,build:NG_BUILD_}:req.op==='ping'?{service:'notes-prototype',build:NG_BUILD_,pong:true}:req.op==='health'?ngHealth_(props,repo):ngAuditRead_(props)};

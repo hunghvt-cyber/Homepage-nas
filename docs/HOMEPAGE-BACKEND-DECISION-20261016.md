@@ -1,5 +1,12 @@
 # Phương án chung Notes + NAS + backup Actions — 16/10/2026
 
+> Cập nhật phạm vi theo chỉ đạo tiếp theo của người dùng: chỉ xoay quanh hệ
+> thống hiện có; chưa mở nền tảng/ứng dụng quản lý mới. Các phần Workers/D1/
+> Firestore dưới đây chỉ giữ làm nghiên cứu đối chiếu, không phải hướng được
+> phép triển khai. Lượt đang thực hiện: GAS/Drive cache preview theo HEAD và
+> pool snapshot thử nghiệm, xem NOTES-GAS-FINAL-TRIAL-20261016.md. Không dùng
+> tài liệu này làm quyền tạo Cloudflare hoặc đổi production.
+
 Trạng thái: **đề xuất để thử nghiệm, chưa chọn backend production**. Ưu tiên
 Cloudflare Workers + D1; Drive làm bản sao/khôi phục độc lập. Không chuyển
 production, migration dữ liệu thật, sửa NAS, workflow backup hoặc Blob trong
