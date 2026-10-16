@@ -40,12 +40,15 @@ export async function deploy({env,files,fetcher=fetch,verify=async()=>true}) {
     }
     report.phase='target';const project=await api('');
     report.target={scriptIdMatches:project.scriptId===id,title:String(project.title||'').slice(0,160)};
-    if(project.scriptId!==id||project.title!=='Homepage Notes Prototype'){
+    if(project.scriptId!==id||String(project.title||'').trim()!=='Homepage Notes Prototype'){
       console.log(JSON.stringify({diagnostic:'TARGET_METADATA_ONLY',target:report.target}));
       fail('TARGET_MISMATCH');
     }
     const initial=(await api('/content')).files;
-    if(!Array.isArray(initial)||initial.some(f=>!expected.includes(f.name)))fail('REMOTE_EXTRA_FILES');
+    if(!Array.isArray(initial)||initial.some(f=>!expected.includes(f.name))){
+      console.log(JSON.stringify({diagnostic:'REMOTE_FILES_METADATA_ONLY',files:Array.isArray(initial)?initial.map(f=>({name:String(f.name).slice(0,100),type:f.type})):null}));
+      fail('REMOTE_EXTRA_FILES');
+    }
     const before=digest(initial);let previous;
     if(dep){previous=await api('/deployments/'+dep);if(previous.deploymentId!==dep||!Number.isSafeInteger(previous.deploymentConfig?.versionNumber))fail('DEPLOYMENT_MISMATCH');report.previousVersion=previous.deploymentConfig.versionNumber;}
     report.phase='source';

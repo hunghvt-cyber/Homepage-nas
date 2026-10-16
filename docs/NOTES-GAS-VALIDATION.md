@@ -10,7 +10,7 @@ Ngày 16/10/2026. Base main: `a09b63b2c520312a70c8e13b645537f62fb7711a`.
 | Python hiện có | `python3 -m unittest discover -s tests -p 'test_*.py'`: 12/12 pass |
 | Syntax và liên kết | Tất cả JS/MJS parse được; HTML nội bộ không có resource hỏng |
 | Build | `python3 scripts/build.py`: 6 guides, QR enabled |
-| Prototype | `node --test experiments/notes-gas/test/*.test.mjs`: 26/26 pass (mô phỏng, gồm logging/health/operations và source/deployment updater) |
+| Prototype | `node --test experiments/notes-gas/test/*.test.mjs`: 27/27 pass (mô phỏng, gồm logging/health/operations và source/deployment updater) |
 | Google triển khai | CHƯA — cần tạo project và consent Google |
 | Benchmark Google thật | CHƯA — không có p50/p95 mạng được xác minh |
 | Vercel Preview end-to-end | CHƯA — adapter hiện là template không deploy |
@@ -41,3 +41,5 @@ Nếu không đạt, giữ nhánh Google làm bằng chứng và đánh giá D1/
 Bổ sung: journal giới hạn 30 event/8.000 byte; không lộ Note/secret; log failure không đổi kết quả commit; log vẫn đọc được khi HEAD hỏng; share bị chặn ops; auth/BUSY không flood Properties; editor check chạy lặp không đổi HEAD; operations tiếp tục lấy log khi health lỗi và lọc output. Job Google operational-probe thiếu secrets chỉ SKIP, không phải live pass. Google init do người dùng xác nhận, chưa có độc lập health/hash readback.
 
 Updater: thêm 6 test mô phỏng cho enable/branch/target guard, exact source replace + readback/version/deploy, chặn wrong project/extra file/concurrent edit, rollback khi health fail hoặc update timeout đã commit, source-only và chặn scope expansion, OAuth error không lộ token. Chưa OAuth/live source sync hoặc deploy Google.
+
+Live OAuth source sync rehearsal: first run 38869304653 obtained access and read the target project, then correctly blocked TARGET_MISMATCH before source writes. Diagnostic run 38869465990 confirmed exact user-supplied Script ID and title with four leading spaces. Title comparison now trims only whitespace; Script ID and substantive title guard remain. No need to rename the project or reauthorize OAuth. Final source readback result recorded separately after retry.

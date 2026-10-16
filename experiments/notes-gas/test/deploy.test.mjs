@@ -56,3 +56,7 @@ test('Apps Script API setup errors are safely distinguished before source writes
   await assert.rejects(deploy({env,files,fetcher}),e=>{assert.equal(e.message,code);return true;});assert.equal(writes,0);
  }
 });
+
+test('leading whitespace in the intended project title is normalized without relaxing Script ID guard',async()=>{
+ const f=fake({title:'    Homepage Notes Prototype  '});const r=await deploy({env,files,fetcher:f.fetcher});assert.equal(r.phase,'verified');
+});
