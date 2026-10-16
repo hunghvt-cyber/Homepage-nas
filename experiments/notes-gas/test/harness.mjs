@@ -11,7 +11,7 @@ export function harness() {
   const iterator=a=>{let i=0;return {hasNext:()=>i<a.length,next:()=>a[i++]};};
   const blob=data=>({getBytes:()=>[...Buffer.from(data)],getDataAsString:()=>data});
   const folder=id=>({getId:()=>id,getSharingAccess:()=> 'PRIVATE',createFile:b=>{
-    if(fail==='create')throw Error('injected');
+    if(fail==='create'||fail==='manifest'&&JSON.parse(b.getDataAsString()).records)throw Error('injected');
     const fileId=randomUUID(),data=b.getDataAsString(),file={id:fileId,data,parent:id,trashed:false};files.set(fileId,file);return wrap(file);
   }});
   const wrap=f=>({getId:()=>f.id,isTrashed:()=>f.trashed,getParents:()=>iterator([folder(f.parent)]),getBlob:()=>blob(f.data),setContent:data=>{if(fail==='overwrite')throw Error('injected');f.data=data;if(fail==='afterOverwrite')throw Error('injected');return wrap(f);}});
@@ -20,10 +20,10 @@ export function harness() {
     computeDigest:(_,s)=>[...Buffer.from(hash(s),'hex')],computeHmacSha256Signature:(s,k)=>[...createHmac('sha256',k).update(s).digest()],newBlob:blob
   },CacheService:{getScriptCache:()=>({get:k=>cache.get(k)??null,getAll:ks=>Object.fromEntries(ks.filter(k=>cache.has(k)).map(k=>[k,cache.get(k)])),putAll:values=>{if(fail==='cache')throw Error('cache failure');for(const [k,v] of Object.entries(values))cache.set(k,v);}})},PropertiesService:{getScriptProperties:()=>({getProperty:k=>props.get(k)??null,setProperty:(k,v)=>{
     if(k==='NOTES_OPS_LOG'&&fail==='audit')throw Error('audit quota');
-    if(k==='NOTES_HEAD'&&fail==='beforeHead')throw Error('injected');
-    props.set(k,v);if(k==='NOTES_HEAD'&&fail==='afterHead')throw Error('injected');
+    if(['NOTES_HEAD','NOTES_SHARD_HEAD','NOTES_SHARD_RESTORE_HEAD'].includes(k)&&fail==='beforeHead')throw Error('injected');
+    props.set(k,v);if(['NOTES_HEAD','NOTES_SHARD_HEAD','NOTES_SHARD_RESTORE_HEAD'].includes(k)&&fail==='afterHead')throw Error('injected');
   }})},DriveApp:{Access:{PRIVATE:'PRIVATE'},createFolder:()=>{const id=randomUUID();folders.add(id);return folder(id);},getFolderById:id=>folder(id),getFileById:id=>{if(!files.has(id))throw Error('missing');return wrap(files.get(id));}},LockService:{getScriptLock:()=>{let held=false;return {tryLock:()=>{if(locked)return false;locked=true;held=true;return true;},waitLock:()=>{if(locked)throw Error('busy');locked=true;held=true;},hasLock:()=>held,releaseLock:()=>{if(held){locked=false;held=false;}}};}},ContentService:{MimeType:{JSON:'application/json'},createTextOutput:s=>({setMimeType:()=>s})}});
-  for(const file of ['Core.js','Server.js'])vm.runInContext(fs.readFileSync(new URL('../apps-script/'+file,import.meta.url),'utf8'),context);
+  for(const file of ['Core.js','Server.js','PerNote.js'])vm.runInContext(fs.readFileSync(new URL('../apps-script/'+file,import.meta.url),'utf8'),context);
   context.initializeNotesPrototype();
   const request=(op,payload={},actor='owner')=>({requestId:randomUUID(),issuedAt:clock,op,payload,actor});
   const send=(req,change={})=>{

@@ -191,3 +191,32 @@ jobs:
           path: experiments/notes-gas/final-integrity-result.local.json
           if-no-files-found: ignore
           retention-days: 7
+
+  per-note-trial:
+    if: github.event_name == 'push' && contains(github.event.head_commit.message, '[per-note-trial]')
+    needs: [simulation, source-update]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    concurrency:
+      group: notes-google-prototype-source
+      cancel-in-progress: false
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Isolated per-note functional and latency trial; never reset old namespace
+        env:
+          NOTES_GAS_PER_NOTE_TRIAL: ISOLATED_SYNTHETIC_ONLY
+          NOTES_GAS_URL: 'https://script.google.com/macros/s/AKfycbwnIO4-cED9dRdNH0ik4FR9os_9kM4XDXqaNdn0iorb5JoiNRIg8dgp0fWEJYurLWAwPA/exec'
+          NOTES_GAS_HMAC_KEY: ${{ secrets.NOTES_GAS_HMAC_KEY }}
+        run: node experiments/notes-gas/scripts/per-note-trial.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: notes-prototype-per-note-trial
+          path: experiments/notes-gas/per-note-result.local.json
+          if-no-files-found: ignore
+          retention-days: 7

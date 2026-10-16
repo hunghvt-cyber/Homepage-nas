@@ -142,7 +142,7 @@ export async function deploy({env,files,fetcher=fetch,verify=async()=>true}) {
 }
 if(process.argv[1]===fileURLToPath(import.meta.url)) {
   const root=new URL('../apps-script/',import.meta.url);
-  const files=await Promise.all([['Core','Core.js','SERVER_JS'],['Server','Server.js','SERVER_JS'],['appsscript','appsscript.json','JSON']].map(async([name,path,type])=>({name,type,source:await readFile(new URL(path,root),'utf8')})));
+  const files=await Promise.all([['Core','Core.js','SERVER_JS'],['Server','Server.js','SERVER_JS'],['appsscript','appsscript.json','JSON']].map(async([name,path,type])=>({name,type,source:(await readFile(new URL(path,root),'utf8'))+(name==='Server'?'\n'+await readFile(new URL('PerNote.js',root),'utf8'):'')})));
   const {createGasClient,newRequest}=await import('../adapter.mjs');
   // Validate probe config before touching Google source/deployment.
   const runtimeEnabled=process.env.NOTES_GAS_DEPLOYMENT_ID||process.env.NOTES_GAS_BOOTSTRAP==='true';

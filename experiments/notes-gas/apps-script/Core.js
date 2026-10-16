@@ -128,5 +128,5 @@ var NotesCore = (function () {
     }
     return {state:s,changed:mutating,result:clone(result)};
   }
-  return {empty,execute};
+  return {empty,execute,validateRecord:function(n,bytes){id(n.id);input(n,bytes);if(!Array.isArray(n.history)||n.history.length>5)fail(400,'INVALID_BACKUP');n.history.forEach(function(h){input(h,bytes);});}};
 }());

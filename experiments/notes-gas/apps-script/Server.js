@@ -85,7 +85,7 @@ function ngRepository_(props,timings,options) {
   };
 }
 // Bounded operational journal; independent of Drive/HEAD so corruption remains diagnosable.
-var NG_BUILD_ = 'notes-gas-cache-only-v4';
+var NG_BUILD_ = 'notes-gas-per-note-v5';
 function ngAuditRead_(props) {
   var raw=props.getProperty('NOTES_OPS_LOG');
   if(!raw)return {schema:1,events:[]};
@@ -98,7 +98,7 @@ function ngAudit_(props,event,held,authenticated) {
   var row={at:new Date().toISOString(),reference:event.reference,build:NG_BUILD_,
     operation:event.operation,stage:event.stage,status:event.status,code:event.code,
     durationMs:Math.max(0,Date.now()-event.started)};
-  if(event.timings){row.timings={};['auth','lockWait','auditStart','headRead','fileLookup','fileValidation','snapshotRead','loadTotal','core','snapshotSerialize','folderLookup','snapshotCreate','snapshotOverwrite','indexCacheRead','indexCacheSeed','snapshotReadback','headPrecondition','headPublish','commitTotal'].forEach(function(name){var value=event.timings[name];if(Number.isFinite(value)&&value>=0)row.timings[name]=value;});}
+  if(event.timings){row.timings={};['auth','lockWait','auditStart','headRead','fileLookup','fileValidation','snapshotRead','loadTotal','core','snapshotSerialize','folderLookup','snapshotCreate','snapshotOverwrite','indexCacheRead','indexCacheSeed','snapshotReadback','headPrecondition','headPublish','commitTotal','manifestRead','manifestWrite','noteRead','noteWrite','receiptRead','shardLoad','shardCommit','shardPublish'].forEach(function(name){var value=event.timings[name];if(Number.isFinite(value)&&value>=0)row.timings[name]=value;});}
   try {console.log(JSON.stringify(row));}catch(_){}
   // Reject noise before persisting. Do not acquire/wait for another lock just to log.
   if(!held||!authenticated)return false;
@@ -147,13 +147,16 @@ function doPost(e) {
     var req;try{req=JSON.parse(envelope.request);}catch(_){ngError_(400,'INVALID_JSON');}
     if(!/^[0-9a-f-]{36}$/.test(req.requestId||''))ngError_(400,'REQUEST_ID_REQUIRED');
     requestId=req.requestId;authenticated=true;timings.auth=Date.now()-event.started;
-    var ops=['list','get','save','delete','restore','folderDelete','shareCreate','shareRevoke','shareList','backup','search','health','logs','ping','preparePool'];
+    var ops=['list','get','save','delete','restore','folderDelete','shareCreate','shareRevoke','shareList','backup','search','health','logs','ping','preparePool','shardInit','shardSeed','shardRestore','shardExport'];
     event.operation=ops.indexOf(req.op)>=0?req.op:'unsupported';event.stage='lock';
     // Lock reads too: permission validation and snapshot publication share one order.
     lock=LockService.getScriptLock();ngTimed_(timings,'lockWait',function(){if(!lock.tryLock(1500))ngError_(503,'BUSY');});
     ngTimed_(timings,'auditStart',function(){ngAudit_(props,{reference:event.reference,operation:event.operation,stage:'start',status:102,code:'STARTED',started:event.started},true,true);});
     var optimized=!!(req.payload&&req.payload.optimized===true),repo=ngRepository_(props,timings,{pool:optimized&&req.payload.poolTrial===true}),output;event.stage='read';
-    if(req.op==='health'||req.op==='logs'||req.op==='ping'||req.op==='preparePool'){
+    if(req.payload&&req.payload.perNote===true){
+      if(req.op==='health'&&req.actor!=='owner')ngError_(403,'OP_FORBIDDEN');
+      result={ok:true,status:200,result:ngShardExecute_(props,timings,req)};
+    }else if(req.op==='health'||req.op==='logs'||req.op==='ping'||req.op==='preparePool'){
       if(req.actor!=='owner')ngError_(403,'OP_FORBIDDEN');
       result={ok:true,status:200,result:req.op==='preparePool'?{prepared:ngPreparePool_(props).length===3,build:NG_BUILD_}:req.op==='ping'?{service:'notes-prototype',build:NG_BUILD_,pong:true}:req.op==='health'?ngHealth_(props,repo):ngAuditRead_(props)};
     }else{
