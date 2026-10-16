@@ -1,0 +1,125 @@
+{
+  "kind": "READ_ONLY_PER_NOTE_RECONCILIATION_NOT_BENCHMARK",
+  "at": "2026-10-16T10:41:08.773Z",
+  "passed": true,
+  "checks": {
+    "original": true,
+    "perNoteIntegrity": true,
+    "journal": true
+  },
+  "errors": [],
+  "attempts": [
+    {
+      "attempt": 1,
+      "stage": "complete",
+      "ok": true,
+      "postMs": 9692.854866,
+      "redirectMs": 2064.0754130000005,
+      "bodyMs": 11.827771000000212,
+      "verifyMs": 0.20141599999988102,
+      "durationMs": 11768.984374
+    },
+    {
+      "attempt": 1,
+      "stage": "redirect",
+      "ok": false,
+      "postMs": 20980.904547000006,
+      "durationMs": 30002.087817,
+      "code": "NETWORK_OR_TIMEOUT"
+    },
+    {
+      "attempt": 2,
+      "stage": "complete",
+      "ok": true,
+      "postMs": 6862.199940999999,
+      "redirectMs": 1304.3031489999994,
+      "bodyMs": 3.073843999998644,
+      "verifyMs": 0.71959799999604,
+      "durationMs": 8170.303905000001
+    },
+    {
+      "attempt": 1,
+      "stage": "verify",
+      "ok": false,
+      "postMs": 7091.754571000005,
+      "redirectMs": 570.0203270000056,
+      "bodyMs": 1.927044999996724,
+      "durationMs": 7663.801359000005,
+      "code": "SHARE_NOT_FOUND"
+    },
+    {
+      "attempt": 1,
+      "stage": "complete",
+      "ok": true,
+      "postMs": 1090.020246,
+      "redirectMs": 115.91229900000326,
+      "bodyMs": 2.079279999998107,
+      "verifyMs": 0.142837999999756,
+      "durationMs": 1208.161967
+    }
+  ],
+  "original": {
+    "build": "notes-gas-per-note-v6",
+    "revision": 119,
+    "activeNotes": 100,
+    "readVerified": true
+  },
+  "perNote": {
+    "revision": 11,
+    "records": 2,
+    "indexRows": 2,
+    "receipts": 11,
+    "revokedShares": 1,
+    "bytes": 85786,
+    "sha256": "2d935734d22fe60f257dd0a9cb77cab85d31ad3a47b49ed9ee6833d0ae9e2303"
+  },
+  "revokedReadDenied": true,
+  "journal": {
+    "events": 30,
+    "builds": [
+      "notes-gas-per-note-v6"
+    ],
+    "lastCodes": [
+      {
+        "operation": "health",
+        "code": "OK",
+        "status": 200
+      },
+      {
+        "operation": "shardExport",
+        "code": "STARTED",
+        "status": 102
+      },
+      {
+        "operation": "shardExport",
+        "code": "OK",
+        "status": 200
+      },
+      {
+        "operation": "shardExport",
+        "code": "STARTED",
+        "status": 102
+      },
+      {
+        "operation": "shardExport",
+        "code": "OK",
+        "status": 200
+      },
+      {
+        "operation": "get",
+        "code": "STARTED",
+        "status": 102
+      },
+      {
+        "operation": "get",
+        "code": "SHARE_NOT_FOUND",
+        "status": 404
+      },
+      {
+        "operation": "logs",
+        "code": "STARTED",
+        "status": 102
+      }
+    ]
+  }
+}

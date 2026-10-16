@@ -79,3 +79,33 @@ Chưa có kế hoạch cutover/migration được phép chạy. Chỉ sau phê d
 ## 8. Bản cập nhật vận hành sau khi đã init
 
 Xem [quản lý chung Homepage](NOTES-GAS-HOMEPAGE-OPERATIONS.md). Chỉ thay Server.gs bằng Server.js mới của PR, lưu, chạy checkNotesPrototype. Không chạy initializeNotesPrototype lần hai, không đổi HMAC/HEAD/folder/manifest. Console và journal chỉ metadata. Sau deploy mới đặt GitHub secrets để AI đọc kết quả health/log qua workflow. Tự cập nhật source bằng OAuth/clasp chưa cấu hình.
+
+## Per-note experiment (version11, still opt-in)
+
+Automatic deployment concatenates local PerNote.js into the Google Server file;
+Google still has only Core/Server/appsscript and unchanged OAuth scopes. Do not
+manually paste PerNote.js into an unrelated expenses/Gemini project. No new user
+setup is needed with the existing pinned prototype/secrets.
+
+Normal requests remain on legacy snapshot storage. perNote=true selects the isolated
+NOTES_SHARD_HEAD; shardStore=recovery selects NOTES_SHARD_RESTORE_HEAD and is owner-only.
+Both use the existing private prototype folder, never production Blob. Do not reset
+or delete any HEAD, manifest or body file; no garbage collection is implemented.
+
+Rollback: stop using perNote flag in test callers to return to untouched legacy
+snapshot. Existing deployment updater can restore its previous immutable version on
+failed rollout; code rollback to pre-experiment disables access to sharded data but
+does not migrate or remove it. Preserve version11/source and both HEADs for review.
+To reopen sharded reads, deploy the reviewed matching source, not guessed file IDs.
+
+Owner-only shardExport includes notes/index/shares/receipts and is limited by current
+wire size. shardRestore only writes a NEW empty recovery namespace; identical retry
+uses restore hash, different input/nonempty target fails. This prototype currently
+has no pagination, scheduled backup, independent off-account backup or live proven
+full-store restore; these remain production blockers. Never treat an old recovery
+copy as current ACL state or expose it to share actors.
+
+Read-only verification marker [verify-per-note] checks exact legacy119/100 and
+sharded11/2 state. Trial markers [per-note-trial]/[per-note-resume] must NOT be rerun
+on the changed namespace. See NOTES-GAS-PER-NOTE-20261016.md for failed attempts,
+retained checkpoints and verification evidence. No production deployment authorized.

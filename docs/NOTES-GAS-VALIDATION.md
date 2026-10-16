@@ -2,13 +2,20 @@
 
 Ngày 16/10/2026. Base main: `a09b63b2c520312a70c8e13b645537f62fb7711a`.
 
-**Trạng thái cuối ngày:** 40/40 test mô phỏng pass. Google version9 đã tự cập
-nhật và read-only integrity pass cho100 Note giả/revision119. Cache list p50
-1.694→1.127ms; pool save p50 4.128→6.297ms, nên pool bị loại khỏi optimized
-mặc định. Live workload bị timeout trước functional phase; chưa đủ điều kiện
-Notes production. Chi tiết và evidence:
+**Trạng thái mới nhất (16/10,17:42 VN):**47/47 test mô phỏng pass, gồm mốc
+100/500 Notes. Google version11/buildv6 đã tự cập nhật. Per-note bodies + atomic
+manifest đã xác minh live CAS cùng Note, giữ thay đổi khác Note, replay idempotent,
+workspace share/revoke. Nhưng timeout liên tiếp làm dừng trước history/delete/
+folder/restore và trước seed100; chưa có benchmark100 Notes cho biến thể này.
+Read-only đối soát sau đó pass: kho legacy119/100; kho per-note11/2,11 receipts,
+share revoked bị từ chối, journal30 events. Lượt đối soát vẫn có một timeout30s
+trước retry thành công. Notes production vẫn NO-GO.
+Chi tiết: [NOTES-GAS-PER-NOTE-20261016.md](NOTES-GAS-PER-NOTE-20261016.md).
+
+Lượt snapshot/cache/pool trước đó có100 Notes thật và cache list p50
+1.694→1.127ms; pool save p50 4.128→6.297ms bị loại khỏi optimized mặc định:
 [NOTES-GAS-FINAL-TRIAL-20261016.md](NOTES-GAS-FINAL-TRIAL-20261016.md).
-Các bảng/ghi chú bên dưới ghi lại từng mốc trước đó, không thay thế kết luận cuối.
+Các bảng/ghi chú bên dưới là lịch sử, không thay thế kết luận mới nhất.
 
 ## Kết quả cục bộ
 

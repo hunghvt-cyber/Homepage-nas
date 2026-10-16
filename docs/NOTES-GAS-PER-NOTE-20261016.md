@@ -167,3 +167,33 @@ modify HEADs, retry a mutation, restore or reset anything. Result pending below.
 This implementation tests per-note bodies with an atomic manifest. It does not
 prove that all GAS/Drive per-note HEAD designs are impossible. Removing the manifest
 would require a different transaction/index/recovery protocol, not a free speedup.
+
+### Final read-only verification — passed, with transport retry
+
+Commit6783c23/run38888738094:
+https://github.com/hunghvt-cyber/Homepage-nas/actions/runs/38888738094
+Simulation47/47, unchanged-source deployment verification, operational probe and
+per-note-integrity all passed. Managed version11 was reused; no new version or
+mutation benchmark. Artifact12040613143; committed sanitized result:
+experiments/notes-gas/results/google-per-note-integrity-20261016.json.
+
+- Legacy snapshot health: buildv6, revision119,100 active, readVerified=true.
+- Per-note export: revision11,2 records/2 matching index rows,11 receipts, one
+  revoked share. Expected titles/folders/Unicode/checklist/history bounds verified.
+- Export85,786 bytes; SHA256
+  2d935734d22fe60f257dd0a9cb77cab85d31ad3a47b49ed9ee6833d0ae9e2303.
+- Reconstructed synthetic revoked capability denied shared get404. Journal30 events
+  available. No content or capability secret persisted in the integrity report.
+- Export attempt1 timed out30s at redirect; attempt2 succeeded8.17s. Original health
+  took11.77s. These are diagnostic calls with retries, NOT a passing latency benchmark.
+
+**Outcome: partial live functional success, production NO-GO.** No new100/500 live
+capacity result. Existing100-Note legacy verification and500-Note simulation are
+separate evidence. Live history/delete/folder/full-store restore remain unverified
+for this storage variant. Backup/restore was tested in simulation only. No measured
+Vercel/iPad path, idle48h or soak test, no independent off-account recovery.
+
+The next action is review of evidence, not another automatic mutation trial.
+Do not rerun either trial marker: namespace is no longer pristine/rev4or5, guards
+will refuse it. Final read-only verifier is repeatable while exact state11/2 remains.
+No additional Google account setup required for current prototype management.
