@@ -32,12 +32,31 @@
     "networkBenchmark": false,
     "headOnlyHelperNotInVersion12": true
   },
-  "beforeAndAfterWebResponse": {
+  "homepageProductionFeedChanged": false,
+  "nasPublisherConfigured": true,
+  "anonymousReadIndependentlyVerified": true,
+  "deployedSourceCommit": "e3f914f92f9eacb386499f7497bf5f2c9c5b281a",
+  "initialWebResponse": {
     "ok": false,
     "service": "nas-drive-reports-v1",
     "code": "NO_REPORT"
   },
-  "homepageProductionFeedChanged": false,
-  "nasPublisherConfigured": false,
-  "anonymousReadIndependentlyVerified": false
+  "nasLiveEvidence": {
+    "operatorReportedPreviousAck": "2026-10-18T07:23:24Z",
+    "operatorReportedIntermediateSkips": true,
+    "independentRead": {
+      "ok": true,
+      "updated_at": "2026-10-18T07:54:06Z",
+      "received_at": "2026-10-18T07:54:22.956Z",
+      "sha256": "be42ce4e493d7956a4e681f61b5ccfc66d0c74349d5ac75f7d2f003853b095b2"
+    },
+    "heartbeatIntervalsVerified": 1,
+    "networkRestartRecoveryVerified": false
+  },
+  "backupCandidate": {
+    "deployedToGoogle": false,
+    "realBackupReportVerified": false,
+    "focusedNodeSimulationChecks": 8,
+    "pythonPublisherChecks": 7
+  }
 }

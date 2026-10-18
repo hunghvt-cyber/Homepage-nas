@@ -28,6 +28,7 @@ function initializeNasReports(){
  }finally{lock.releaseLock();}
 }
 function doGet(e){
+ if(e&&e.parameter&&(e.parameter.source==='gdrive'||e.parameter.source==='gphotos')&&typeof bkGet_==='function')return bkGet_(e.parameter.source);
  try{
   nrAssert_(e&&e.parameter&&e.parameter.source==='nas','INVALID_SOURCE');
   var cached;try{cached=CacheService.getScriptCache().get('nas-report');}catch(_){}
@@ -39,6 +40,15 @@ function doGet(e){
  }catch(error){return nrOutput_({ok:false,service:NAS_BUILD,code:['NO_REPORT','INVALID_SOURCE','REPORT_HASH_MISMATCH'].indexOf(error.message)>=0?error.message:'READ_UNAVAILABLE'});}
 }
 function doPost(e){
+ // Route untrusted source only to a fixed handler with its own HMAC key.
+ var routedSource;
+ if(typeof bkPost_==='function'&&e&&e.postData&&typeof e.postData.contents==='string'&&e.postData.contents.length<=16384){
+  try{routedSource=JSON.parse(JSON.parse(e.postData.contents).payload).source;}catch(_){}
+  if(routedSource==='gdrive'||routedSource==='gphotos')return bkPost_(e,routedSource);
+ }
+ return nrPost_(e);
+}
+function nrPost_(e){
  var started=Date.now(),reference='NR-'+Utilities.getUuid().slice(0,8),op='invalid',signed=false,lock,owns=false,requestId=null,key;
  try{
   nrAssert_(e&&e.postData&&typeof e.postData.contents==='string'&&e.postData.contents.length<=8192,'INVALID_REQUEST');

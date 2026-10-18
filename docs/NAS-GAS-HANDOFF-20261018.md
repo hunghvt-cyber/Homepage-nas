@@ -70,3 +70,17 @@ blocked by account billing. A reporting-specific updater and a working execution
 channel still need qualification; current browser access does not guarantee
 permanent unattended updates. Do not reveal/retrieve GitHub/Vercel stored secrets
 to work around this limitation.
+
+## Live heartbeat and pending backup extension
+
+On 2026-10-18 an independent anonymous /exec?source=nas read returned ok:true,
+updated_at=07:54:06Z and received_at=07:54:22.956Z. The operator reported the
+previous ack at 07:23:24Z plus unchanged sequence/empty pending on intermediate
+timer ticks. This verifies one heartbeat interval (~31 minutes); it does not
+prove two intervals, a state transition, or network/restart recovery.
+
+Google deployment v12 remains the NAS-only Server.gs from commit e3f914f.
+The branch now also contains a pending backup dispatcher and new Backup files.
+Those files have NOT been deployed to Google. Keep v12 stable during NAS live
+qualification. Follow BACKUP-REPORTS-GAS-20261018.md for the separate deployment
+and isolated qualification gates; do not replace only Server.gs.
