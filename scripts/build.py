@@ -31,9 +31,11 @@ def write(path, content):
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(content, encoding='utf-8')
 
-status_url = site.get('status_url', '/status.json')
-if status_url != '/status.json' and (urlparse(status_url).scheme != 'https' or not urlparse(status_url).hostname):
-    raise ValueError('Status source must be HTTPS')
+status_url = os.getenv('NAS_REPORT_STATUS_URL', site.get('status_url', '/status.json'))
+if status_url == '/api/nas-report':
+    pass
+elif status_url != '/status.json' and (urlparse(status_url).scheme != 'https' or not urlparse(status_url).hostname):
+    raise ValueError('Status source must be HTTPS or the NAS report API')
 write('config.js', 'window.PORTAL_STATUS_URL = '+json.dumps(status_url)+';\n')
 backup_base = site.get('backup_reports_base_url', '').rstrip('/')
 if backup_base and (urlparse(backup_base).scheme != 'https' or not urlparse(backup_base).hostname or not urlparse(backup_base).hostname.endswith('.public.blob.vercel-storage.com') or urlparse(backup_base).path not in ('', '/') or urlparse(backup_base).query):
@@ -95,6 +97,7 @@ write('chi-tieu/index.html',page('Chi tiêu gia đình','<header><a href="/">←
 
 
 write('gemini/index.html',page('Gemini','<header class="gemini-page-header"><a href="/">← Trang chủ</a><h1>Gemini</h1><p>Hỏi đáp ngay trên Homepage.</p></header>'+ACCOUNT+'<section id="chat-workspace" hidden><div class="bar"><h2>Cuộc trò chuyện</h2></div><div class="body"><div class="editor-actions"><button id="chat-new" type="button">Cuộc trò chuyện mới</button><button id="chat-stop" type="button">Dừng</button></div><div id="chat-log" aria-live="polite"></div><form id="chat-form"><label for="chat-input">Tin nhắn</label><textarea id="chat-input" rows="4" maxlength="4000" required></textarea><button id="chat-send" type="submit">Gửi</button></form><p id="chat-status" role="status"></p><small>Cuộc trò chuyện chỉ giữ khi trang đang mở. Tối đa 30 câu hỏi/ngày cho cả nhà; hết hạn mức thì chờ.</small></div></section><script src="/account.js" defer></script><script>if(new URLSearchParams(location.search).get("embed")==="1")document.documentElement.classList.add("gemini-embedded");</script><script src="/chat.js" defer></script>'))
+
 
 
 
