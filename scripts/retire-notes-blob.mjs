@@ -46,5 +46,5 @@ export async function retireNotes({env=process.env, enumerate=list, remove=del, 
   return {counts,deleted,remaining};
 }
 if(process.argv[1] && import.meta.url===pathToFileURL(process.argv[1]).href) {
-  retireNotes().catch(()=>{console.error('RETIRED_NOTES_CLEANUP_FAILED');process.exitCode=1;});
+  retireNotes().catch(error=>{console.error(JSON.stringify({event:'retired-notes-cleanup-failed',code:/^[A-Z_]{1,64}$/.test(error.message)?error.message:'BLOB_REQUEST_FAILED',type:/^[A-Za-z]{1,64}$/.test(error.name)?error.name:'Error'}));process.exitCode=1;});
 }
