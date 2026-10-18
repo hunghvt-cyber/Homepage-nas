@@ -1,0 +1,13 @@
+{
+  "kind": "local-simulation-not-live",
+  "date": "2026-10-18",
+  "nodeTests": {"passed": 64, "failed": 0},
+  "pythonTests": {"passed": 17, "failed": 0},
+  "buildWithNasApi": true,
+  "syntaxChecks": ["api/nas-report.js", "public/status.js"],
+  "covered": ["HMAC", "wrong key", "expired request", "out-of-order sequence", "generation mismatch", "idempotency mismatch", "lost commit acknowledgement", "Drive write failure", "previous report recovery", "retention failure after commit", "redirect allowlist", "schema and hash validation", "private config permissions", "durable sequence", "stale UI", "network failure UI"],
+  "liveGoogleDeployment": false,
+  "liveNasPublisher": false,
+  "productionCutover": false,
+  "remaining": ["Google sign-in/deployment", "NAS connection and one-time publisher configuration", "two real reporting cycles and browser readback"]
+}

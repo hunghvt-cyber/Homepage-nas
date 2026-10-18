@@ -1,0 +1,3 @@
+[Service]
+Environment=STATUS_BACKEND=gas-drive
+Environment=STATUS_REPORT_CONFIG=%h/.config/homepage-nas/reporting.json
