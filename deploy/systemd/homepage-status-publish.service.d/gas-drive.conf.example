@@ -1,3 +1,7 @@
 [Service]
 Environment=STATUS_BACKEND=gas-drive
-Environment=STATUS_REPORT_CONFIG=%h/.config/homepage-nas/reporting.json
+# Without an override, the publisher expands ~/.config/homepage-nas/reporting.json
+# as its runtime service user. Verify that this resolves to admin's configured file.
+# If overriding, use the verified absolute config path:
+# Environment=STATUS_REPORT_CONFIG=/absolute/admin-home/.config/homepage-nas/reporting.json
+# Do not use systemd %h for a system service: User=admin does not change %h.
