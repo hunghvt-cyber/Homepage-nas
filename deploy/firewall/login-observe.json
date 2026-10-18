@@ -1,0 +1,35 @@
+{
+  "name": "Homepage password login — observe before 3 per 10m",
+  "description": "Observe only dedicated password POST routes; preserve existing Blob limiter. Target enforcement: 3/IP/600s after preview verification.",
+  "active": true,
+  "conditionGroup": [
+    {
+      "conditions": [
+        {
+          "type": "path",
+          "op": "re",
+          "value": "^/api/login(?:\\.js)?/?$"
+        },
+        {
+          "type": "method",
+          "op": "eq",
+          "value": "POST"
+        }
+      ]
+    }
+  ],
+  "action": {
+    "mitigate": {
+      "action": "rate_limit",
+      "rateLimit": {
+        "algo": "fixed_window",
+        "window": 600,
+        "limit": 30,
+        "keys": [
+          "ip"
+        ],
+        "action": "log"
+      }
+    }
+  }
+}
