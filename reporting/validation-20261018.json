@@ -38,20 +38,36 @@
     "missing/corrupt policy fails closed",
     "heartbeat source freshness"
   ],
-  "liveGoogleDeployment": false,
+  "liveGoogleDeployment": true,
   "liveNasPublisher": false,
   "productionCutover": false,
   "remaining": [
-    "Google sign-in/deployment",
     "NAS connection and one-time publisher configuration",
     "two real reporting cycles and browser readback",
     "NAS RAM/swap threshold and hysteresis qualification",
-    "backup aggregate publishers and QR migration"
+    "backup aggregate publishers and QR migration",
+    "anonymous Vercel-to-GAS transport qualification",
+    "NAS one-time dedicated key configuration"
   ],
   "eventPolicySimulation": {
     "checks": 288,
     "durationHours": 24,
     "successfulSends": 48,
     "realBenchmark": false
-  }
+  },
+  "googleVersion": 12,
+  "liveGoogleInProcessQualification": {
+    "checks": 17,
+    "cleanup": true,
+    "requestMs": [
+      27,
+      2776,
+      894,
+      518,
+      27,
+      2672
+    ],
+    "networkBenchmark": false
+  },
+  "endpointBrowserBeforeAndAfterQualification": "NO_REPORT"
 }

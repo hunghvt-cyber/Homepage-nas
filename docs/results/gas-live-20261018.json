@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-18",
+  "scriptId": "1vASoUHTYVL1pP4oeAbrh0ueOCdo5cWwpUiwUkTleziWgKRod17Pa68cs",
+  "deploymentId": "AKfycbwnIO4-cED9dRdNH0ik4FR9os_9kM4XDXqaNdn0iorb5JoiNRIg8dgp0fWEJYurLWAwPA",
+  "version": 12,
+  "deployedFiles": {
+    "Core.gs": "reporting/nas-schema.cjs",
+    "Server.gs": "reporting/apps-script/Server.gs",
+    "appsscript.json": "reporting/apps-script/appsscript.json"
+  },
+  "sha256": {
+    "schema": "5157bdf9beca883495caa4cebd7313c512b689cc43cb12dc1d72252eff734c45",
+    "server": "340a3fbf0cf6e37749bb96d4c187087f46256c57104c12a8f5576988eafce50b",
+    "qualification": "29e49a7315265e4cb17ef3ef23b1c3ba3e1ca71bbd3e8477a68586055a19cbf0"
+  },
+  "initialization": {
+    "configured": true,
+    "hasReport": false
+  },
+  "qualification": {
+    "kind": "real-drive-in-process",
+    "checks": 17,
+    "cleanup": true,
+    "requestMs": [
+      27,
+      2776,
+      894,
+      518,
+      27,
+      2672
+    ],
+    "networkBenchmark": false,
+    "headOnlyHelperNotInVersion12": true
+  },
+  "beforeAndAfterWebResponse": {
+    "ok": false,
+    "service": "nas-drive-reports-v1",
+    "code": "NO_REPORT"
+  },
+  "homepageProductionFeedChanged": false,
+  "nasPublisherConfigured": false,
+  "anonymousReadIndependentlyVerified": false
+}
