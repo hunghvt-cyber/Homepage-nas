@@ -5,8 +5,8 @@ project. Expense/Gemini projects are unchanged. The schema lives in Core.gs in
 this existing project; the repository's canonical source is nas-schema.cjs.
 The execution log confirms successful initialization and 17 real Drive checks
 using a disposable property namespace/folder. This is not an end-to-end benchmark.
-The deployed feed still returns NO_REPORT; Homepage production still uses its
-previous source.
+The deployed feed now returns a live NAS report. Homepage production still uses
+its previous source.
 
 ## Task for Codex with an existing NAS connection
 
@@ -73,11 +73,30 @@ to work around this limitation.
 
 ## Live heartbeat and pending backup extension
 
-On 2026-10-18 an independent anonymous /exec?source=nas read returned ok:true,
-updated_at=07:54:06Z and received_at=07:54:22.956Z. The operator reported the
-previous ack at 07:23:24Z plus unchanged sequence/empty pending on intermediate
-timer ticks. This verifies one heartbeat interval (~31 minutes); it does not
-prove two intervals, a state transition, or network/restart recovery.
+Codex NAS supplied three successful sends on 2026-10-18 (UTC):
+
+| Sequence | Local ack | GAS received_at | Snapshot updated_at |
+| --- | --- | --- | --- |
+| 1 | 07:23:24 | 07:23:28.515 | 07:23:13 |
+| 2 | 07:54:19 | 07:54:22.956 | 07:54:06 |
+| 3 | 08:24:42 | 08:24:46.053 | 08:24:29 |
+
+This supports two heartbeat intervals (~31 and ~30 minutes). Codex NAS also
+reported unchanged ticks skipped without sequence increments, an active five-minute
+timer, successful service exit, pending=false and failures=0. These service/state
+facts are operator-supplied Codex NAS evidence, not a direct NAS inspection here.
+
+An anonymous /exec?source=nas read independently repeated in this session returned
+ok=true, updated_at=2026-10-18T08:24:29Z,
+received_at=2026-10-18T08:24:46.053Z and sha256
+99658ae9d1140b43dfb3a752d88808780d3d01dec62311a1bd0e82dee070943d.
+Policy/transport simulations passed 11/11 according to the handoff; a real warning
+transition and real network/restart recovery remain unverified. Do not interrupt
+NAS networking/camera workloads or reset generation, sequence or policy state.
+
+Publisher on NAS remains 2be7d18. No NAS checkout update is required for subsequent
+documentation/backup-only changes. Rollback files:
+`/home/admin/.local/state/homepage-status/rollback-20261018T072335Z`.
 
 Google deployment v12 remains the NAS-only Server.gs from commit e3f914f.
 The branch now also contains a pending backup dispatcher and new Backup files.
