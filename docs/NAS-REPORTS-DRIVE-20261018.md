@@ -1,5 +1,23 @@
 # Camera và sức khỏe NAS qua Apps Script + Drive
 
+## Điều chỉnh đã thống nhất: gửi theo thay đổi + heartbeat 30 phút
+
+Yêu cầu người dùng ngày 18/10/2026 thay nhịp upload cố định 5 phút bằng policy
+trong [NAS-REPORTS-EVENT-POLICY-20261018.md](NAS-REPORTS-EVENT-POLICY-20261018.md).
+Timer 5 phút hiện có chỉ đọc cache và quyết định có cần gửi. Chỉ upload khi có
+sự kiện đáng kể, lúc khởi động/chưa có ack hoặc đã 30 phút từ lần gửi được xác
+nhận gần nhất. Một sự kiện được xác nhận cũng thay heartbeat; không gửi thêm
+bản định kỳ trùng lúc. Mức nền là khoảng 48 lượt/ngày cộng sự kiện, không phải
+trần 48 lượt. Cần sửa freshness cùng policy, không chỉ kéo dài timer.
+
+**Trạng thái code:** bản mã trong PR #21 hiện vẫn upload mỗi lần service chạy;
+policy sự kiện/heartbeat và freshness mới là thiết kế được chốt cho bước sửa
+tiếp theo, chưa được cài vào publisher. Các mô tả implementation và kiểm thử ở
+phần dưới áp dụng cho bản mã trước điều chỉnh này. Chưa cutover production.
+
+Kiểm kê phụ thuộc Blob và thứ tự chuyển:
+[BLOB-DEPENDENCIES-20261018.md](BLOB-DEPENDENCIES-20261018.md).
+
 Nguồn mới dành cho snapshot camera, dung lượng, RAM/swap và kết quả bảo trì/
 retention đã có. Không thêm collector, scan, timer hay GitHub Actions mỗi lần gửi.
 Hai workflow backup Drive/Photos là nguồn khác, chưa đổi trong bản này.
