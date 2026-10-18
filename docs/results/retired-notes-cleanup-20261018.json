@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-18",
+  "kind": "live-production-cleanup",
+  "project": "homepage-nas",
+  "retirementMainCommit": "b1f643428e06237b44d9d38544a15d3be55f7992",
+  "cleanupCommit": "eb88cfeb8a32462fa0de6cd700fc38c0f1b1c483",
+  "cleanupDeployment": "dpl_Ey844A3Z5XhF2f5DNkT73u7JyyWK",
+  "inventory": {
+    "notes": 25,
+    "shares": 1,
+    "indexes": 1
+  },
+  "deleted": 27,
+  "remaining": 0,
+  "excludedPrefixes": [
+    "guides/",
+    "login-attempts/"
+  ],
+  "koofrDataTouched": false,
+  "productionRestoredToMainDeployment": "dpl_GYbozGpfovwqWKWd3njdUV942wgJ",
+  "logs": [
+    {
+      "type": "stdout",
+      "text": "Cloning github.com/hunghvt-cyber/Homepage-nas (Branch: ops/retired-notes-cleanup-20261018, Commit: eb88cfe)"
+    },
+    {
+      "type": "stdout",
+      "text": "{\"event\":\"retired-notes-inventory\",\"execute\":true,\"counts\":{\"notes\":25,\"shares\":1,\"indexes\":1}}"
+    },
+    {
+      "type": "stdout",
+      "text": "{\"event\":\"retired-notes-cleanup\",\"deleted\":27,\"remaining\":0}"
+    },
+    {
+      "type": "stdout",
+      "text": "Deployment completed"
+    }
+  ]
+}
