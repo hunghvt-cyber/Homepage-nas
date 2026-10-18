@@ -42,15 +42,42 @@
     "code": "NO_REPORT"
   },
   "nasLiveEvidence": {
-    "operatorReportedPreviousAck": "2026-10-18T07:23:24Z",
+    "evidenceAttribution": "NAS service/ack evidence supplied by Codex NAS via operator handoff; anonymous feed read independently repeated in this session.",
+    "operatorReportedPublisherCommit": "2be7d18",
+    "operatorReportedSends": [
+      {
+        "sequence": 1,
+        "ackLocalUtc": "2026-10-18T07:23:24Z",
+        "received_at": "2026-10-18T07:23:28.515Z",
+        "updated_at": "2026-10-18T07:23:13Z"
+      },
+      {
+        "sequence": 2,
+        "ackLocalUtc": "2026-10-18T07:54:19Z",
+        "received_at": "2026-10-18T07:54:22.956Z",
+        "updated_at": "2026-10-18T07:54:06Z"
+      },
+      {
+        "sequence": 3,
+        "ackLocalUtc": "2026-10-18T08:24:42Z",
+        "received_at": "2026-10-18T08:24:46.053Z",
+        "updated_at": "2026-10-18T08:24:29Z"
+      }
+    ],
     "operatorReportedIntermediateSkips": true,
+    "operatorReportedTimerActive": true,
+    "operatorReportedPending": false,
+    "operatorReportedFailures": 0,
     "independentRead": {
       "ok": true,
-      "updated_at": "2026-10-18T07:54:06Z",
-      "received_at": "2026-10-18T07:54:22.956Z",
-      "sha256": "be42ce4e493d7956a4e681f61b5ccfc66d0c74349d5ac75f7d2f003853b095b2"
+      "updated_at": "2026-10-18T08:24:29Z",
+      "received_at": "2026-10-18T08:24:46.053Z",
+      "sha256": "99658ae9d1140b43dfb3a752d88808780d3d01dec62311a1bd0e82dee070943d"
     },
-    "heartbeatIntervalsVerified": 1,
+    "heartbeatIntervalsVerified": 2,
+    "heartbeatEvidenceScope": "Two intervals supported by Codex NAS metadata; latest payload independently read, not independent observation of all timer ticks.",
+    "policyTransportSimulationChecks": 11,
+    "realStateTransitionVerified": false,
     "networkRestartRecoveryVerified": false
   },
   "backupCandidate": {
