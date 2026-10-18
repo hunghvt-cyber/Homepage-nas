@@ -33,5 +33,6 @@ export function createPublicShare(deps={}){
   }catch(e){return fail(res,e);}
  };
 }
-export default createPublicShare();
+export {default} from '../lib/retired-notes.js';
+
 

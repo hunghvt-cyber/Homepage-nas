@@ -88,6 +88,7 @@ export function createNotesHandler(deps = {}) {
 }
 
 }
-export default createNotesHandler();
+export {default} from '../lib/retired-notes.js';
+
 
 

@@ -38,5 +38,6 @@ export function createWorkspace(deps={}){
   }catch(e){return fail(res,e);}
  };
 }
-export default createWorkspace();
+export {default} from '../lib/retired-notes.js';
+
 
