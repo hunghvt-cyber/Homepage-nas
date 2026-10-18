@@ -1,0 +1,9 @@
+<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>Preview Firewall qualification</title><h1>Preview Firewall qualification</h1><p>Preview only. Sends at most 31 empty JSON requests; no password, credential or report mutation.</p><button id="run">Run bounded observation probe</button><pre id="result">Not run</pre><script>
+const button=document.getElementById('run'),result=document.getElementById('result');
+button.onclick=async()=>{
+ if(!location.hostname.includes('homepage-')||location.hostname==='homepage-nas.vercel.app'){result.textContent='Refused outside isolated preview';return;}
+ button.disabled=true;const rows=[];
+ for(let n=1;n<=31;n++){const started=performance.now();try{const response=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:'{}',cache:'no-store',signal:AbortSignal.timeout(10000)});rows.push({n,status:response.status,ms:Math.round(performance.now()-started)});}catch(e){rows.push({n,error:e.name});}
+ result.textContent=JSON.stringify({complete:n===31,requests:rows},null,2);}
+};
+</script></html>
