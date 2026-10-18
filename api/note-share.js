@@ -34,4 +34,5 @@ export function createShareManagement(deps={}){
   }catch(e){return fail(res,e);}
  };
 }
-export default createShareManagement();
+export {default} from '../lib/retired-notes.js';
+

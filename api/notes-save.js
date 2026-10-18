@@ -1,2 +1,2 @@
-import { createNotesHandler } from './notes.js';
-export default createNotesHandler({saveOnly: true});
+export {default} from '../lib/retired-notes.js';
+
