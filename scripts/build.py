@@ -31,9 +31,11 @@ def write(path, content):
     dest.parent.mkdir(parents=True, exist_ok=True)
     dest.write_text(content, encoding='utf-8')
 
-status_url = site.get('status_url', '/status.json')
-if status_url != '/status.json' and (urlparse(status_url).scheme != 'https' or not urlparse(status_url).hostname):
-    raise ValueError('Status source must be HTTPS')
+status_url = os.getenv('NAS_REPORT_STATUS_URL', site.get('status_url', '/status.json'))
+if status_url == '/api/nas-report':
+    pass
+elif status_url != '/status.json' and (urlparse(status_url).scheme != 'https' or not urlparse(status_url).hostname):
+    raise ValueError('Status source must be HTTPS or the NAS report API')
 write('config.js', 'window.PORTAL_STATUS_URL = '+json.dumps(status_url)+';\n')
 backup_base = site.get('backup_reports_base_url', '').rstrip('/')
 if backup_base and (urlparse(backup_base).scheme != 'https' or not urlparse(backup_base).hostname or not urlparse(backup_base).hostname.endswith('.public.blob.vercel-storage.com') or urlparse(backup_base).path not in ('', '/') or urlparse(backup_base).query):
@@ -100,5 +102,6 @@ write('gemini/index.html',page('Gemini','<header class="gemini-page-header"><a h
 write('share/index.html',page('Note được chia sẻ','<header><h1>Note được chia sẻ</h1><p>Liên kết có quyền xem và chỉnh sửa Note này cho đến khi chủ sở hữu thu hồi.</p></header><section class="body"><label for="shared-title">Tiêu đề</label><input id="shared-title" maxlength="200"><label for="shared-text">Nội dung</label><textarea id="shared-text" spellcheck="false" wrap="soft" rows="18"></textarea><div id="shared-checklist" class="note-checklist"></div><div class="editor-actions"><button id="shared-save" type="button">Lưu thay đổi</button><button id="shared-refresh" type="button">Tải bản mới nhất</button></div><p id="shared-status" role="status">Đang kiểm tra liên kết…</p><p class="muted">Nếu người khác đã sửa trước, hệ thống yêu cầu tải lại trước khi lưu.</p></section><script src="/checklist.js" defer></script><script src="/shared-note.js" defer></script>'))
 
 write('workspace/index.html',page('Workspace chia sẻ','<header><h1 id="workspace-heading">Workspace chia sẻ</h1><p>Người có link có thể xem, tạo và chỉnh sửa các Note trong thư mục này.</p></header><section class="body"><div class="editor-actions"><button id="workspace-new" type="button">Note mới</button><button id="workspace-reload" type="button">Tải lại danh sách</button></div><div id="workspace-list"></div><label for="workspace-title">Tiêu đề</label><input id="workspace-title" maxlength="200"><label for="workspace-text">Nội dung</label><textarea id="workspace-text" rows="18" spellcheck="false" wrap="soft"></textarea><div id="workspace-checklist" class="note-checklist"></div><button id="workspace-save" type="button">Lưu Note</button><p id="workspace-status" role="status">Đang kiểm tra link…</p></section><script src="/checklist.js" defer></script><script src="/workspace.js" defer></script>'))
+
 
 

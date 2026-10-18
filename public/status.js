@@ -22,8 +22,8 @@ async function refresh(){
         const measured=time(item.measured_at);
         detail.textContent=measured?'Kết quả gần nhất · '+measured:'Chưa có thời điểm kết quả';
       }else {
-        const label=key==='nas'?({ok:'Đủ chỗ',pass:'Đủ chỗ',warn:'Sắp đầy',fail:'Cần kiểm tra dung lượng',unknown:'Chưa xác minh'}[item.state]||labels.unknown):(labels[item.state]||labels.unknown);
-        const free=key==='nas'&&snapshotTime?bytesGiB(data.health?.vol1?.available_bytes):null;
+        const label=stale?'Dữ liệu cũ · Chưa xác minh hiện tại':!snapshotTime?'Chưa xác minh':key==='nas'?({ok:'Đủ chỗ',pass:'Đủ chỗ',warn:'Sắp đầy',fail:'Cần kiểm tra dung lượng',unknown:'Chưa xác minh'}[item.state]||labels.unknown):(labels[item.state]||labels.unknown);
+        const free=key==='nas'&&snapshotTime&&!stale?bytesGiB(data.health?.vol1?.available_bytes):null;
         el.textContent=label+(free?' · Còn trống '+free:'');
       }
     }
@@ -42,8 +42,14 @@ async function refresh(){
     const swapPercent=swapValid?(swap.used_bytes/swap.total_bytes*100).toFixed(1)+'%':null;
     display('health-swap-usage',swapUsage,stale,!!snapshotTime);
     display('health-swap-percent',swapPercent,stale,!!snapshotTime);
-  }catch{stamp.textContent='Không tải được trạng thái. Các link và hướng dẫn vẫn dùng được.';}
+  }catch{
+    stamp.textContent='Không tải được báo cáo mới. Camera/NAS hiện chưa được xác minh.';
+    for(const key of ['cam1','cam2','nas'])document.getElementById(key).textContent='Chưa xác minh';
+    document.getElementById('health-updated').textContent='Chưa tải được báo cáo mới';
+    for(const id of ['health-root-used','health-root-free','health-vol1-used','health-vol1-free','health-ram','health-swap-usage','health-swap-percent'])document.getElementById(id).textContent='Chưa có dữ liệu mới';
+  }
 }
 refresh();
 setInterval(refresh,300000);
+
 
