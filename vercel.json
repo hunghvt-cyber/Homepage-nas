@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "npm ci --ignore-scripts && python3 -m pip install --target .build-deps -r requirements.txt",
-  "buildCommand": "node scripts/retire-notes-blob.mjs && PYTHONPATH=.build-deps python3 scripts/build.py",
+  "buildCommand": "NOTES_BLOB_CLEANUP=DELETE_RETIRED_NOTES_20261018 node scripts/retire-notes-blob.mjs && PYTHONPATH=.build-deps python3 scripts/build.py",
   "outputDirectory": "dist",
   "trailingSlash": true,
   "headers": [
