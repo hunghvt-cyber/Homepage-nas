@@ -37,13 +37,10 @@ if status_url == '/api/nas-report':
 elif status_url != '/status.json' and (urlparse(status_url).scheme != 'https' or not urlparse(status_url).hostname):
     raise ValueError('Status source must be HTTPS or the NAS report API')
 write('config.js', 'window.PORTAL_STATUS_URL = '+json.dumps(status_url)+';\n')
-backup_base = site.get('backup_reports_base_url', '').rstrip('/')
-if backup_base and (urlparse(backup_base).scheme != 'https' or not urlparse(backup_base).hostname or not urlparse(backup_base).hostname.endswith('.public.blob.vercel-storage.com') or urlparse(backup_base).path not in ('', '/') or urlparse(backup_base).query):
-    raise ValueError('backup_reports_base_url must be a public Vercel Blob origin')
-backup_api = os.getenv('BACKUP_REPORTS_API_URL', '')
-if backup_api not in ('', '/api/backup-report'):
+backup_api = os.getenv('BACKUP_REPORTS_API_URL', '/api/backup-report')
+if backup_api != '/api/backup-report':
     raise ValueError('Invalid backup report API')
-write('backup-config.js', 'window.BACKUP_REPORTS_BASE_URL = '+json.dumps(backup_base)+';\nwindow.BACKUP_REPORTS_API_URL = '+json.dumps(backup_api)+';\n')
+write('backup-config.js', 'window.BACKUP_REPORTS_API_URL = '+json.dumps(backup_api)+';\n')
 
 
 links = []
@@ -107,3 +104,4 @@ write('gemini/index.html',page('Gemini','<header class="gemini-page-header"><a h
 
 
 retire(OUT)
+

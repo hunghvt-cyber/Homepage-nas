@@ -1,3 +1,5 @@
+> Lịch sử. Trạng thái hiện hành: [QR → Koofr](QR-KOOFR-20261019.md). Homepage runtime đã bỏ Blob; dữ liệu guide cũ chưa được đối chiếu, không xóa store/secret. Bộ đếm giữ Supabase, không quay lại Blob.
+
 # Trạng thái các phụ thuộc Blob
 
 Cập nhật hiện hành: 19/10/2026. Đọc [OPERATIONS.md](OPERATIONS.md) và
@@ -50,3 +52,4 @@ remain in source for regression tests; their deployed defaults terminate at 410.
 Những ghi nhận trên chỉ áp dụng vào lần cleanup đó. Chúng không chứng minh
 Blob đang đọc/ghi bình thường hôm nay và không chứng minh Notes Koofr đã có
 backup tự động. Đợt cập nhật tài liệu này không xóa thêm object nào.
+

@@ -2,7 +2,7 @@
   const slug = document.body?.dataset.guideSlug || document.querySelector('[data-guide-slug]')?.dataset.guideSlug;
   if (!slug) return;
   const $ = id => document.getElementById(id); const api = (...a) => window.PortalAccount.api(...a);
-  let current, revision, busy = false, dirty = false;
+  let current, revision, editable = false, pending, busy = false, dirty = false;
   const p = text => {const el = document.createElement('p'); el.textContent = text; el.style.whiteSpace = 'pre-line'; return el;};
   function render(g) {
     $('guide-title').textContent = g.title; document.title = g.title; $('guide-area').textContent = g.area; $('guide-summary').textContent = g.summary;
@@ -20,23 +20,26 @@
     const content = document.createElement('textarea'); content.value = d.body; content.rows = 5; content.setAttribute('aria-label', 'Nội dung mục bổ sung');
     const remove = document.createElement('button'); remove.type = 'button'; remove.textContent = 'Bỏ mục'; remove.onclick = () => {row.remove(); dirty = true;}; row.append(title,content,remove); $('edit-details').append(row);
   }
-  async function load() {const r = await api('/api/guides?slug=' + encodeURIComponent(slug)); current = r.guide; revision = r.revision; render(current);}
+  async function load() {const r = await api('/api/guides?slug=' + encodeURIComponent(slug)); current = r.guide; revision = r.revision; editable = r.editable !== false; render(current); $('guide-message').textContent = r.warning || '';}
   $('guide-edit').addEventListener('click', () => {
     if (!window.PortalAccount.state.authenticated) {window.PortalAccount.login(); return;}
-    if (!current) return; if (!$('guide-editor').hidden && dirty) return; fill(); $('guide-editor').hidden = false; $('guide-editor').scrollIntoView({behavior:'smooth'});
+    if (!current || !editable) {$('guide-message').textContent = 'Chưa kết nối được kho hướng dẫn để chỉnh sửa. Nội dung vẫn đọc được.'; return;} if (!$('guide-editor').hidden && dirty) return; fill(); $('guide-editor').hidden = false; $('guide-editor').scrollIntoView({behavior:'smooth'});
   });
   $('guide-cancel').addEventListener('click', () => {if(dirty && !confirm('Bỏ thay đổi chưa lưu?')) return; dirty = false; $('guide-editor').hidden = true;});
   $('guide-add-detail').addEventListener('click', () => {addDetail(); dirty = true;});
   $('guide-editor').addEventListener('input', () => {dirty = true;});
   $('guide-form').addEventListener('submit', async e => {
-    e.preventDefault(); if (busy) return; busy = true; $('guide-save').disabled = true; $('guide-message').textContent = 'Đang lưu…';
+    e.preventDefault(); if (busy) return; busy = true; $('guide-save').disabled = true; $('guide-message').textContent = 'Đang lưu…'; for(const el of $('guide-form').querySelectorAll('input,textarea,button')) el.disabled = true;
     try {
       const guide = {...current}; for(const f of ['title','area','summary','notes','last_cleaned']) guide[f] = $('edit-' + f).value;
       guide.steps = $('edit-steps').value.split('\n').filter(s => s.trim()); guide.details = [...$('edit-details').children].map(row => ({title: row.querySelector('input').value, body: row.querySelector('textarea').value}));
-      const r = await api('/api/guides?slug=' + encodeURIComponent(slug), {guide, revision}); current = r.guide; revision = r.revision; render(current); dirty = false; $('guide-message').textContent = 'Đã lưu hướng dẫn.';
-    } catch(e) {$('guide-message').textContent = e.message;} finally {busy = false; $('guide-save').disabled = false;}
+      const fingerprint = JSON.stringify({guide, revision});
+      if (!pending || pending.fingerprint !== fingerprint) pending = {fingerprint, operationId: crypto.randomUUID()};
+      const r = await api('/api/guides?slug=' + encodeURIComponent(slug), {guide, revision, operationId: pending.operationId}); pending = null; current = r.guide; revision = r.revision; render(current); dirty = false; $('guide-message').textContent = 'Đã lưu hướng dẫn.';
+    } catch(e) {$('guide-message').textContent = e.message;} finally {busy = false; for(const el of $('guide-form').querySelectorAll('input,textarea,button')) el.disabled = false;}
   });
   window.addEventListener('account-change', e => {if(!e.detail.authenticated) $('guide-editor').hidden = true;});
   window.addEventListener('beforeunload', e => {if(dirty) {e.preventDefault(); e.returnValue = '';}});
   load().catch(() => {$('guide-message').textContent = 'Không tải được bản cập nhật. Đang hiển thị bản hướng dẫn gốc.';});
 })();
+

@@ -1,8 +1,7 @@
 /* Public, read-only, versioned backup reports. No GitHub credentials in browser. */
 (async()=>{
   const put=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=String(value)};
-  const base=window.BACKUP_REPORTS_BASE_URL||'';
-  const api=window.BACKUP_REPORTS_API_URL||'';
+  const api=window.BACKUP_REPORTS_API_URL||'/api/backup-report';
   const when=v=>v?new Date(v).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}):'Chưa có dữ liệu';
   const val=v=>v==null?'Chưa có dữ liệu':v;
   const sources=[
@@ -11,9 +10,9 @@
   ];
   for(const item of sources){
     const p=item.prefix;
-    if(!base&&!api){put(p+'-state','Chưa cấu hình nguồn báo cáo');continue;}
+    if(!api){put(p+'-state','Chưa cấu hình nguồn báo cáo');continue;}
     try{
-      const response=await fetch(api?api+'?source='+item.key:base+'/'+item.file,{cache:'no-store',signal:AbortSignal.timeout(15000)});
+      const response=await fetch(api+'?source='+item.key,{cache:'no-store',signal:AbortSignal.timeout(15000)});
       const data=await response.json();
       if(!response.ok){
         if(api&&data.code==='NO_REPORT'){
@@ -45,5 +44,6 @@
     }catch(err){put(p+'-state','Chưa tải được báo cáo; kiểm tra nguồn báo cáo');}
   }
 })();
+
 
 

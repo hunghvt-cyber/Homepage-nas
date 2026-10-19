@@ -6,7 +6,6 @@
     "test": "node --test tests/*.test.js"
   },
   "dependencies": {
-    "@vercel/blob": "2.7.0",
     "iron-session": "8.0.4"
   },
   "devDependencies": {

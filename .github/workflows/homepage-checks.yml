@@ -1,7 +1,7 @@
 name: Homepage checks
 on:
   push:
-    branches: [feature/notes-grid-gemini-home-20261013]
+    branches: [main]
   pull_request:
     branches: [main]
 jobs:
@@ -21,6 +21,7 @@ jobs:
       - run: python -m pip install -r requirements.txt
       - run: python scripts/build.py
       - run: npm test
-      - run: node --check public/notes.js && node --check api/notes.js && node --check lib/validation.js
+      - run: node --check public/guides.js && node --check api/notes.js && node --check lib/validation.js
       - run: test -f dist/notes/index.html && test -f dist/gemini/index.html
-      - run: grep -q 'note-folders' dist/notes/index.html && grep -q 'home-gemini' dist/index.html
+      - run: grep -q 'hunghvt-notes.vercel.app' dist/notes/index.html && grep -q 'home-gemini' dist/index.html
+
