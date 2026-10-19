@@ -6,7 +6,7 @@ const display=(id,value,stale,hasTimestamp)=>{document.getElementById(id).textCo
 async function refresh(){
   const stamp=document.getElementById('updated');
   try{
-    const response=await fetch(window.PORTAL_STATUS_URL||'/status.json',{cache:'no-store',signal:AbortSignal.timeout(5000)});
+    const response=await fetch(window.PORTAL_STATUS_URL||'/status.json',{cache:'no-store',signal:AbortSignal.timeout(15000)});
     if(!response.ok)throw new Error('HTTP');
     const data=await response.json();
     if(data.schema!==1)throw new Error('schema');
