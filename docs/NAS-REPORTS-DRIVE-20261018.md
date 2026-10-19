@@ -125,12 +125,19 @@ Chỉ sau khi các gate trong hồ sơ recovery đã đóng/được giải quy�
 Production, build/deploy đúng project Homepage. Kiểm API public, UI và timestamp
 nguồn/nhận, rồi kiểm lại sau chu kỳ refresh. Hai lần gửi đơn thuần chưa đủ gate.
 
-## Rollback và tiêu chí hoàn thành
+## Phục hồi và tiêu chí hoàn thành
 
-Gỡ drop-in gas-drive, reload user systemd, phục hồi nguồn đọc cũ trên Homepage nếu
-cần. Blob đang bị khóa nên rollback về Blob không bảo đảm có báo cáo mới. Không
-xóa file token Blob hay file snapshot local trong lần cutover. Khôi phục phiên
-bản code tốt hoặc HEAD previous sau đối chiếu hash nếu nguồn Drive lỗi.
+Theo quyết định người dùng ngày 19/10/2026: chuyển riêng báo cáo NAS sang GAS sau
+khi tăng timeout UI lên 15 giây. Các gate quan sát còn mở được tiếp tục sau
+cutover; không tự coi là đã kiểm chứng. API upstream vẫn timeout 12 giây.
+
+Blob cũ hết quota, không nhận báo cáo mới; chỉ giữ làm dự phòng dữ liệu lịch sử,
+không phải nguồn rollback vận hành và không tự fallback sang Blob. Không gỡ
+drop-in GAS hoặc sửa publisher NAS để quay về Blob trong lần cutover này.
+Khi GAS/API lỗi, UI báo chưa xác minh/dữ liệu cũ; phục hồi adapter/bản mã tốt
+hoặc GAS current/previous sau đối chiếu hash, giữ đúng timestamp và metadata.
+Không reset generation/sequence/policy state, không xóa store/token/snapshot cũ.
+Hai nguồn backup, QR và limiter không được chuyển trong lần này.
 
 Gate live: ghi/đọc Google thật; wrong HMAC, stale sequence và retry không ghi trùng;
 2 chu kỳ NAS thật; so hash/timestamp với snapshot local; API và trình duyệt đọc
