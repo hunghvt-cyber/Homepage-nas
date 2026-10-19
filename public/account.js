@@ -1,9 +1,11 @@
 (() => {
  let state={authenticated:false}; let busy=false;
+ const inlinePassword=Boolean(document.getElementById('chat-workspace'));
+ if(inlinePassword){document.getElementById('account-login').hidden=true;document.getElementById('password-form').hidden=false;}
  const show = text => {document.getElementById('account-message').textContent=text;};
  const update=()=>{
   document.getElementById('account-state').textContent=state.authenticated?'Đã mở khóa':'Chưa mở khóa';
-  document.getElementById('account-login').hidden=state.authenticated;
+  document.getElementById('account-login').hidden=inlinePassword||state.authenticated;
   document.getElementById('account-logout').hidden=!state.authenticated;
   document.getElementById('password-form').hidden=state.authenticated;
   window.dispatchEvent(new CustomEvent('account-change',{detail:state}));
