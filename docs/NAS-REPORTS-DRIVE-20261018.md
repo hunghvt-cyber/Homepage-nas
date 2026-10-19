@@ -10,10 +10,12 @@ nhận gần nhất. Một sự kiện được xác nhận cũng thay heartbeat
 bản định kỳ trùng lúc. Mức nền là khoảng 48 lượt/ngày cộng sự kiện, không phải
 trần 48 lượt. Cần sửa freshness cùng policy, không chỉ kéo dài timer.
 
-**Trạng thái code:** bản mã trong PR #21 hiện vẫn upload mỗi lần service chạy;
-policy sự kiện/heartbeat và freshness mới là thiết kế được chốt cho bước sửa
-tiếp theo, chưa được cài vào publisher. Các mô tả implementation và kiểm thử ở
-phần dưới áp dụng cho bản mã trước điều chỉnh này. Chưa cutover production.
+**Trạng thái hiện tại (cập nhật 19/10/2026):** policy đã chạy trên NAS ở
+2be7d18; Google v12 NAS-only đang nhận báo cáo thật, có hai heartbeat và skip.
+Fault injection qua endpoint thật đã xác minh pending/retry và phục hồi bằng
+tiến trình mới; mất mạng thực tế và state transition tự nhiên chưa xác minh.
+Preview Vercel đã kiểm JSON/cache/UI; production vẫn dùng Blob.
+Xem [bằng chứng và gate còn lại](results/nas-publisher-recovery-20261019.md).
 
 Kiểm kê phụ thuộc Blob và thứ tự chuyển:
 [BLOB-DEPENDENCIES-20261018.md](BLOB-DEPENDENCIES-20261018.md).
@@ -30,8 +32,8 @@ read cache → Drive. Vercel cache 60 giây, cho phép stale-while-revalidate 24
 GAS cache tối đa 240 giây (có thể bị evict). UI vẫn xét timestamp nguồn và refresh
 5 phút. Metadata received/upload không được thay thế updated_at của collector.
 
-Đã lập trình và kiểm thử mô phỏng. Chưa có Google deployment mới, chưa có NAS
-publisher gửi thật, chưa chuyển nguồn Homepage. Không gọi đây là live benchmark.
+Google v12 NAS-only và NAS publisher đã chạy thật. Chưa chuyển nguồn production
+Homepage. Các lần thử không phải benchmark dài hạn.
 Mã giữ default backend Blob cho tới khi cấu hình gas-drive. Build đổi nguồn bằng
 `NAS_REPORT_STATUS_URL=/api/nas-report`; API lấy endpoint từ `NAS_REPORT_GAS_URL`.
 Vercel reader không cần hoặc nhận writer key.
@@ -47,8 +49,9 @@ chiếu HEAD, không tự chấp nhận để vượt 409.
 Mỗi request có UUID, thời gian (5 phút), signed JSON và snapshotText ASCII chính
 xác; SHA-256 được tính trên chuỗi gốc để Python 80.0 và JS 80 không làm lệch hash.
 Replay của request hiện tại chỉ ack khi hash/sequence khớp; replay cũ hơn HEAD
-bị từ chối. Publisher hiện gửi một lần trong deadline 25 giây; khi mất phản hồi,
-lần timer sau dùng sequence cao hơn. Backend hỗ trợ retry nguyên body cùng UUID.
+bị từ chối. Transport gửi trong deadline giới hạn; khi mất phản hồi, policy giữ pending và
+lần retry dùng cùng mutation UUID, sequence và snapshot. Có thể ký lại issuedAt
+khi cần mà không đổi danh tính mutation. Chỉ mutation mới cấp sequence mới.
 
 ScriptLock kiểm sequence và serialize commit. Tạo file mới, đọc lại xác minh hash,
 rồi đổi một HEAD property. Đọc lại HEAD khi setProperty mất phản hồi. Giữ current
@@ -57,8 +60,9 @@ ngược commit. Ghi dở trước HEAD có thể để file mồ côi; hiện c
 nhóm mồ côi. Không có bảo đảm phục hồi sau hết retention của Drive trash.
 
 GAS read fallback previous khi current hỏng; timestamp vẫn là thời điểm nguồn
-của bản trước. API kiểm schema + hash trước xuất. UI báo dữ liệu cũ/không xác minh
-khi quá 15 phút hoặc lỗi mạng, không giữ nhãn hoạt động như dữ liệu vừa cập nhật.
+của bản trước. API kiểm schema + hash trước xuất. UI xét received_at tối đa 45 phút và tuổi phép đo tại lúc nhận tối đa 15 phút,
+cùng kiểm tra clock skew; lỗi mạng xóa nhãn khỏe hiện tại. Không dùng giờ tải
+trang để làm mới timestamp nguồn.
 
 ## Log và quota
 
@@ -67,14 +71,20 @@ reference, thao tác, mã lỗi và thời lượng. Không ghi key, request bod
 đường dẫn camera, file ID hay log hệ thống thô. Signed op logs đọc vòng này;
 không có public log endpoint. Nếu Properties/log quota lỗi, log là best effort.
 
-Nhịp 5 phút tương đương 288 lượt ghi/ngày khi NAS chạy đủ 24 giờ. Đây là tính
-toán từ lịch, chưa phải số đo. Properties consumer hiện có quota 50.000 lượt
+Nhịp kiểm tra 5 phút tương đương 288 lượt quyết định/ngày. Policy heartbeat
+30 phút cho mức nền khoảng 48 lần gửi/ngày cộng sự kiện. Đây là tính toán lịch,
+chưa phải số đo quota dài hạn. Properties consumer hiện có quota 50.000 lượt
 read/write/ngày; quota dùng chung theo tài khoản, không riêng project. Cần đo
 Google thật, kể cả cache miss/eviction, trước khi kết luận đáp ứng dài hạn.
 
 ## Thiết lập Google một lần
 
-Tạo project riêng tên `Homepage NAS Reports`, không sửa project chi tiêu/Gemini.
+Phần dưới là hướng dẫn khởi tạo; hệ thống hiện đã dùng lại prototype Notes nghỉ
+hoạt động làm project báo cáo riêng. Không khởi tạo lại hoặc đổi project
+chi tiêu/Gemini. Google v12 dùng Core.gs từ schema và Server.gs của commit e3f914f;
+không nạp Server.gs HEAD nhánh có dispatcher backup mà thiếu bộ file/phân quyền.
+
+Với một cài đặt mới: tạo project riêng tên `Homepage NAS Reports`.
 Nạp `reporting/nas-schema.cjs` vào file `Schema.gs`,
 `reporting/apps-script/Server.gs` vào `Server.gs`, và manifest appsscript.json
 đã cung cấp. Chạy `initializeNasReports` một lần và cấp quyền Drive. Hàm chỉ tạo
@@ -110,9 +120,10 @@ vào user unit directory dưới tên `gas-drive.conf`, reload user systemd và 
 service. Giữ timer 5 phút hiện có. Không sửa collector/maintenance/tunnels.
 Không cần cài Python Blob SDK cho transport mới; stdlib là đủ.
 
-Sau hai lần gửi thật liên tiếp: đặt NAS_REPORT_GAS_URL ở Vercel Production và
-NAS_REPORT_STATUS_URL=/api/nas-report ở build, deploy đúng project Homepage.
-Kiểm camera/NAS/health/maintenance timestamp trên UI, rồi kiểm lại sau 5 phút.
+Chỉ sau khi các gate trong hồ sơ recovery đã đóng/được giải quyết rõ và có
+ủy quyền cutover: cấu hình NAS_REPORT_GAS_URL và NAS_REPORT_STATUS_URL cho
+Production, build/deploy đúng project Homepage. Kiểm API public, UI và timestamp
+nguồn/nhận, rồi kiểm lại sau chu kỳ refresh. Hai lần gửi đơn thuần chưa đủ gate.
 
 ## Rollback và tiêu chí hoàn thành
 
