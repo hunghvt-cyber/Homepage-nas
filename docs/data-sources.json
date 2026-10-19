@@ -1,0 +1,246 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-10-19T06:26:25.440Z",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "scope": "Homepage operational inventory; metadata only; not a live status feed",
+  "source_commit": "ccb4fb264a4292a63b7ac12ad9f2f554474cfbb9",
+  "canonical_document": "docs/OPERATIONS.md",
+  "platform_groups": [
+    {
+      "id": "nas",
+      "role": "Measurement producer and camera/Viewer runtime"
+    },
+    {
+      "id": "github",
+      "role": "Source, documentation and backup runners"
+    },
+    {
+      "id": "vercel",
+      "role": "Homepage and independent Notes hosting/API; Blob is a subservice"
+    },
+    {
+      "id": "supabase",
+      "role": "Temporary Homepage login attempt counters; shared project with exam application"
+    },
+    {
+      "id": "google",
+      "role": "Separate GAS reporting/bridge/webhook deployments plus Drive, Sheets, Photos and Gemini"
+    },
+    {
+      "id": "koofr",
+      "role": "Independent Notes store, media backups and backup state"
+    }
+  ],
+  "applications": {
+    "homepage": {
+      "url": "https://homepage-nas.vercel.app/",
+      "repository": "hunghvt-cyber/Homepage-nas",
+      "branch": "main",
+      "vercel_project": "homepage-nas",
+      "project_id": "prj_3CCmGVbfaymDVoO66d6MPU1CQ1nw"
+    },
+    "notes": {
+      "url": "https://hunghvt-notes.vercel.app/",
+      "repository": "hunghvt-cyber/Hunghvt-notes",
+      "branch": "release/minimal-notes",
+      "vercel_project": "hunghvt-notes",
+      "project_id": "prj_c4sEp6nB4msWTsPiGoALSuVutVTK",
+      "verified_deployment": "dpl_97WThiMJ427dyDB2ajMHYLgDQjVP",
+      "verified_source": "85f01a65a8473b5e5eb02d44a3b235f711a9d39f",
+      "main_branch_is_not_release": true
+    },
+    "exam_and_limiter": {
+      "supabase_project": "CongchungVND",
+      "project_ref": "sxnuwfnqgqjrjvoosjep",
+      "region": "ap-southeast-1",
+      "organization_plan": "free",
+      "homepage_schema": "homepage_login",
+      "exam_data_out_of_scope": true
+    }
+  },
+  "sources": [
+    {
+      "id": "static-content",
+      "authoritative_store": "GitHub content/site.json, content/guides.json, public/images",
+      "writer": "Reviewed source commit",
+      "reader": "Vercel static build",
+      "state": "active",
+      "caution": "Printed guide slugs/origin must remain stable"
+    },
+    {
+      "id": "guide-overrides",
+      "authoritative_store": "Private Vercel Blob guides/<slug>.json",
+      "writer": "api/guides.js with owner session/origin/revision",
+      "reader": "api/guides.js",
+      "state": "remaining_blob_dependency",
+      "live_write_verified_this_audit": false,
+      "secret_names": [
+        "PORTAL_PRIVATE_BLOB_TOKEN"
+      ]
+    },
+    {
+      "id": "nas-report",
+      "authoritative_store": "NAS collector cache and maintenance/retention outputs; committed aggregate copy in Drive",
+      "writer": "Existing NAS publisher via HMAC GAS request",
+      "reader": "GET /api/nas-report",
+      "transport": "gas-drive",
+      "state": "live_read_verified",
+      "build_selector": "NAS_REPORT_STATUS_URL",
+      "runtime_endpoint_env": "NAS_REPORT_GAS_URL",
+      "timer_seconds": 300,
+      "heartbeat_seconds": 1800,
+      "browser_refresh_seconds": 300,
+      "freshness": {
+        "receipt_max_age_seconds": 2700,
+        "measurement_max_age_at_receipt_seconds": 900
+      },
+      "nas_service_reinspected_this_audit": false
+    },
+    {
+      "id": "gdrive-backup-report",
+      "authoritative_store": "my-backup-gdrive-koofr bisync result",
+      "writer": "scripts/publish_gas_report.py in backup repo",
+      "reader": "GET /api/backup-report?source=gdrive",
+      "transport_selected_by_homepage": "gas-drive",
+      "publisher_backend_actual_variable": "not independently read",
+      "state": "adapter_selected_no_report",
+      "observed_http": 503,
+      "observed_code": "NO_REPORT",
+      "repository": "hunghvt-cyber/my-backup-gdrive-koofr",
+      "workflow": ".github/workflows/bisync.yml",
+      "schedule_utc": "0 19 * * *",
+      "schedule_vietnam": "02:00 daily; scheduler may delay",
+      "publisher_env_names": [
+        "REPORT_BACKEND",
+        "REPORT_GAS_URL",
+        "REPORT_GAS_KEY"
+      ]
+    },
+    {
+      "id": "gphotos-backup-report",
+      "authoritative_store": "google-photos-koofr daily result",
+      "writer": "scripts/publish_gas_report.py in Photos repo",
+      "reader": "GET /api/backup-report?source=gphotos",
+      "transport_selected_by_homepage": "gas-drive",
+      "publisher_backend_actual_variable": "not independently read",
+      "state": "adapter_selected_no_report",
+      "observed_http": 503,
+      "observed_code": "NO_REPORT",
+      "repository": "hunghvt-cyber/google-photos-koofr",
+      "workflow": ".github/workflows/daily.yml",
+      "schedule_utc": "17 20 * * *",
+      "schedule_vietnam": "03:17 daily; scheduler may delay",
+      "excludes": [
+        "backfill",
+        "quarterly reconcile"
+      ]
+    },
+    {
+      "id": "homepage-login",
+      "authoritative_store": "Supabase homepage_login.state",
+      "writer": "Atomic RPC public.homepage_consume_login_attempt -> private implementation",
+      "reader": "Vercel api/auth.js",
+      "state": "production_verified",
+      "backend": "supabase",
+      "per_ip_max": 5,
+      "global_max": 30,
+      "window_seconds": 900,
+      "ip_storage": "HMAC-SHA256 only",
+      "counter_state_rows": 1,
+      "env_names": [
+        "LOGIN_LIMIT_BACKEND",
+        "LOGIN_LIMIT_SUPABASE_URL",
+        "LOGIN_LIMIT_SUPABASE_KEY",
+        "LOGIN_LIMIT_TOKEN"
+      ],
+      "password_and_session_store": "Vercel env and encrypted browser cookie",
+      "automatic_fallback": false,
+      "return_to_blob": "User-approved direction after Blob recovery; not scheduled or performed"
+    },
+    {
+      "id": "notes",
+      "authoritative_store": "Koofr dedicated Notes namespace",
+      "writer": "Independent hunghvt-notes API",
+      "reader": "Independent Notes app",
+      "state": "separate_live_application",
+      "homepage_route": "/notes/",
+      "env_names": [
+        "KOOFR_NOTES_USER",
+        "KOOFR_NOTES_APP_PASSWORD",
+        "NOTES_PASSWORD",
+        "NOTES_SESSION_PASSWORD",
+        "NOTES_DATA_NAMESPACE"
+      ],
+      "local_drafts": "IndexedDB; not authoritative backup",
+      "backup": "Owner snapshot export; independent automated backup not confirmed",
+      "legacy_homepage_notes_api": {
+        "status": 410,
+        "code": "NOTES_RETIRED"
+      }
+    },
+    {
+      "id": "expenses",
+      "authoritative_store": "Google Sheets ledger",
+      "writer": "Active Telegram GAS webhook doPost; @PoormanTest0219_bot",
+      "reader": "Vercel api/expenses.js -> separate bridge GAS homepage_stats",
+      "state": "source_and_config_verified_not_authenticated_smoke_this_audit",
+      "env_names": [
+        "EXPENSES_API_URL",
+        "EXPENSES_API_SECRET"
+      ],
+      "bot_source": {
+        "repository": "hunghvt-cyber/poorman-telebot",
+        "branch": "experiment/gas-webhook-isolated",
+        "folder": "experiments/gas-webhook"
+      },
+      "bridge_source": {
+        "repository": "hunghvt-cyber/poorman-telebot",
+        "branch": "main",
+        "warning": "Preserved HTTP bridge; do not bootstrap old polling bot"
+      }
+    },
+    {
+      "id": "gemini-chat",
+      "authoritative_service": "Gemini API invoked by separate existing GAS bridge",
+      "reader": "Vercel api/chat.js -> homepage_chat",
+      "state": "source_and_config_verified_not_authenticated_smoke_this_audit",
+      "env_names": [
+        "EXPENSES_API_URL",
+        "EXPENSES_API_SECRET"
+      ],
+      "runtime_model": "Not independently inspected; model self-identification is not evidence"
+    },
+    {
+      "id": "backup-media-and-state",
+      "authoritative_store": "Google Drive/Photos originals and Koofr destinations/state",
+      "writer": "Separate GitHub-hosted backup engines",
+      "reader": "Backup runner and owner",
+      "state": "latest_runs_failed_no_new_backup_proof",
+      "homepage_access": "Sanitized aggregate reports only",
+      "directions": {
+        "drive": "Two-way bisync",
+        "photos": "One-way backup"
+      },
+      "nas_required": false
+    }
+  ],
+  "cross_cutting": {
+    "reporting_and_bridge_share_endpoint": false,
+    "nas_and_backup_reporting_share_endpoint": true,
+    "site_json_blob_urls": "Legacy build defaults overridden by production env; presence is not automatic fallback",
+    "secondary_dependencies": [
+      "Telegram for expense intake",
+      "Tailscale for Viewer/FnNAS shortcuts",
+      "Gemini API for chat"
+    ],
+    "home_ai": "Independent linked application; its Firestore is not a Homepage dependency",
+    "secrets": "Only names/locations documented; no values; production secrets not copied into preview",
+    "known_gaps": [
+      "Both backup aggregate endpoints NO_REPORT",
+      "Latest Drive and Photos daily runs failure; cause not established from job metadata",
+      "Guide overrides still depend on Blob",
+      "Supabase Free inactivity pause",
+      "Independent Notes automated backup not confirmed"
+    ]
+  }
+}

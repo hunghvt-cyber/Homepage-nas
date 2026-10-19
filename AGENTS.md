@@ -1,14 +1,24 @@
-# Homepage NAS
+# Homepage NAS — AI tiếp quản
 
-Repository: hunghvt-cyber/Homepage-nas. Homepage with static public pages, QR instructions and private Notes; Home-AI is only a shortcut.
+Repository: hunghvt-cyber/Homepage-nas. Current operating snapshot: 2026-10-19.
 
-- Keep plain HTML/CSS/JavaScript. Python generates static pages; qrcode is build-only.
-- Text in content/, compressed images in public/images/. No Firestore or Home-AI API dependencies. Shared-password sessions and server-only private Blob storage are authorized for Notes and QR editing. Keep public QR reading independent of login; enforce the server-verified shared password on the server.
-- Build: python3 scripts/build.py; QR build needs requirements.txt and a confirmed PORTAL_BASE_URL HTTPS origin.
-- Never change guide slugs after QR printing. Never derive printed QR URLs from preview deployment URLs.
-- Root Vercel project uses main and dist output. Never deploy this repo into the existing Home-AI project.
-- NAS status is public, minimal and read-only. Preserve camera/NAS five-minute refresh and maintenance on page load only. Show data freshness; never fabricate current measurements.
-- No credentials, private keys, events, recording paths or private data in source/public output.
-- Preserve others' changes, no force-push or history rewrite. Inspect diff and run build, JS syntax and internal-link checks before push.
-- Report deployment and browser verification limits truthfully. Do not change NAS services or tunnels as part of source edits.
+Read [docs/OPERATIONS.md](docs/OPERATIONS.md) and
+[docs/data-sources.json](docs/data-sources.json) before changing a backend,
+deployment, data source, authentication or reporting workflow. Re-check current
+configuration and production evidence; dated reports are not live status.
+
+- Keep plain HTML/CSS/JavaScript; Python builds static pages into dist. Source content is in content/, images in public/images/. Build with python3 scripts/build.py; QR requires requirements.txt and a confirmed HTTPS PORTAL_BASE_URL.
+- Homepage production is Vercel project homepage-nas / main. Never deploy into home-ai, hunghvt-notes or a lab project.
+- NAS and backup aggregate reads currently use GAS/Drive via Vercel API adapters. Build env overrides the legacy Blob defaults in content/site.json; verify generated config.js and backup-config.js.
+- NAS timer checks every five minutes; GAS publishing uses event changes plus a 30-minute heartbeat. Preserve freshness timestamps, pending mutation identity, generation and sequence. Do not add collectors, timers or fabricate measurements.
+- Supabase is only the temporary Homepage login attempt counter in the isolated homepage_login schema of CongchungVND. Password verification/encrypted sessions stay on Vercel. Do not modify exam tables, users or policies. Never bypass the limiter or silently fall back between counter stores.
+- Legacy Homepage Notes APIs are retired (410). /notes/ opens the independent Koofr Notes project. Its source is hunghvt-cyber/Hunghvt-notes on release/minimal-notes, not its nearly empty main. Do not restore legacy Notes writers, import caches as authoritative data or assume deleted Blob Notes can be rolled back.
+- Guide overrides/history still use private Blob. Keep public static QR reading independent of login. Preserve revisions and server-side shared-password checks; never change printed guide slugs.
+- Expense/Gemini bridge, reporting GAS and active Telegram webhook GAS are separate deployments. Active bot is @PoormanTest0219_bot using doPost; do not bootstrap the legacy polling bot.
+- Home-AI is a shortcut to an independent application, not a Homepage database/API dependency.
+- No credentials, private keys, share tokens, raw events, recording paths or private data in repo/public output. Document secret names and storage locations only.
+- Preserve local changes. No reset/clean/force-push/history rewrite. Inspect the exact diff and run checks appropriate to the change; build, JS syntax and local links for runtime source edits.
+- Do not change NAS services, cameras, recordings, retention, tunnels, Google triggers or backup/sync engines as part of Homepage source/documentation work.
+- Report deployment and verification limits truthfully. A selected report backend, READY deployment or successful report publish does not prove the underlying backup succeeded.
+
 

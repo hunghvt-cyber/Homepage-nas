@@ -1,5 +1,9 @@
 # Notes và sửa QR bằng mật khẩu chung
 
+> **Cập nhật 19/10/2026 — đọc [OPERATIONS.md](OPERATIONS.md) trước.** Kiến trúc Notes Blob lịch sử đã nghỉ. /notes/ hiện mở ứng dụng Koofr riêng; API Notes cũ trả 410. Guide overrides vẫn dùng private Blob; mật khẩu/cookie Homepage vẫn giữ, bộ đếm đã chuyển Supabase. Không khôi phục Notes writer cũ.
+
+## Nội dung lưu trữ lịch sử
+
 Người dùng đã thay yêu cầu Gmail/Google login bằng một mật khẩu chung cho Notes và sửa hướng dẫn QR. Không còn Google Client ID, OAuth, tài khoản GitHub hoặc email allowlist trong runtime. Ai biết mật khẩu đều có quyền này. QR vẫn đọc công khai.
 
 ## Chức năng

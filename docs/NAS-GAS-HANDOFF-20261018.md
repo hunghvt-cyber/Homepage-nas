@@ -1,5 +1,9 @@
 # NAS publisher handoff
 
+> **Cập nhật 19/10/2026 — đọc [OPERATIONS.md](OPERATIONS.md) trước.** Handoff lịch sử. Cutover NAS đã diễn ra: production chọn /api/nas-report → GAS/Drive, HTTP 200 ngày 19/10/2026. Hai feed backup đã chọn adapter nhưng còn NO_REPORT. Các câu bên dưới nói production còn chọn Blob/backup chưa deploy/không được cutover đã bị thay thế bởi quyết định và cấu hình mới.
+
+## Nội dung lưu trữ lịch sử
+
 GAS version 12 has been deployed using the retired standalone Notes prototype
 project. Expense/Gemini projects are unchanged. The schema lives in Core.gs in
 this existing project; the repository's canonical source is nas-schema.cjs.

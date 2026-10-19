@@ -1,5 +1,9 @@
 # Backup reporting — source of truth for AI handover
 
+> **Cập nhật 19/10/2026 — đọc [OPERATIONS.md](OPERATIONS.md) trước.** Tài liệu transport Blob cũ. Homepage production hiện chọn /api/backup-report → GAS/Drive; hai nguồn còn NO_REPORT. Blob chỉ là cấu hình cũ/dự phòng chưa xác minh dùng được. Không cấu hình lại feed về Blob theo các bước lịch sử bên dưới.
+
+## Nội dung lưu trữ lịch sử
+
 ## Purpose and ownership
 Homepage displays two independent public aggregate reports, never raw logs or secrets:
 - `hunghvt-cyber/my-backup-gdrive-koofr`: daily two-way Drive ↔ Koofr.

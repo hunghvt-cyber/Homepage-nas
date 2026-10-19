@@ -1,5 +1,9 @@
 # Chat Gemini trên Homepage
 
+> **Cập nhật 19/10/2026 — đọc [OPERATIONS.md](OPERATIONS.md) trước.** Chat hiện vẫn qua /api/chat và GAS bridge chi tiêu hiện có; khác GAS reporting. /notes/ đã chuyển sang app Koofr độc lập nên hướng dẫn mở chat từ Notes cũ bên dưới là lịch sử. Bộ đếm đăng nhập hiện dùng Supabase; chưa kiểm model runtime trong đợt quản trị này.
+
+## Nội dung lưu trữ lịch sử
+
 ## Kết nối đã kiểm tra
 
 Home-AI dùng Vercel `api/gemini.js` gọi Gemini Developer API bằng `GEMINI_API_KEY`, xác thực Firebase. Không dùng Gemini CLI. Metadata Vercel xác nhận biến khóa tồn tại; không đọc hoặc sao chép giá trị khóa.

@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-19T06:26:25.440Z",
+  "source_commit": "ccb4fb264a4292a63b7ac12ad9f2f554474cfbb9",
+  "production_http": [
+    {
+      "path": "/config.js",
+      "status": 200,
+      "selected_source": "/api/nas-report"
+    },
+    {
+      "path": "/backup-config.js",
+      "status": 200,
+      "selected_source": "/api/backup-report",
+      "legacy_blob_default_also_present": true
+    },
+    {
+      "path": "/api/nas-report/",
+      "status": 200,
+      "updated_at": "2026-10-19T06:01:21Z",
+      "received_at": "2026-10-19T06:01:37.917Z",
+      "recovered_previous": false
+    },
+    {
+      "path": "/api/backup-report/?source=gdrive",
+      "status": 503,
+      "code": "NO_REPORT"
+    },
+    {
+      "path": "/api/backup-report/?source=gphotos",
+      "status": 503,
+      "code": "NO_REPORT"
+    },
+    {
+      "path": "/api/auth/",
+      "status": 200,
+      "authenticated": false
+    },
+    {
+      "path": "/api/notes/",
+      "status": 410,
+      "code": "NOTES_RETIRED"
+    }
+  ],
+  "github_runs": [
+    {
+      "repository": "hunghvt-cyber/my-backup-gdrive-koofr",
+      "id": 39166849940,
+      "name": "Two-Way Sync (Google Drive <-> Koofr)",
+      "created_at": "2026-10-18T21:13:11Z",
+      "conclusion": "failure",
+      "job_steps": null,
+      "logs_url": null
+    },
+    {
+      "repository": "hunghvt-cyber/google-photos-koofr",
+      "id": 39172293967,
+      "name": "Google Photos Daily Backup",
+      "created_at": "2026-10-18T22:27:19Z",
+      "conclusion": "failure",
+      "job_steps": null,
+      "logs_url": null
+    }
+  ],
+  "supabase": {
+    "project": "CongchungVND",
+    "ref": "sxnuwfnqgqjrjvoosjep",
+    "organization_plan": "free",
+    "status_previous_check": "ACTIVE_HEALTHY",
+    "function_readback": {
+      "private_implementation_security_definer": true,
+      "public_wrapper_security_definer": false
+    },
+    "changed_by_documentation_task": false
+  },
+  "earlier_same_day_limiter_rollout": {
+    "commit": "ccb4fb264a4292a63b7ac12ad9f2f554474cfbb9",
+    "deployment": "dpl_12x4TdUfaSufN1TFxGyBnihf5Zvp",
+    "node_tests_passed": 9,
+    "live_rpc_same_ip": {
+      "requests": 8,
+      "allowed": 5,
+      "denied": 3
+    },
+    "live_rpc_global_allowed": 30,
+    "production_synthetic_wrong_password_http": 401,
+    "production_counter_increment_confirmed": true,
+    "real_password_read": false
+  },
+  "notes": {
+    "deployment": "dpl_97WThiMJ427dyDB2ajMHYLgDQjVP",
+    "target": "production",
+    "state": "READY",
+    "source": "85f01a65a8473b5e5eb02d44a3b235f711a9d39f",
+    "branch": "release/minimal-notes",
+    "koofr_secret_metadata_present": true,
+    "live_crud_retested_this_audit": false
+  },
+  "limitations": [
+    "No direct NAS SSH inspection",
+    "No GAS editor/deployment bundle comparison in this audit",
+    "No real private Notes or ledger content read",
+    "No current Blob quota dashboard inspection",
+    "Backup workflow failure causes not established; historical billing note is not proof for current failures",
+    "Only documentation changes authorized/applied in this task"
+  ]
+}

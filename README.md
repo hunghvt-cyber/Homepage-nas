@@ -1,60 +1,69 @@
-# Homepage và QR trên Vercel
+# Homepage AIO — quản trị và vận hành
 
-Homepage độc lập; nội dung nền và ảnh trong GitHub. Không Firebase SDK, Firestore hay API Home-AI. Trang QR đọc công khai; sửa hướng dẫn và Notes riêng tư dùng mật khẩu chung, chỉ cho người biết mật khẩu. API chạy trên Vercel và dữ liệu lưu trong Blob PRIVATE riêng. Chỉ dist được phục vụ; Home-AI là dự án riêng; Homepage chỉ chứa shortcut đến ứng dụng đó.
+Trang chính: https://homepage-nas.vercel.app/
+Cập nhật trạng thái: 19/10/2026, múi giờ Việt Nam.
 
-## Nội dung
-- content/site.json: tên trang và shortcut. Link trống là chưa cấu hình. Viewer/FnNAS chỉ điền đường Tailscale đã xác minh; Home-AI giữ truy cập/đăng nhập hiện tại.
-- content/guides.json: slug cố định, tên, khu vực, tóm tắt, các bước, lưu ý và ảnh. Không đổi slug sau khi in QR.
-- Ảnh nén trong public/images; khai báo {"src":"/images/ten.webp","alt":"Mô tả","caption":"Chú thích"}. Ưu tiên ảnh 100–300 KB vẫn rõ chữ, tránh video/ảnh gốc lớn. Chỉ đưa nội dung muốn công khai.
-- Hộp đồ là trang mẫu, không phải đồ vật thật. Trang hướng dẫn đọc được khi tắt JavaScript.
+**AI tiếp quản đọc [Hồ sơ vận hành hiện tại](docs/OPERATIONS.md) trước.**
+[Bản đồ nguồn dữ liệu JSON](docs/data-sources.json) dùng để tra cứu có cấu trúc;
+[bằng chứng kiểm tra](docs/results/operations-20261019.json) phân biệt cấu hình,
+kiểm tra production và những phần chưa xác minh.
 
-## Project Vercel riêng
-Trong account đang có Home-AI, tạo project Homepage riêng, kết nối repo hunghvt-cyber/Homepage-nas:
-- Root Directory: để trống (root repo)
-- Framework: Other
-- Production Branch: main
-- Install/build/output: lấy từ vercel.json
-- Không sao chép env/secret Home-AI.
-- Production công khai không cần Vercel login; kiểm tra Deployment Protection của đúng project Homepage, không chỉnh Home-AI.
+## Sáu nhóm phụ thuộc
 
-Git integration tự deploy khi push; không cần workflow Firebase hoặc token trong repo. Repo riêng phát triển độc lập với Home-AI.
+| Nhóm | Vai trò hiện tại |
+| --- | --- |
+| NAS | Nguồn đo camera, dung lượng, sức khỏe và kết quả bảo trì/dọn video; không host Homepage |
+| GitHub | Mã nguồn/tài liệu; Actions chạy backup Drive/Photos → Koofr |
+| Vercel | Website tĩnh và API; Blob là dịch vụ con, vẫn còn dùng cho guide overrides |
+| Supabase | Bộ đếm đăng nhập Homepage, tách trong schema riêng của dự án CongchungVND |
+| Google: GAS, Drive, Sheets, Photos, Gemini | GAS/Drive phục vụ báo cáo; GAS/Sheets phục vụ chi tiêu; GAS gọi Gemini |
+| Koofr | Dữ liệu Notes độc lập, bản sao Drive/Photos và trạng thái của các bộ backup |
 
-Sau deploy đầu, xác nhận domain production thật và đặt PORTAL_BASE_URL=https://TEN-PROJECT.vercel.app cho build Production/Preview, rồi redeploy để có QR. Không dùng VERCEL_URL vì mỗi deployment có URL khác. In thử và quét kiểm chứng trước khi dán. Nếu đổi domain phải giữ domain cũ hoặc redirect để QR cũ tiếp tục dùng.
+Telegram là nguồn ghi chi tiêu; Tailscale phục vụ hai shortcut NAS. Home-AI là
+ứng dụng riêng được liên kết, không phải backend của Homepage.
 
-## Build local
-Không tạo QR: python3 scripts/build.py.
-Tạo QR: pip install -r requirements.txt, chạy build với PORTAL_BASE_URL là HTTPS origin đã xác nhận. QR SVG nằm trong dist/qr, có link tải ở từng hướng dẫn. Thư viện QR chỉ dùng khi build.
+## Trạng thái đang dùng
 
-## Trạng thái NAS
-Homepage đọc snapshot JSON công khai tối thiểu từ Vercel Blob; `content/site.json` giữ URL nguồn. Publisher Python lấy cache collector sẵn có, không quét NAS lại, và chạy bằng user systemd timer mỗi 5 phút. Snapshot được ghi đè tại pathname cố định; không commit cache vận hành hoặc snapshot.
-State: ok/pass/warn/fail/unknown. `updated_at` theo cache nguồn; maintenance/retention giữ kết quả lần chạy gần nhất cùng `measured_at`. Snapshot quá 15 phút đánh dấu camera/NAS cũ nhưng không xóa kết quả maintenance/retention. Camera/NAS làm mới 5 phút một lần; maintenance/retention chỉ khi mở/reload.
-Publisher dùng Blob SDK và token đọc từ `~/.config/homepage-nas/blob-token`. Không đẩy GitHub theo lịch, mở tunnel, hoặc xuất IP, đường dẫn recording, event, secret hay thông tin quản trị. Chi tiết và kiểm chứng: [báo cáo status feed](docs/NAS-STATUS-FEED-20261009.md).
+- Camera/NAS: trình duyệt → `/api/nas-report` → GAS reporting → Drive.
+- Hai báo cáo backup: `/api/backup-report?source=gdrive|gphotos` → cùng GAS reporting.
+  Kiểm tra 19/10/2026 vẫn trả `503 NO_REPORT`; chưa có báo cáo thật để xác nhận hoàn tất.
+- Đăng nhập: mật khẩu chung và cookie mã hóa tại Vercel; bộ đếm Supabase
+  từ commit `ccb4fb2`, giới hạn 5 lượt/IP và 30 lượt tổng/15 phút.
+- Notes: `/notes/` mở https://hunghvt-notes.vercel.app/; repo
+  [Hunghvt-notes, nhánh release/minimal-notes](https://github.com/hunghvt-cyber/Hunghvt-notes/tree/release/minimal-notes).
+  Backend Koofr và phiên đăng nhập riêng. API Notes cũ trả `410 NOTES_RETIRED`.
+- Hướng dẫn đồ vật: nội dung nền/ảnh ở GitHub; phần sửa trên web vẫn dùng private Blob.
+  Chưa hoàn tất mục tiêu dành Blob riêng cho bộ đếm đăng nhập sau này.
+- Chi tiêu/Gemini: API Vercel gọi GAS bridge hiện có bằng HMAC; dữ liệu chi tiêu ở Sheets.
+  GAS bridge này khác GAS reporting và khác GAS webhook của bot hiện hành.
 
-## Kiểm chứng và quay lại
-Build, syntax, link nội bộ/404, ảnh và QR trước khi commit. Kiểm tra điện thoại không đăng nhập Vercel, dữ liệu cũ, link Tailscale sau deploy. Revert commit hoặc rollback Vercel; giữ Homepage/tunnel cũ đến khi bản mới được kiểm chứng.
+## Đường dẫn cần đọc
 
-## Trạng thái
-Đã bỏ cấu hình/workflow Firebase Hosting. Source sẵn sàng chưa có nghĩa website đã live; cần quyền tạo project đúng account Vercel.
+- [Vận hành, nguồn dữ liệu, cấu hình và xử lý lỗi](docs/OPERATIONS.md)
+- [Danh mục nguồn dữ liệu có cấu trúc](docs/data-sources.json)
+- [Bộ đếm Supabase, quyền và cách chuyển lại Blob](docs/LOGIN-LIMITER-SUPABASE-20261019.md)
+- [Trạng thái phụ thuộc Blob](docs/BLOB-DEPENDENCIES-20261018.md)
+- [Notes cũ đã nghỉ và bằng chứng dọn dữ liệu](docs/NOTES-RETIREMENT-20261018.md)
 
+Tài liệu có ngày cũ là lịch sử khi mâu thuẫn với hồ sơ hiện tại; không dùng
+README/handoff cũ để tự khôi phục Notes Blob hoặc bật lại bot polling.
 
-## Notes và sửa hướng dẫn bằng mật khẩu
+## Phát triển
 
-Mở `/notes/` để tạo, sửa và copy ghi chú/code. Ở trang đồ vật, chọn “Sửa hướng dẫn”, đăng nhập mật khẩu rồi sửa trực tiếp trên web. Chỉ người biết mật khẩu chung được truy cập Notes và sửa QR; đọc QR vẫn công khai. Không cần GitHub login.
+Giữ HTML/CSS/JavaScript thuần; Python sinh `dist/`. Build:
 
-Sửa trên web lưu override riêng trong private Blob; không tự commit GitHub. Nội dung nền vẫn trong content/guides.json. Rollback code không rollback dữ liệu Blob. Xem [cấu hình, quyền truy cập và giới hạn](docs/NOTES-PASSWORD-AUTH-20261010.md).
+```sh
+npm ci --ignore-scripts
+python3 -m pip install -r requirements.txt
+python3 scripts/build.py
+npm test
+```
 
-Chức năng riêng tư cần PORTAL_PASSWORD, SESSION_PASSWORD, PORTAL_BASE_URL và PORTAL_PRIVATE_BLOB_TOKEN. Khi thiếu cấu hình, API từ chối truy cập và giao diện báo chưa cấu hình. Không dùng Blob public đang phục vụ NAS status để lưu Notes.
+`vercel.json` là nguồn cấu hình install/build/output. Vercel project
+`homepage-nas`, production branch `main`. Push main tự tạo deployment;
+commit tài liệu không đồng nghĩa có thay đổi runtime.
 
-Cài dependency Node: `npm ci --ignore-scripts`. Kiểm tra API: `npm test`.
+`content/site.json` có URL Blob cũ làm mặc định; production đang chọn GAS bằng
+biến môi trường build. Luôn kiểm tra `/config.js` và `/backup-config.js` thực tế
+trước khi kết luận nguồn đang dùng. Không đổi slug/domain QR đã in.
 
-
-## Chat Gemini
-
-Trong Notes chọn **Mở chat Gemini**, hoặc mở `/gemini/`. Dùng mật khẩu chung và kết nối Apps Script của trang Chi tiêu; không thêm khóa Gemini vào Homepage. [Kiến trúc và giới hạn](docs/GEMINI-CHAT-20261011.md).
-
-
-## Checklist trong Notes
-
-Chọn **Chèn checklist** để thêm mục bên cạnh nội dung chữ; Enter thêm mục tiếp theo, Shift+Enter xuống dòng trong một mục. Tick chuyển mục xuống phần **Đã hoàn thành**, bỏ tick đưa trở lại phía trên. Bấm **Lưu** để lưu cả nội dung và checklist; Copy toàn bộ kèm ký hiệu `[ ]` / `[x]`.
-
-Checklist có tối đa 200 mục, 2.000 ký tự/mục và tính vào giới hạn nội dung Note 1 MB. Hỗ trợ Note riêng, link Note, thư mục chia sẻ và lịch sử khôi phục. Note cũ mặc định không có checklist; trang cũ không gửi trường checklist sẽ giữ checklist đã có trên máy chủ.

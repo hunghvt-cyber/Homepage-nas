@@ -1,23 +1,37 @@
-# Blob dependencies after legacy Notes retirement
+# Trạng thái các phụ thuộc Blob
 
-Updated 2026-10-18 under the user's latest authorization.
+Cập nhật hiện hành: 19/10/2026. Đọc [OPERATIONS.md](OPERATIONS.md) và
+[data-sources.json](data-sources.json) để tra toàn bộ hệ thống. Tên file giữ
+ngày cũ để các link sẵn có tiếp tục hoạt động.
 
-| Component | Current state | GAS/Drive action |
+| Thành phần | Nguồn hiện tại | Vai trò Blob còn lại |
 | --- | --- | --- |
-| Legacy Notes/checklists/folder metadata | Production APIs retired (410); 25 note objects deleted | No migration required |
-| Legacy share permissions | 1 share object deleted; old share/workspace pages retired | No migration required |
-| Legacy Notes list index | 1 index deleted | No migration required |
-| Koofr Notes | Independent live application | Preserve Koofr backend |
-| Camera/NAS health/maintenance/retention aggregate | Public Blob source still configured on Homepage | Event + 30-minute heartbeat code prepared; Google/NAS live qualification pending |
-| Google Drive backup report | Public Blob source; private workflow blocked by Actions billing | Move only the small aggregate report to GAS/Drive; publisher/adapter work pending |
-| Google Photos daily backup report | Public Blob source; private workflow blocked by Actions billing | Move only the daily aggregate report to GAS/Drive; publisher/adapter work pending |
-| QR guide overrides and history | Private Blob, preserved | Suitable for GAS/Drive with per-guide revision checks, owner authentication and verified migration; implementation/cutover pending |
-| Homepage login rate limits | Private Blob, preserved | Keep current atomic limiter as requested |
-| Expense and Gemini | Existing separate GAS integrations plus shared Homepage session | Preserve existing projects and integration |
-| Static guides, images and printed QR URLs | GitHub/Vercel build | Keep as static content |
-| Photos/Drive backup media and sync engines | Koofr plus existing backup runners | GAS reporting does not replace the backup engine or fix blocked private runners |
+| Camera/NAS, sức khỏe, bảo trì, retention tổng hợp | NAS → GAS reporting/Drive → /api/nas-report | URL Blob còn làm build default cũ; production đã override sang API |
+| Báo cáo Drive ↔ Koofr | Homepage chọn /api/backup-report?source=gdrive → GAS/Drive | Publisher vẫn có nhánh Blob dự phòng; adapter hiện NO_REPORT |
+| Báo cáo Photos → Koofr | Homepage chọn /api/backup-report?source=gphotos → GAS/Drive | Publisher vẫn có nhánh Blob dự phòng; adapter hiện NO_REPORT |
+| Bộ đếm đăng nhập Homepage | Supabase homepage_login.state từ ccb4fb2 | Code limiter Blob giữ để chuyển lại khi hoạt động được; không tự fallback |
+| Guide overrides/history | Private Blob guides/<slug>.json | **Vẫn phụ thuộc thực sự**; chưa chuyển backend hoặc xác minh ghi trong đợt này |
+| Legacy Notes/share/index | API nghỉ, 410; đã có bằng chứng cleanup trước | Không khôi phục writer hoặc coi dữ liệu đã xóa là backup |
+| Notes hiện dùng | Koofr qua hunghvt-notes project riêng | Không ghi Notes mới vào Blob |
+| Chi tiêu/Gemini | GAS bridge + Sheets/Gemini | Không dùng Blob cho dữ liệu này |
+| Media và state backup | Google Drive/Photos + Koofr + Actions | Report Blob cũ không phải media/state backup |
 
-## Live deletion evidence
+## Quyết định và giới hạn hiện tại
+
+- Người dùng chọn Supabase cho bộ đếm tạm; sau khi Blob hoạt động lại sẽ đánh giá
+  đưa bộ đếm về Blob. Chưa cấu hình tự động chuyển backend.
+- Mong muốn dùng Blob riêng cho bộ đếm **chưa hoàn tất**, vì guide overrides vẫn
+  đọc/ghi Blob. Không xóa PORTAL_PRIVATE_BLOB_TOKEN hay package @vercel/blob.
+- NAS/backup production build đang chọn GAS. Giá trị URL Blob trong site.json
+  không phải bằng chứng website đang đọc Blob; kiểm generated config.js.
+- Hai feed backup trả NO_REPORT và hai run mới nhất failure tại lần kiểm 19/10.
+  Source/cấu hình đã chuyển không chứng minh publisher thực sự chạy thành công.
+- Giữ Blob cũ làm dự phòng không đồng nghĩa có rollback khả dụng. Cần kiểm tra
+  đọc/ghi thực trước khi chuyển, và không âm thầm dùng JSON cũ như dữ liệu mới.
+- Mốc mở lại 14/11/2026 là thông báo quota ghi nhận trước đó, chưa xác minh lại
+  dashboard trong đợt tài liệu này. Public/private store phải được kiểm riêng.
+
+## Bằng chứng xóa legacy Notes — lịch sử 18/10/2026
 
 Inventory in the existing Homepage production build environment found 25 Notes,
 1 share and 1 Notes index. Cleanup deployment `dpl_Ey844A3Z5XhF2f5DNkT73u7JyyWK`
@@ -33,18 +47,6 @@ Browser readback confirmed the legacy API's NOTES_RETIRED response and `/notes/`
 navigation to Koofr. Old editor assets were removed. Historical backend factories
 remain in source for regression tests; their deployed defaults terminate at 410.
 
-## Remaining rollout gates
-
-1. Authenticate Google and deploy the dedicated reporting project; do not change
-   expense/Gemini. Existing OAuth secrets cannot be read back from GitHub and
-   private Actions runners are unavailable due to billing.
-2. Connect the NAS publisher once. Do not modify NAS collectors, services or
-   tunnels through source changes; the local NAS operator must apply the reviewed
-   publisher configuration under the existing timer.
-3. Qualify two real heartbeat cycles, outage recovery and source freshness before
-   choosing the GAS feed in Homepage configuration.
-4. Implement and qualify the two backup aggregate publishers and QR migration.
-   Do not claim either complete merely because the NAS prototype is ready.
-
-The remaining private Blob token/package must stay: QR and the login limiter still
-use them. No quota/latency savings are claimed before real GAS rollout.
+Những ghi nhận trên chỉ áp dụng vào lần cleanup đó. Chúng không chứng minh
+Blob đang đọc/ghi bình thường hôm nay và không chứng minh Notes Koofr đã có
+backup tự động. Đợt cập nhật tài liệu này không xóa thêm object nào.

@@ -1,5 +1,9 @@
 # Backup aggregate reports on existing GAS/Drive
 
+> **Cập nhật 19/10/2026 — đọc [OPERATIONS.md](OPERATIONS.md) trước.** Kế hoạch/lịch sử rollout. Source workflow đã có trên main; Homepage production đã chọn GAS adapter. Hai endpoint hiện trả 503 NO_REPORT: chưa xác nhận một lần publish báo cáo thật của từng nguồn. Không coi các gate lịch sử bên dưới là trạng thái deployment hiện tại.
+
+## Nội dung lưu trữ lịch sử
+
 Status: source and local simulations prepared. Not deployed on Google, no real
 backup run published to GAS, and Homepage source has not changed.
 
