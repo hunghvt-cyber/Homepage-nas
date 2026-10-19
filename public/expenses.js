@@ -10,7 +10,7 @@
   const list=filtered().filter(selection.match).sort((a,b)=>b.day.localeCompare(a.day));
   $('expense-detail-count').textContent=list.length+' giao dịch';
   const body=$('expense-transactions');body.replaceChildren();
-  for(const r of list){const tr=document.createElement('tr');for(const value of [r.day.split('-').reverse().join('/'),r.type==='ThuNhap'?'Thu nhập':'Chi tiêu',r.category,r.payer,money(r.amount)]){const td=document.createElement('td');td.textContent=value;tr.append(td);}body.append(tr);}
+  for(const r of list){const tr=document.createElement('tr');for(const value of [r.day.split('-').reverse().join('/'),r.type==='ThuNhap'?'Thu nhập':'Chi tiêu',r.category,r.description || 'Chưa có diễn giải',r.payer,money(r.amount)]){const td=document.createElement('td');td.textContent=value;tr.append(td);}body.append(tr);}
  }
  function choose(label,match){selection={label,match};details();$('expense-details').scrollIntoView?.({behavior:'smooth',block:'nearest'});}
  function bars(id,entries,kind){

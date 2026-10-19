@@ -19,7 +19,7 @@ export function createExpensesHandler({authorize = owner, request = fetch} = {})
    if(!data.ok || data.month !== month || !Array.isArray(data.transactions) || data.transactions.length > 100000) throw new HttpError(502,'Chưa đọc được thống kê từ Botchitieu.');
    const transactions=data.transactions.map(r=>{
     if(!/^\d{4}-\d{2}-\d{2}$/.test(r.day) || !r.day.startsWith(month+'-') || !Number.isFinite(r.amount) || r.amount < 0 || !['ChiTieu','ThuNhap'].includes(r.type) || typeof r.payer !== 'string' || typeof r.payerId !== 'string' || typeof r.category !== 'string') throw new HttpError(502,'Dữ liệu thống kê không hợp lệ.');
-    return {day:r.day,amount:r.amount,type:r.type,payer:r.payer.slice(0,200),payerId:r.payerId.slice(0,100),category:r.category.slice(0,100)};
+    return {day:r.day,amount:r.amount,type:r.type,payer:r.payer.slice(0,200),payerId:r.payerId.slice(0,100),category:r.category.slice(0,100),description:typeof r.description==='string'?r.description.slice(0,2000):''};
    });
    return reply(res,200,{month,transactions,measuredAt:data.measuredAt});
   } catch(e) {if(!e.status) e=new HttpError(502,'Không kết nối được nguồn thống kê. Thử làm mới sau.'); return fail(res,e);}

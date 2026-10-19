@@ -154,3 +154,5 @@ button.expense-bar-row{width:100%;text-align:left;cursor:pointer} .expense-bar{d
  #expenses-workspace button.expense-bar-row{grid-template-columns:90px minmax(0,1fr) 100px;gap:6px;font-size:.85rem;padding:12px 8px}
  #expenses-workspace .expense-bar-row small{font-size:.85rem}
 }
+
+#expenses-workspace .expense-table td:nth-child(4){min-width:180px;max-width:360px;white-space:pre-wrap;overflow-wrap:anywhere}
