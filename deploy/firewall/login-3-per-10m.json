@@ -1,0 +1,35 @@
+{
+  "name": "Homepage password login — 3 per 10m",
+  "description": "Enforce only after logged scope and preview verification; keep Blob until live evidence passes.",
+  "active": true,
+  "conditionGroup": [
+    {
+      "conditions": [
+        {
+          "type": "path",
+          "op": "re",
+          "value": "^/api/login(?:\\.js)?/?$"
+        },
+        {
+          "type": "method",
+          "op": "eq",
+          "value": "POST"
+        }
+      ]
+    }
+  ],
+  "action": {
+    "mitigate": {
+      "action": "rate_limit",
+      "rateLimit": {
+        "algo": "fixed_window",
+        "window": 600,
+        "limit": 3,
+        "keys": [
+          "ip"
+        ],
+        "action": "rate_limit"
+      }
+    }
+  }
+}
