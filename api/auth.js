@@ -12,7 +12,12 @@ export function createAuthHandler({limit = checkAttempts} = {}) {
     sameOrigin(req); const b = body(req); const s = await session(req, res);
     if (b.action === 'logout') {s.destroy(); return reply(res, 200, {authenticated: false});}
     if (b.action !== 'login') throw new HttpError(400, 'Thao tác không hợp lệ.');
-    await limit(req);
+    try {await limit(req);} catch(e) {
+      if(e.status) throw e;
+      const blocked=/store.{0,40}blocked|quota|suspend|usage.?limit/i.test(String(e.message||''));
+      console.error(JSON.stringify({operation:'login',stage:'attempt-limit',reason:blocked?'blob-store-blocked':'storage-unavailable'}));
+      throw new HttpError(503, 'Chưa thể mở khóa: dịch vụ giới hạn đăng nhập đang không khả dụng. Vui lòng thử lại sau.');
+    }
     if (!verifyPassword(b.password)) throw new HttpError(401, 'Mật khẩu không đúng.');
     s.authVersion = passwordVersion(); await s.save(); return reply(res, 200, {authenticated: true});
   } catch(e) {return fail(res,e);}
