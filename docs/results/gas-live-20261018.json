@@ -78,7 +78,35 @@
     "heartbeatEvidenceScope": "Two intervals supported by Codex NAS metadata; latest payload independently read, not independent observation of all timer ticks.",
     "policyTransportSimulationChecks": 11,
     "realStateTransitionVerified": false,
-    "networkRestartRecoveryVerified": false
+    "networkRestartRecoveryVerified": false,
+    "controlledLiveRecovery": {
+      "evidenceAttribution": "Operator-supplied Codex NAS report, recorded 2026-10-19; not independently inspected on NAS. UTC times-of-day supplied without explicit calendar dates.",
+      "report": "nas-publisher-recovery-20261019.md",
+      "preRequestFaultPendingPreserved": true,
+      "newProcessRecoveryVerified": true,
+      "postCommitAckLossReplayVerified": true,
+      "secondCommitPrevented": true,
+      "naturalNetworkOutageVerified": false,
+      "realStateTransitionVerified": false,
+      "terminalState": {
+        "sequence": 7,
+        "pending": false,
+        "failures": 0,
+        "timerActive": true,
+        "wrappersRemoved": true,
+        "lockFree": true,
+        "publisherCommit": "2be7d18"
+      },
+      "policyTransportSimulationChecks": 11
+    },
+    "independentFollowUpRead": {
+      "observedOn": "2026-10-19",
+      "channel": "authorized Vercel Preview API read",
+      "httpStatus": 200,
+      "updated_at": "2026-10-19T00:26:59Z",
+      "received_at": "2026-10-19T00:27:15.614Z",
+      "recovered_previous": false
+    }
   },
   "backupCandidate": {
     "deployedToGoogle": false,
