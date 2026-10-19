@@ -90,9 +90,14 @@ An anonymous /exec?source=nas read independently repeated in this session return
 ok=true, updated_at=2026-10-18T08:24:29Z,
 received_at=2026-10-18T08:24:46.053Z and sha256
 99658ae9d1140b43dfb3a752d88808780d3d01dec62311a1bd0e82dee070943d.
-Policy/transport simulations passed 11/11 according to the handoff; a real warning
-transition and real network/restart recovery remain unverified. Do not interrupt
-NAS networking/camera workloads or reset generation, sequence or policy state.
+Policy/transport simulations passed 11/11. The later operator-supplied recovery
+report verifies durable pending across pre-request failure and dropped post-commit
+ack, recovery in new Python processes, and replay=true without another commit.
+These are controlled faults through the real GAS endpoint, not a natural outage.
+See [recovery evidence and remaining cutover gates](results/nas-publisher-recovery-20261019.md).
+A natural warning transition and physical network outage remain unverified.
+Do not interrupt NAS networking/camera workloads or reset generation, sequence or
+policy state. The new-process recovery gate is passed within the documented scope.
 
 Publisher on NAS remains 2be7d18. No NAS checkout update is required for subsequent
 documentation/backup-only changes. Rollback files:
@@ -103,3 +108,11 @@ The branch now also contains a pending backup dispatcher and new Backup files.
 Those files have NOT been deployed to Google. Keep v12 stable during NAS live
 qualification. Follow BACKUP-REPORTS-GAS-20261018.md for the separate deployment
 and isolated qualification gates; do not replace only Server.gs.
+
+## Current release decision (2026-10-19)
+
+PR #23 remains draft. Production still selects Blob, independently read again on
+2026-10-19. Preview API returned a newer report measured at 00:26:59Z and received
+at 00:27:15.614Z. The recovery review records outstanding natural-transition,
+UI edge-case, cold-read timeout and operational rollback questions. No merge or
+production cutover is authorized by this documentation update.
