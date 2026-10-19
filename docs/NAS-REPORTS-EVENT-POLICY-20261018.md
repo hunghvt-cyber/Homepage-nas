@@ -1,7 +1,11 @@
 # Policy camera/NAS: sự kiện và heartbeat
 
 Đã thống nhất với người dùng ngày 18/10/2026. Policy đã có mã trong
-`scripts/nas_report_policy.py` và kiểm thử mô phỏng; chưa chạy trên NAS thật.
+`scripts/nas_report_policy.py`, đã triển khai trên NAS ở 2be7d18 và có hai chu kỳ
+heartbeat thật theo hồ sơ. Fault injection qua GAS thật đã xác nhận giữ pending,
+retry cùng mutation và phục hồi bằng tiến trình mới. Bằng chứng cùng các giới hạn:
+[recovery và gate trước cutover](results/nas-publisher-recovery-20261019.md).
+Production Homepage vẫn chưa chuyển nguồn.
 Scope là báo cáo tổng hợp hiện có.
 
 Kết quả mô phỏng mới: 288 lượt kiểm tra trong 24 giờ ổn định tạo 48 lần gửi,
