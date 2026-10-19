@@ -21,6 +21,7 @@ export function createBackupReportHandler({env=process.env,request=fetch}={}){
     r=await request(next,{redirect:'error',signal});
    }
    if(!r.ok)throw Error('UPSTREAM_ERROR');const data=JSON.parse(await boundedText(r));
+   if(data.ok===false&&data.service==='homepage-backup-reports-v1'&&data.source===source&&data.code==='NO_REPORT')return fail(503,'NO_REPORT');
    if(data.ok!==true||data.service!=='homepage-backup-reports-v1'||data.source!==source||typeof data.payload!=='string'||Buffer.byteLength(data.payload)>8192)throw Error('INVALID_REPORT');
    if(createHash('sha256').update(data.payload).digest('hex')!==data.sha256)throw Error('HASH_MISMATCH');
    const report=schema.validate(JSON.parse(data.payload),source),received=Date.parse(data.received_at);
@@ -32,3 +33,4 @@ export function createBackupReportHandler({env=process.env,request=fetch}={}){
  };
 }
 export default createBackupReportHandler();
+

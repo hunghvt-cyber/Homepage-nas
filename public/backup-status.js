@@ -13,9 +13,16 @@
     const p=item.prefix;
     if(!base&&!api){put(p+'-state','Chưa cấu hình nguồn báo cáo');continue;}
     try{
-      const response=await fetch(api?api+'?source='+item.key:base+'/'+item.file,{cache:'no-store'});
-      if(!response.ok)throw new Error('HTTP '+response.status);
+      const response=await fetch(api?api+'?source='+item.key:base+'/'+item.file,{cache:'no-store',signal:AbortSignal.timeout(15000)});
       const data=await response.json();
+      if(!response.ok){
+        if(api&&data.code==='NO_REPORT'){
+          put(p+'-state','Chưa có báo cáo từ workflow');
+          put(p+'-note','Nguồn GAS đã sẵn sàng; chờ workflow gửi kết quả.');
+          continue;
+        }
+        throw new Error('HTTP '+response.status);
+      }
       if(data.schema_version!==1||data.source!==item.source||!data.metrics||typeof data.metrics!=='object')throw new Error('Schema mismatch');
       const states={success:'Backup thành công',paused:'Tạm dừng theo giới hạn thời gian',failure:'Backup thất bại',unknown:'Chưa xác minh'};
       put(p+'-state',states[data.status]||states.unknown);
@@ -38,4 +45,5 @@
     }catch(err){put(p+'-state','Chưa tải được báo cáo; kiểm tra nguồn báo cáo');}
   }
 })();
+
 

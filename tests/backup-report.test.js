@@ -77,7 +77,20 @@ test('Vercel adapter validates source, hash, schema, redirect and trusted receiv
 test('Homepage can select backup API without falling back silently to blocked Blob',async()=>{
  const ids=['backup','photos'].flatMap(p=>['state','time','note','link',...(p==='backup'?['bytes','speed','ignored']:['uploaded','skipped','errors'])].map(x=>p+'-'+x));
  const dom=new JSDOM(ids.map(id=>id.endsWith('-link')?'<a id="'+id+'"></a>':'<span id="'+id+'"></span>').join(''),{runScripts:'outside-only'}),w=dom.window,calls=[];
- w.BACKUP_REPORTS_API_URL='/api/backup-report';w.BACKUP_REPORTS_BASE_URL='https://legacy.invalid';w.fetch=async url=>{calls.push(url);return {ok:true,json:async()=>report(url.endsWith('gdrive')?'gdrive':'gphotos')};};
+ w.AbortSignal=AbortSignal;w.BACKUP_REPORTS_API_URL='/api/backup-report';w.BACKUP_REPORTS_BASE_URL='https://legacy.invalid';w.fetch=async url=>{calls.push(url);return {ok:true,json:async()=>report(url.endsWith('gdrive')?'gdrive':'gphotos')};};
  w.eval(readFileSync('public/backup-status.js','utf8'));for(let i=0;i<4;i++)await new Promise(r=>setImmediate(r));
  assert.deepEqual(calls,['/api/backup-report?source=gdrive','/api/backup-report?source=gphotos']);assert.equal(w.document.getElementById('backup-state').textContent,'Backup thành công');dom.window.close();
 });
+test('configured GAS without a terminal report stays uncacheable and never claims success',async()=>{
+ const res=response();
+ await createBackupReportHandler({env,request:async()=>Response.json({ok:false,service:'homepage-backup-reports-v1',source:'gdrive',code:'NO_REPORT'})})({method:'GET',query:{source:'gdrive'}},res);
+ assert.equal(res.code,503);assert.equal(res.data.code,'NO_REPORT');assert.equal(res.headers['Cache-Control'],'no-store');
+ const ids=['backup','photos'].flatMap(p=>['state','time','note','link'].map(x=>p+'-'+x));
+ const dom=new JSDOM(ids.map(id=>'<span id="'+id+'"></span>').join(''),{runScripts:'outside-only'}),w=dom.window,calls=[];
+ w.AbortSignal=AbortSignal;w.BACKUP_REPORTS_API_URL='/api/backup-report';w.BACKUP_REPORTS_BASE_URL='https://legacy.invalid';
+ w.fetch=async url=>{calls.push(url);return {ok:false,json:async()=>({code:'NO_REPORT'})};};
+ w.eval(readFileSync('public/backup-status.js','utf8'));for(let i=0;i<4;i++)await new Promise(r=>setImmediate(r));
+ assert.equal(calls.length,2);for(const p of ['backup','photos'])assert.equal(w.document.getElementById(p+'-state').textContent,'Chưa có báo cáo từ workflow');
+ assert.ok(calls.every(x=>x.startsWith('/api/backup-report?')));dom.window.close();
+});
+
