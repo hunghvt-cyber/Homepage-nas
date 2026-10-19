@@ -2,17 +2,18 @@
 (async()=>{
   const put=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=String(value)};
   const base=window.BACKUP_REPORTS_BASE_URL||'';
+  const api=window.BACKUP_REPORTS_API_URL||'';
   const when=v=>v?new Date(v).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}):'Chưa có dữ liệu';
   const val=v=>v==null?'Chưa có dữ liệu':v;
   const sources=[
-    {file:'gdrive-backup-latest.json',source:'gdrive-koofr',prefix:'backup',repo:'my-backup-gdrive-koofr'},
-    {file:'gphotos-backup-latest.json',source:'gphotos-koofr',prefix:'photos',repo:'google-photos-koofr'}
+    {key:'gdrive',file:'gdrive-backup-latest.json',source:'gdrive-koofr',prefix:'backup',repo:'my-backup-gdrive-koofr'},
+    {key:'gphotos',file:'gphotos-backup-latest.json',source:'gphotos-koofr',prefix:'photos',repo:'google-photos-koofr'}
   ];
   for(const item of sources){
     const p=item.prefix;
-    if(!base){put(p+'-state','Chưa cấu hình nguồn báo cáo Vercel Blob');continue;}
+    if(!base&&!api){put(p+'-state','Chưa cấu hình nguồn báo cáo');continue;}
     try{
-      const response=await fetch(base+'/'+item.file,{cache:'no-store'});
+      const response=await fetch(api?api+'?source='+item.key:base+'/'+item.file,{cache:'no-store'});
       if(!response.ok)throw new Error('HTTP '+response.status);
       const data=await response.json();
       if(data.schema_version!==1||data.source!==item.source||!data.metrics||typeof data.metrics!=='object')throw new Error('Schema mismatch');
@@ -34,6 +35,7 @@
       if(Number.isInteger(data.run_id)&&data.run_id>0&&data.run_url===expected+data.run_id){
         document.getElementById(p+'-link').href=data.run_url;
       }
-    }catch(err){put(p+'-state','Chưa tải được báo cáo; kiểm tra nguồn Blob');}
+    }catch(err){put(p+'-state','Chưa tải được báo cáo; kiểm tra nguồn báo cáo');}
   }
 })();
+

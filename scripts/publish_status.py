@@ -5,6 +5,7 @@ import hashlib
 import json
 import math
 import os
+import re
 import signal
 import sys
 import tempfile
@@ -287,6 +288,27 @@ def main():
             if os.path.exists(temp_name):
                 os.unlink(temp_name)
 
+        backend = os.environ.get("STATUS_BACKEND", "blob")
+        if backend == "gas-drive":
+            # Same collector, snapshot allowlist, publisher lock and timer.
+            try:
+                from scripts.nas_report_transport import load_config
+                from scripts.nas_report_policy import tick
+            except ModuleNotFoundError:
+                from nas_report_transport import load_config
+                from nas_report_policy import tick
+            config_file = Path(os.environ.get("STATUS_REPORT_CONFIG", "~/.config/homepage-nas/reporting.json")).expanduser()
+            config = load_config(config_file)
+            signal.signal(signal.SIGALRM, timeout)
+            signal.alarm(25)
+            try:
+                result = tick(payload, config, OUTPUT.parent)
+            finally:
+                signal.alarm(0)
+            print(json.dumps(result, separators=(",", ":")))
+            return 0
+        if backend != "blob":
+            raise ValueError("Unknown status backend")
         token = TOKEN_FILE.read_text(encoding="utf-8").strip()
         if not token:
             raise RuntimeError("Blob token file is empty")
@@ -311,5 +333,7 @@ if __name__ == "__main__":
     try:
         raise SystemExit(main())
     except Exception as exc:
-        print(f"status publish failed: {type(exc).__name__}", file=sys.stderr)
+        code = str(exc) if isinstance(exc, ValueError) and re.fullmatch(r"[A-Z_]{1,64}", str(exc)) else type(exc).__name__
+        print(json.dumps({"event": "nas-status-publish", "ok": False, "code": code}), file=sys.stderr)
         raise SystemExit(1)
+

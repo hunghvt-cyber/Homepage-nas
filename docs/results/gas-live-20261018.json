@@ -1,0 +1,117 @@
+{
+  "date": "2026-10-18",
+  "scriptId": "1vASoUHTYVL1pP4oeAbrh0ueOCdo5cWwpUiwUkTleziWgKRod17Pa68cs",
+  "deploymentId": "AKfycbwnIO4-cED9dRdNH0ik4FR9os_9kM4XDXqaNdn0iorb5JoiNRIg8dgp0fWEJYurLWAwPA",
+  "version": 12,
+  "deployedFiles": {
+    "Core.gs": "reporting/nas-schema.cjs",
+    "Server.gs": "reporting/apps-script/Server.gs",
+    "appsscript.json": "reporting/apps-script/appsscript.json"
+  },
+  "sha256": {
+    "schema": "5157bdf9beca883495caa4cebd7313c512b689cc43cb12dc1d72252eff734c45",
+    "server": "340a3fbf0cf6e37749bb96d4c187087f46256c57104c12a8f5576988eafce50b",
+    "qualification": "29e49a7315265e4cb17ef3ef23b1c3ba3e1ca71bbd3e8477a68586055a19cbf0"
+  },
+  "initialization": {
+    "configured": true,
+    "hasReport": false
+  },
+  "qualification": {
+    "kind": "real-drive-in-process",
+    "checks": 17,
+    "cleanup": true,
+    "requestMs": [
+      27,
+      2776,
+      894,
+      518,
+      27,
+      2672
+    ],
+    "networkBenchmark": false,
+    "headOnlyHelperNotInVersion12": true
+  },
+  "homepageProductionFeedChanged": false,
+  "nasPublisherConfigured": true,
+  "anonymousReadIndependentlyVerified": true,
+  "deployedSourceCommit": "e3f914f92f9eacb386499f7497bf5f2c9c5b281a",
+  "initialWebResponse": {
+    "ok": false,
+    "service": "nas-drive-reports-v1",
+    "code": "NO_REPORT"
+  },
+  "nasLiveEvidence": {
+    "evidenceAttribution": "NAS service/ack evidence supplied by Codex NAS via operator handoff; anonymous feed read independently repeated in this session.",
+    "operatorReportedPublisherCommit": "2be7d18",
+    "operatorReportedSends": [
+      {
+        "sequence": 1,
+        "ackLocalUtc": "2026-10-18T07:23:24Z",
+        "received_at": "2026-10-18T07:23:28.515Z",
+        "updated_at": "2026-10-18T07:23:13Z"
+      },
+      {
+        "sequence": 2,
+        "ackLocalUtc": "2026-10-18T07:54:19Z",
+        "received_at": "2026-10-18T07:54:22.956Z",
+        "updated_at": "2026-10-18T07:54:06Z"
+      },
+      {
+        "sequence": 3,
+        "ackLocalUtc": "2026-10-18T08:24:42Z",
+        "received_at": "2026-10-18T08:24:46.053Z",
+        "updated_at": "2026-10-18T08:24:29Z"
+      }
+    ],
+    "operatorReportedIntermediateSkips": true,
+    "operatorReportedTimerActive": true,
+    "operatorReportedPending": false,
+    "operatorReportedFailures": 0,
+    "independentRead": {
+      "ok": true,
+      "updated_at": "2026-10-18T08:24:29Z",
+      "received_at": "2026-10-18T08:24:46.053Z",
+      "sha256": "99658ae9d1140b43dfb3a752d88808780d3d01dec62311a1bd0e82dee070943d"
+    },
+    "heartbeatIntervalsVerified": 2,
+    "heartbeatEvidenceScope": "Two intervals supported by Codex NAS metadata; latest payload independently read, not independent observation of all timer ticks.",
+    "policyTransportSimulationChecks": 11,
+    "realStateTransitionVerified": false,
+    "networkRestartRecoveryVerified": false,
+    "controlledLiveRecovery": {
+      "evidenceAttribution": "Operator-supplied Codex NAS report, recorded 2026-10-19; not independently inspected on NAS. UTC times-of-day supplied without explicit calendar dates.",
+      "report": "nas-publisher-recovery-20261019.md",
+      "preRequestFaultPendingPreserved": true,
+      "newProcessRecoveryVerified": true,
+      "postCommitAckLossReplayVerified": true,
+      "secondCommitPrevented": true,
+      "naturalNetworkOutageVerified": false,
+      "realStateTransitionVerified": false,
+      "terminalState": {
+        "sequence": 7,
+        "pending": false,
+        "failures": 0,
+        "timerActive": true,
+        "wrappersRemoved": true,
+        "lockFree": true,
+        "publisherCommit": "2be7d18"
+      },
+      "policyTransportSimulationChecks": 11
+    },
+    "independentFollowUpRead": {
+      "observedOn": "2026-10-19",
+      "channel": "authorized Vercel Preview API read",
+      "httpStatus": 200,
+      "updated_at": "2026-10-19T00:26:59Z",
+      "received_at": "2026-10-19T00:27:15.614Z",
+      "recovered_previous": false
+    }
+  },
+  "backupCandidate": {
+    "deployedToGoogle": false,
+    "realBackupReportVerified": false,
+    "focusedNodeSimulationChecks": 8,
+    "pythonPublisherChecks": 7
+  }
+}

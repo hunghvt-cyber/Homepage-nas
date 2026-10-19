@@ -114,6 +114,12 @@
     }
   ],
   "functions": {
+    "api/backup-report.js": {
+      "maxDuration": 20
+    },
+    "api/nas-report.js": {
+      "maxDuration": 20
+    },
     "api/guides.js": {
       "includeFiles": "content/guides.json"
     },
@@ -122,3 +128,4 @@
     }
   }
 }
+

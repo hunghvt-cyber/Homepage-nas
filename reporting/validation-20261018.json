@@ -1,0 +1,73 @@
+{
+  "kind": "local-simulation-not-live",
+  "date": "2026-10-18",
+  "nodeTests": {
+    "passed": 56,
+    "failed": 0
+  },
+  "pythonTests": {
+    "passed": 23,
+    "failed": 0
+  },
+  "buildWithNasApi": true,
+  "syntaxChecks": [
+    "api/nas-report.js",
+    "public/status.js"
+  ],
+  "covered": [
+    "HMAC",
+    "wrong key",
+    "expired request",
+    "out-of-order sequence",
+    "generation mismatch",
+    "idempotency mismatch",
+    "lost commit acknowledgement",
+    "Drive write failure",
+    "previous report recovery",
+    "retention failure after commit",
+    "redirect allowlist",
+    "schema and hash validation",
+    "private config permissions",
+    "durable sequence",
+    "stale UI",
+    "network failure UI",
+    "timestamp-only skips",
+    "cumulative disk change against acknowledged baseline",
+    "pending mutation survives restart",
+    "retry backoff",
+    "missing/corrupt policy fails closed",
+    "heartbeat source freshness"
+  ],
+  "liveGoogleDeployment": true,
+  "liveNasPublisher": false,
+  "productionCutover": false,
+  "remaining": [
+    "NAS connection and one-time publisher configuration",
+    "two real reporting cycles and browser readback",
+    "NAS RAM/swap threshold and hysteresis qualification",
+    "backup aggregate publishers and QR migration",
+    "anonymous Vercel-to-GAS transport qualification",
+    "NAS one-time dedicated key configuration"
+  ],
+  "eventPolicySimulation": {
+    "checks": 288,
+    "durationHours": 24,
+    "successfulSends": 48,
+    "realBenchmark": false
+  },
+  "googleVersion": 12,
+  "liveGoogleInProcessQualification": {
+    "checks": 17,
+    "cleanup": true,
+    "requestMs": [
+      27,
+      2776,
+      894,
+      518,
+      27,
+      2672
+    ],
+    "networkBenchmark": false
+  },
+  "endpointBrowserBeforeAndAfterQualification": "NO_REPORT"
+}
