@@ -127,3 +127,30 @@ body:has(#notes-workspace) #note-resume:not([hidden]){display:inline-block}
 .note-select-checkbox{font-size:1.25rem;line-height:1;align-self:flex-end}
 
 button.expense-bar-row{width:100%;text-align:left;cursor:pointer} .expense-bar{display:block} .expense-summary>button{cursor:pointer;text-align:left;color:inherit} .expense-table-wrap{overflow-x:auto}.expense-table{width:100%;border-collapse:collapse}.expense-table th,.expense-table td{text-align:left;padding:8px;border-bottom:1px solid #a1b1a5}.expense-table td:last-child{white-space:nowrap}button.expense-bar-row:focus-visible,.expense-summary>button:focus-visible{outline:3px solid #254c3c;outline-offset:2px}
+
+/* Expense controls keep readable contrast, including touch hover states. */
+#expenses-workspace .expense-summary>button,
+#expenses-workspace button.expense-bar-row{
+ background:#f4f7f5;color:#172c22;border:1px solid #899e91;
+}
+#expenses-workspace .expense-summary>button:hover,
+#expenses-workspace .expense-summary>button:active,
+#expenses-workspace button.expense-bar-row:hover,
+#expenses-workspace button.expense-bar-row:active{
+ background:#dfece3;color:#102a1c;border-color:#345a43;
+}
+#expenses-workspace .expense-summary small{color:#354c3e;font-size:.9rem}
+#expenses-workspace .expense-summary strong{color:#142c1e;font-size:1.2rem;margin-top:4px}
+#expenses-workspace button.expense-bar-row{font-size:.95rem;padding:12px 10px;grid-template-columns:100px minmax(0,1fr) 115px}
+#expenses-workspace .expense-bar-row small{color:#172c22;font-size:.95rem;font-weight:600}
+#expenses-workspace .expense-track{background:#cbd9cf;border:1px solid #a4b8aa;height:16px}
+#expenses-workspace .expense-bar{background:#28613e}
+#expense-details{color:#172c22;background:#fff;padding:14px;box-shadow:none}
+#expenses-workspace .expense-table th{background:#e0e9e3;color:#172c22}
+#expenses-workspace .expense-table td{color:#172c22;background:#fff}
+#expenses-workspace .expense-table tr:nth-child(even) td{background:#f0f5f1}
+#expenses-workspace .expense-table th,#expenses-workspace .expense-table td{border-bottom-color:#b5c4b9;line-height:1.5}
+@media(max-width:520px){
+ #expenses-workspace button.expense-bar-row{grid-template-columns:90px minmax(0,1fr) 100px;gap:6px;font-size:.85rem;padding:12px 8px}
+ #expenses-workspace .expense-bar-row small{font-size:.85rem}
+}
