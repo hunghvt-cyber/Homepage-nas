@@ -208,7 +208,15 @@
         "EXPENSES_API_URL",
         "EXPENSES_API_SECRET"
       ],
-      "runtime_model": "Not independently inspected; model self-identification is not evidence"
+      "runtime_model": "Not independently inspected; model self-identification is not evidence",
+      "model_metadata_change": {
+        "state": "prepared_not_deployed",
+        "document": "docs/GEMINI-MODELS-20261019.md",
+        "identity_source": "Google GenerateContentResponse.modelVersion, distinct from requestedModel",
+        "selection": "Request-local; reviewed allowlist intersected with Google models.list generateContent support",
+        "deployment_order": "GAS legacy Homepage bridge manual workflow, then Homepage main/Vercel",
+        "automatic_model_fallback": false
+      }
     },
     {
       "id": "backup-media-and-state",
@@ -244,3 +252,4 @@
     ]
   }
 }
+

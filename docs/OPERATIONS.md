@@ -174,7 +174,7 @@ engine trong một đợt cập nhật tài liệu.
 | Note mất/không lưu | Đang ở hunghvt-notes hay trang cũ; Koofr app/namespace/IDB | Không khởi động lại Notes Blob; export nháp trước, tránh ghi đè catalog |
 | Sửa guide lỗi lưu trữ | Private Blob và revision guides/<slug>.json | Giữ nội dung nền/QR; chưa thể cam kết khắc phục bằng Supabase limiter |
 | Chi tiêu sai/lỗi | GAS bridge, spreadsheet đang dùng, quy tắc Date/DELETED | Không đổi Sheet hoặc sửa giao dịch theo suy đoán |
-| Gemini tự nói tên model lạ | Model cấu hình trong GAS và request Gemini thực | Câu trả lời tự giới thiệu không chứng minh model |
+| Gemini tự nói tên model lạ | Model cấu hình trong GAS và request Gemini thực | Câu trả lời tự giới thiệu không chứng minh model; thay đổi metadata/picker đang chuẩn bị, xem GEMINI-MODELS-20261019.md |
 | Viewer/FnNAS không vào | Tailscale/shortcut và NAS | Là link riêng; không đổi Vercel/GAS để sửa mạng NAS |
 
 ## 9. Dự phòng, backup và ranh giới
@@ -212,3 +212,4 @@ engine trong một đợt cập nhật tài liệu.
 Việc cần xác minh tiếp: (1) nguyên nhân hai workflow failure và báo cáo GAS đầu
 tiên của từng nguồn; (2) hướng xử lý guide overrides còn ở Blob; (3) backup định kỳ
 Notes cùng thủ tục khôi phục. Đây là backlog, không tự tạo lịch hay thay production.
+
