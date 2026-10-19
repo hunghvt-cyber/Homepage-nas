@@ -22,3 +22,19 @@ test('30-minute heartbeat remains usable but old measurements and silent publish
  get=await run({...snapshot,updated_at:new Date(Date.now()-60*60000).toISOString()});assert.match(get('cam1'),/Dữ liệu cũ/);
  get=await run({...snapshot,_report:{received_at:new Date(Date.now()-46*60000).toISOString()}});assert.match(get('cam1'),/Dữ liệu cũ/);
 });
+test('a valid GAS response taking six seconds still renders successfully',async()=>{
+ const dom=new JSDOM(ids.map(x=>`<span id="${x}">old</span>`).join(''),{runScripts:'outside-only'}),w=dom.window;
+ w.AbortSignal=AbortSignal;w.setInterval=()=>{};
+ let complete;
+ const finished=new Promise(resolve=>{complete=resolve;});
+ w.fetch=(_url,{signal})=>new Promise((resolve,reject)=>{
+  const timer=setTimeout(()=>{signal.removeEventListener('abort',aborted);resolve({ok:true,json:async()=>({schema:1,updated_at:new Date().toISOString(),cam1:{state:'ok'},_report:{received_at:new Date().toISOString()}})});complete();},6000);
+  function aborted(){clearTimeout(timer);reject(signal.reason);complete();}
+  signal.addEventListener('abort',aborted,{once:true});
+ });
+ w.eval(readFileSync('public/status.js','utf8'));await finished;
+ for(let i=0;i<5;i++)await new Promise(r=>setImmediate(r));
+ assert.equal(w.document.getElementById('cam1').textContent,'Hoạt động');
+ dom.window.close();
+});
+
