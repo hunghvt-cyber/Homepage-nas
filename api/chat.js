@@ -2,13 +2,13 @@ import { createHmac } from 'node:crypto';
 import { owner, sameOrigin, body, reply, fail, HttpError, requireConfig } from '../lib/security.js';
 
 export function validateMessages(messages) {
- if (!Array.isArray(messages) || !messages.length || messages.length > 19) throw new HttpError(400, 'Tối đa 10 lượt trao đổi; hãy mở cuộc trò chuyện mới.');
+ if (!Array.isArray(messages) || !messages.length || messages.length > 39) throw new HttpError(400, 'Tối đa 20 lượt trao đổi; hãy mở cuộc trò chuyện mới.');
  let total=0;
  const normalized=messages.map((m,i)=>{
-  if (!m || m.role !== (i%2 ? 'model' : 'user') || typeof m.text !== 'string' || !m.text.trim() || m.text.length>(m.role==='user'?4000:16000)) throw new HttpError(400,'Tin nhắn không hợp lệ hoặc dài quá 4.000 ký tự.');
+  if (!m || m.role !== (i%2 ? 'model' : 'user') || typeof m.text !== 'string' || !m.text.trim() || m.text.length>(m.role==='user'?50000:16000)) throw new HttpError(400,'Tin nhắn không hợp lệ hoặc dài quá 50.000 ký tự.');
   total+=m.text.length; return {role:m.role,text:m.text.trim()};
  });
- if(normalized.at(-1).role!=='user' || total>24000) throw new HttpError(400,'Cuộc trò chuyện quá dài; hãy mở cuộc trò chuyện mới.');
+ if(normalized.at(-1).role!=='user' || total>200000) throw new HttpError(400,'Cuộc trò chuyện quá dài; hãy mở cuộc trò chuyện mới.');
  return normalized;
 }
 export function createChatHandler({authorize=owner,request=fetch}={}) {

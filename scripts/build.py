@@ -37,13 +37,10 @@ if status_url == '/api/nas-report':
 elif status_url != '/status.json' and (urlparse(status_url).scheme != 'https' or not urlparse(status_url).hostname):
     raise ValueError('Status source must be HTTPS or the NAS report API')
 write('config.js', 'window.PORTAL_STATUS_URL = '+json.dumps(status_url)+';\n')
-backup_base = site.get('backup_reports_base_url', '').rstrip('/')
-if backup_base and (urlparse(backup_base).scheme != 'https' or not urlparse(backup_base).hostname or not urlparse(backup_base).hostname.endswith('.public.blob.vercel-storage.com') or urlparse(backup_base).path not in ('', '/') or urlparse(backup_base).query):
-    raise ValueError('backup_reports_base_url must be a public Vercel Blob origin')
-backup_api = os.getenv('BACKUP_REPORTS_API_URL', '')
-if backup_api not in ('', '/api/backup-report'):
+backup_api = os.getenv('BACKUP_REPORTS_API_URL', '/api/backup-report')
+if backup_api != '/api/backup-report':
     raise ValueError('Invalid backup report API')
-write('backup-config.js', 'window.BACKUP_REPORTS_BASE_URL = '+json.dumps(backup_base)+';\nwindow.BACKUP_REPORTS_API_URL = '+json.dumps(backup_api)+';\n')
+write('backup-config.js', 'window.BACKUP_REPORTS_API_URL = '+json.dumps(backup_api)+';\n')
 
 
 links = []
@@ -96,10 +93,10 @@ print(f'Built {len(guides)} guides; QR '+('enabled' if base else 'pending confir
 
 
 
-write('chi-tieu/index.html',page('Chi tiêu gia đình','<header><a href="/">← Trang chủ</a><h1>Chi tiêu gia đình</h1></header>'+ACCOUNT+'<div id="expenses-workspace" hidden><section><div class="bar"><h2>Thống kê</h2></div><div class="body"><label for="expense-month">Tháng</label><input id="expense-month" type="month"><label for="expense-payer">Người chi</label><select id="expense-payer"><option value="">Cả nhà</option></select><button id="expense-refresh" type="button">Làm mới</button><p id="expense-message" role="status"></p><div id="expense-summary" class="expense-summary"></div><h3>Chi theo ngày</h3><div id="expense-days"></div><h3>Theo danh mục</h3><div id="expense-categories"></div><p id="expense-updated" class="muted"></p></div></section></div><script src="/account.js" defer></script><script src="/expenses.js" defer></script>'))
+write('chi-tieu/index.html',page('Chi tiêu gia đình','<header><a href="/">← Trang chủ</a><h1>Chi tiêu gia đình</h1></header>'+ACCOUNT+'<div id="expenses-workspace" hidden><section><div class="bar"><h2>Thống kê</h2></div><div class="body"><label for="expense-month">Tháng</label><input id="expense-month" type="month"><label for="expense-payer">Người chi</label><select id="expense-payer"><option value="">Cả nhà</option></select><button id="expense-refresh" type="button">Làm mới</button><p id="expense-message" role="status"></p><div id="expense-summary" class="expense-summary"></div><h3>Chi theo ngày</h3><label for="expense-sort">Sắp xếp ngày</label><select id="expense-sort"><option value="date">Ngày mới nhất trước</option><option value="amount">Chi nhiều nhất trước</option></select><div id="expense-days"></div><h3>Theo danh mục</h3><div id="expense-categories"></div><section id="expense-details" hidden aria-live="polite"><h3 id="expense-detail-title"></h3><button id="expense-detail-close" type="button">Đóng danh sách</button><p id="expense-detail-count"></p><div class="expense-table-wrap"><table class="expense-table"><thead><tr><th>Ngày</th><th>Loại</th><th>Danh mục</th><th>Diễn giải</th><th>Người</th><th>Số tiền</th></tr></thead><tbody id="expense-transactions"></tbody></table></div></section><p id="expense-updated" class="muted"></p></div></section></div><script src="/account.js" defer></script><script src="/expenses.js" defer></script>'))
 
 
-write('gemini/index.html',page('Gemini','<header class="gemini-page-header"><a href="/">← Trang chủ</a><h1>Gemini</h1><p>Hỏi đáp ngay trên Homepage.</p></header>'+ACCOUNT+'<section id="chat-workspace" hidden><div class="bar"><h2>Cuộc trò chuyện</h2></div><div class="body"><div class="editor-actions"><button id="chat-new" type="button">Cuộc trò chuyện mới</button><button id="chat-stop" type="button">Dừng</button></div><label for="chat-model">Model</label><select id="chat-model"><option value="">Mặc định</option></select><button id="chat-model-refresh" type="button">Làm mới model</button><p id="chat-model-status" class="muted" role="status">Chưa xác minh model.</p><div id="chat-log" aria-live="polite"></div><form id="chat-form"><label for="chat-input">Tin nhắn</label><textarea id="chat-input" rows="4" maxlength="4000" required></textarea><button id="chat-send" type="submit">Gửi</button></form><p id="chat-status" role="status"></p><small>Cuộc trò chuyện chỉ giữ khi trang đang mở. Tối đa 30 câu hỏi/ngày cho cả nhà; hết hạn mức thì chờ.</small></div></section><script src="/account.js" defer></script><script>if(new URLSearchParams(location.search).get("embed")==="1")document.documentElement.classList.add("gemini-embedded");</script><script src="/chat.js" defer></script>'))
+write('gemini/index.html',page('Gemini','<header class="gemini-page-header"><a href="/">← Trang chủ</a><h1>Gemini</h1><p>Hỏi đáp ngay trên Homepage.</p></header>'+ACCOUNT+'<section id="chat-workspace" hidden><div class="bar"><h2>Cuộc trò chuyện</h2></div><div class="body"><div class="editor-actions"><button id="chat-new" type="button">Cuộc trò chuyện mới</button><button id="chat-stop" type="button">Dừng</button></div><label for="chat-model">Model</label><select id="chat-model"><option value="">Mặc định</option></select><button id="chat-model-refresh" type="button">Làm mới model</button><p id="chat-model-status" class="muted" role="status">Chưa xác minh model.</p><div id="chat-log" aria-live="polite"></div><form id="chat-form"><label for="chat-input">Tin nhắn</label><textarea id="chat-input" rows="10" maxlength="50000" aria-describedby="chat-count" required></textarea><p id="chat-count" class="muted">0 / 50.000 ký tự</p><button id="chat-send" type="submit">Gửi</button></form><p id="chat-status" role="status"></p><small>Mỗi tin tối đa 50.000 ký tự; lịch sử 200.000 ký tự, tối đa 20 lượt. Cuộc trò chuyện chỉ giữ khi trang đang mở. Tối đa 30 câu hỏi/ngày cho cả nhà; hết hạn mức thì chờ.</small></div></section><script src="/account.js" defer></script><script>if(new URLSearchParams(location.search).get("embed")==="1")document.documentElement.classList.add("gemini-embedded");</script><script src="/chat.js" defer></script>'))
 
 
 
@@ -107,4 +104,5 @@ write('gemini/index.html',page('Gemini','<header class="gemini-page-header"><a h
 
 
 retire(OUT)
+
 

@@ -19,6 +19,5 @@
   ],
   "base_url": "https://homepage-nas.vercel.app",
   "subtitle": "Ecohome Premia, XH2.1-0219",
-  "status_url": "https://5amgghtpn0okgki0.public.blob.vercel-storage.com/nas-status.json",
-  "backup_reports_base_url": "https://ozqxijzgxr73qool.public.blob.vercel-storage.com"
+  "status_url": "/api/nas-report"
 }

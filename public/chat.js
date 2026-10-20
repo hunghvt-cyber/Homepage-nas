@@ -1,6 +1,9 @@
 (() => {
  const workspace=document.getElementById('chat-workspace'),log=document.getElementById('chat-log'),input=document.getElementById('chat-input'),status=document.getElementById('chat-status'),send=document.getElementById('chat-send');
  let messages=[],busy=false,controller=null,generation=0;
+ const count=document.getElementById('chat-count');
+ function updateCount(){if(count)count.textContent=input.value.length.toLocaleString('vi-VN')+' / 50.000 ký tự · Lịch sử đã gửi: '+messages.reduce((n,m)=>n+m.text.length,0).toLocaleString('vi-VN')+' / 200.000';}
+ input.addEventListener('input',updateCount);updateCount();
  const model=document.getElementById('chat-model'),modelStatus=document.getElementById('chat-model-status'),refresh=document.getElementById('chat-model-refresh');
  let catalogGeneration=0,catalogController=null;
  function modelInfo(text){if(modelStatus)modelStatus.textContent=text;}
@@ -24,15 +27,16 @@
  refresh?.addEventListener('click',()=>loadModels(true));
  model?.addEventListener('change',()=>modelInfo('Đã chọn '+(model.value||'Mặc định')+'. Áp dụng cho câu hỏi tiếp theo; chưa xác minh phiên bản.'));
  function line(role,text){const article=document.createElement('article');article.className='chat-message';const label=document.createElement('strong'),p=document.createElement('p');label.textContent=role==='user'?'Bạn':'Gemini';p.textContent=text;article.append(label,p);log.append(article);article.scrollIntoView?.({block:'nearest'});}
- function reset(){generation++;controller?.abort();controller=null;messages=[];busy=false;send.disabled=false;if(model)model.disabled=false;if(refresh)refresh.disabled=false;log.replaceChildren();input.value='';status.textContent='';modelInfo('Chưa có câu trả lời để xác minh phiên bản thực tế.');}
+ function reset(){generation++;controller?.abort();controller=null;messages=[];busy=false;send.disabled=false;if(model)model.disabled=false;if(refresh)refresh.disabled=false;log.replaceChildren();input.value='';updateCount();status.textContent='';modelInfo('Chưa có câu trả lời để xác minh phiên bản thực tế.');}
  window.addEventListener('account-change',e=>{workspace.hidden=!e.detail.authenticated;if(!e.detail.authenticated){reset();catalogGeneration++;catalogController?.abort();catalogController=null;if(model){model.replaceChildren(new Option('Mặc định',''));model.disabled=false;refresh.disabled=false;}modelInfo('Chưa xác minh model.');}else loadModels();});
  document.getElementById('chat-new').addEventListener('click',()=>{reset();input.focus();});
  document.getElementById('chat-stop').addEventListener('click',()=>{if(busy){generation++;controller?.abort();busy=false;send.disabled=false;if(model)model.disabled=false;if(refresh)refresh.disabled=false;status.textContent='Đã dừng chờ câu trả lời.';}});
  document.getElementById('chat-form').addEventListener('submit',async e=>{
   e.preventDefault();if(busy||!window.PortalAccount.state.authenticated)return;
   const text=input.value.trim();if(!text)return;
+  if(text.length>50000){status.textContent='Mỗi tin tối đa 50.000 ký tự. Hãy chia nội dung thành nhiều tin.';return;}
   const next=[...messages,{role:'user',text}];
-  if(next.length>19 || next.reduce((n,m)=>n+m.text.length,0)>24000){status.textContent='Cuộc trò chuyện đã dài. Bấm Cuộc trò chuyện mới.';return;}
+  if(next.length>39 || next.reduce((n,m)=>n+m.text.length,0)>200000){status.textContent='Cuộc trò chuyện đã dài. Bấm Cuộc trò chuyện mới.';return;}
   busy=true;send.disabled=true;status.textContent='Gemini đang trả lời…';
   catalogGeneration++;catalogController?.abort();catalogController=null;if(refresh)refresh.disabled=true;
   if(model)model.disabled=true;
@@ -41,7 +45,7 @@
    const response=await fetch('/api/chat',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:next,...(model?.value?{model:model.value}:{})}),signal:controller.signal});
    const data=await response.json();if(current!==generation)return;
    if(!response.ok){if(response.status===401){reset();workspace.hidden=true;window.PortalAccount.login();}throw new Error(data.error||'Chưa nhận được câu trả lời.');}
-   messages=[...next,{role:'model',text:data.text}];line('user',text);line('model',data.text);input.value='';status.textContent='';
+   messages=[...next,{role:'model',text:data.text}];line('user',text);line('model',data.text);input.value='';updateCount();status.textContent='';
    const identity=data.modelVersion?'Google xác nhận phiên bản: '+data.modelVersion+(data.requestedModel?' · Yêu cầu: '+data.requestedModel:''):(data.requestedModel?'Model yêu cầu: '+data.requestedModel+' · Google chưa trả tên phiên bản.':'Chưa nhận được metadata model từ backend.');
    modelInfo(identity);
    if(modelStatus){const detail=document.createElement('small');detail.textContent=identity;log.lastElementChild.append(detail);}

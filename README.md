@@ -14,10 +14,10 @@ kiểm tra production và những phần chưa xác minh.
 | --- | --- |
 | NAS | Nguồn đo camera, dung lượng, sức khỏe và kết quả bảo trì/dọn video; không host Homepage |
 | GitHub | Mã nguồn/tài liệu; Actions chạy backup Drive/Photos → Koofr |
-| Vercel | Website tĩnh và API; Blob là dịch vụ con, vẫn còn dùng cho guide overrides |
+| Vercel | Website tĩnh và API; không còn đường chạy dùng Vercel Blob |
 | Supabase | Bộ đếm đăng nhập Homepage, tách trong schema riêng của dự án CongchungVND |
 | Google: GAS, Drive, Sheets, Photos, Gemini | GAS/Drive phục vụ báo cáo; GAS/Sheets phục vụ chi tiêu; GAS gọi Gemini |
-| Koofr | Dữ liệu Notes độc lập, bản sao Drive/Photos và trạng thái của các bộ backup |
+| Koofr | Notes độc lập, đích guide QR riêng, bản sao Drive/Photos và trạng thái backup |
 
 Telegram là nguồn ghi chi tiêu; Tailscale phục vụ hai shortcut NAS. Home-AI là
 ứng dụng riêng được liên kết, không phải backend của Homepage.
@@ -32,8 +32,9 @@ Telegram là nguồn ghi chi tiêu; Tailscale phục vụ hai shortcut NAS. Home
 - Notes: `/notes/` mở https://hunghvt-notes.vercel.app/; repo
   [Hunghvt-notes, nhánh release/minimal-notes](https://github.com/hunghvt-cyber/Hunghvt-notes/tree/release/minimal-notes).
   Backend Koofr và phiên đăng nhập riêng. API Notes cũ trả `410 NOTES_RETIRED`.
-- Hướng dẫn đồ vật: nội dung nền/ảnh ở GitHub; phần sửa trên web vẫn dùng private Blob.
-  Chưa hoàn tất mục tiêu dành Blob riêng cho bộ đếm đăng nhập sau này.
+- Hướng dẫn đồ vật: nội dung nền/ảnh ở GitHub; adapter sửa/lịch sử đã chuyển sang Koofr.
+  **Chưa mở lưu:** thiếu cấu hình Koofr riêng và chưa đối chiếu các bản sửa cũ trên Blob.
+  QR vẫn đọc bản nền công khai, có thông báo rõ khi chưa lấy được bản cập nhật.
 - Chi tiêu/Gemini: API Vercel gọi GAS bridge hiện có bằng HMAC; dữ liệu chi tiêu ở Sheets.
   GAS bridge này khác GAS reporting và khác GAS webhook của bot hiện hành.
 
@@ -41,8 +42,8 @@ Telegram là nguồn ghi chi tiêu; Tailscale phục vụ hai shortcut NAS. Home
 
 - [Vận hành, nguồn dữ liệu, cấu hình và xử lý lỗi](docs/OPERATIONS.md)
 - [Danh mục nguồn dữ liệu có cấu trúc](docs/data-sources.json)
-- [Bộ đếm Supabase, quyền và cách chuyển lại Blob](docs/LOGIN-LIMITER-SUPABASE-20261019.md)
-- [Trạng thái phụ thuộc Blob](docs/BLOB-DEPENDENCIES-20261018.md)
+- [Bộ đếm Supabase và quyền](docs/LOGIN-LIMITER-SUPABASE-20261019.md)
+- [Chuyển QR sang Koofr và điều kiện mở lưu](docs/QR-KOOFR-20261019.md)
 - [Notes cũ đã nghỉ và bằng chứng dọn dữ liệu](docs/NOTES-RETIREMENT-20261018.md)
 
 Tài liệu có ngày cũ là lịch sử khi mâu thuẫn với hồ sơ hiện tại; không dùng
@@ -63,7 +64,6 @@ npm test
 `homepage-nas`, production branch `main`. Push main tự tạo deployment;
 commit tài liệu không đồng nghĩa có thay đổi runtime.
 
-`content/site.json` có URL Blob cũ làm mặc định; production đang chọn GAS bằng
-biến môi trường build. Luôn kiểm tra `/config.js` và `/backup-config.js` thực tế
-trước khi kết luận nguồn đang dùng. Không đổi slug/domain QR đã in.
-
+Nguồn mặc định: `/api/nas-report` và `/api/backup-report`, đều qua GAS/Drive.
+Không còn SDK, URL mặc định hay nhánh dự phòng Vercel Blob trong đường chạy Homepage.
+Bộ đếm giữ Supabase; không có kế hoạch tự quay lại Blob. Không đổi slug/domain QR đã in.

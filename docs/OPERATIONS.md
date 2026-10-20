@@ -1,4 +1,9 @@
+> Cập nhật QR 19/10/2026: [QR → Koofr](QR-KOOFR-20261019.md) là nguồn hiện hành cho đợt chuyển đổi này. Mã Homepage đã bỏ Blob; Koofr guide chưa được kích hoạt khi chưa có credential riêng và dữ liệu đối chiếu. QR công khai vẫn đọc bản nền có cảnh báo. Bộ đếm giữ Supabase, không chuyển lại Blob.
+
 # Hồ sơ quản trị và vận hành Homepage
+
+Chat Gemini 20/10: [chọn model và nội dung dài](GEMINI-CHAT-20261020.md).
+Giới hạn mới 50.000/tin, 200.000 lịch sử, 20 lượt; cần rollout GAS rồi Homepage.
 
 Cập nhật: 19/10/2026, Asia/Ho_Chi_Minh. Đối chiếu code Homepage `ccb4fb2`,
 Vercel production/env metadata, Supabase và HTTP public. Lần đọc mới:
@@ -29,7 +34,7 @@ Homepage chỉ chứa link. Không cộng một shortcut thành database của H
 | Dữ liệu/tính năng | Nguồn chuẩn | Đường đi tới giao diện | Ghi ở đâu |
 | --- | --- | --- | --- |
 | Tiêu đề, shortcut, hướng dẫn nền, ảnh, QR | GitHub content/ và public/images/ | Build → Vercel dist | Sửa repo → main → build |
-| Sửa hướng dẫn trên web, lịch sử guide | Private Vercel Blob, guides/<slug>.json | /api/guides + guide nền | Vercel API kiểm phiên/origin/revision rồi ghi Blob |
+| Sửa hướng dẫn trên web, lịch sử guide | Koofr namespace Homepage-Guides riêng (chờ cấu hình/import) | /api/guides + guide nền | Vercel API kiểm phiên/origin/revision, DAV lock/readback rồi ghi Koofr |
 | Camera, dung lượng, RAM/swap, bảo trì, dọn video | Cache/kết quả job NAS; Drive giữ báo cáo đã commit | NAS publisher → GAS reporting → Drive → /api/nas-report → UI | NAS gửi HMAC; GAS commit immutable file + HEAD |
 | Báo cáo Drive ↔ Koofr | Kết quả workflow bisync | Actions → GAS reporting/Drive → /api/backup-report?source=gdrive | Publisher ở repo backup |
 | Báo cáo Photos → Koofr | Kết quả workflow daily | Actions → GAS reporting/Drive → /api/backup-report?source=gphotos | Publisher ở repo Photos; backfill/reconcile không xuất feed này |
@@ -54,7 +59,7 @@ flowchart TB
 ```
 
 Mũi tên Homepage → Notes là chuyển sang ứng dụng độc lập, không phải server
-Homepage trực tiếp đọc kho Notes. GitHub source/build và private Blob guides
+Homepage trực tiếp đọc kho Notes. GitHub source/build và guide Koofr
 được mô tả trong bảng để sơ đồ tập trung vào luồng dữ liệu runtime.
 
 ## 3. Định danh source và nơi triển khai
@@ -91,7 +96,7 @@ Chỉ ghi tên, target và vai trò; không lưu giá trị secret trong tài li
 | Vercel Homepage production | LOGIN_LIMIT_BACKEND=supabase ; LOGIN_LIMIT_SUPABASE_URL | Chọn bộ đếm và project |
 | Vercel Homepage production Secret | LOGIN_LIMIT_SUPABASE_KEY ; LOGIN_LIMIT_TOKEN | Publishable API key + machine token giới hạn riêng; không dùng service_role |
 | Vercel Homepage production Secret | PORTAL_PASSWORD ; SESSION_PASSWORD ; PORTAL_BASE_URL | Mật khẩu chung, mã hóa phiên và origin |
-| Vercel Homepage production Secret | PORTAL_PRIVATE_BLOB_TOKEN | Vẫn cần cho guide overrides; không xóa theo suy đoán “đã bỏ Blob hết” |
+| Vercel Homepage production Secret | PORTAL_PRIVATE_BLOB_TOKEN | Chỉ giữ phục hồi/đối chiếu dữ liệu cũ; runtime mới không đọc token này |
 | Vercel Homepage production | EXPENSES_API_URL + Secret EXPENSES_API_SECRET | GAS bridge ký HMAC cho thống kê và Gemini |
 | NAS config owner-only 0600 | URL, key, generation | Khóa gửi NAS riêng; vị trí thực theo service/config NAS đã xác minh |
 | GAS reporting Script Properties | NAS_REPORT_KEY/FOLDER/HEAD/LOG ; BACKUP_GDRIVE_KEY/FOLDER/HEAD/LOG ; BACKUP_GPHOTOS_KEY/FOLDER/HEAD/LOG | Tách key/state mỗi nguồn; cùng ScriptLock và quota tài khoản |
@@ -101,10 +106,7 @@ Chỉ ghi tên, target và vai trò; không lưu giá trị secret trong tài li
 | Vercel Notes production | NOTES_MODE ; NOTES_PROJECT_ID ; NOTES_DATA_NAMESPACE ; NOTES_BASE_URL | Ràng buộc project/namespace/origin riêng |
 | GAS bot/bridge Script Properties | Khóa Telegram/Gemini, spreadsheet ID, khóa HMAC và cấu hình riêng từng project | Không lấy key của reporting thay key bot hoặc ngược lại |
 
-Trong `content/site.json` còn URL Blob NAS/backup làm giá trị mặc định.
-**Production build env đang ghi đè chúng.** `/config.js` xác nhận chọn NAS API;
-`/backup-config.js` có thể đồng thời chứa URL Blob cũ và API URL. Khi API URL được
-chọn, không kết luận rằng có fallback Blob chỉ vì URL cũ còn xuất hiện.
+Nguồn mặc định NAS/backup đã là API GAS/Drive; không còn URL hoặc nhánh dự phòng Blob trong build/trình duyệt.
 Preview không có đầy đủ secret production; không đồng bộ chúng sang Preview để
 né lỗi cấu hình. Secret/key scopes phải được review khi đổi backend.
 
@@ -135,7 +137,7 @@ né lỗi cấu hình. Secret/key scopes phải được review khi đổi backe
 | Workflow Photos daily | Run 39172293967, 19/10 05:27:19 VN, failure | Không kết luận backup đã chạy hay dữ liệu Koofr mới |
 | Supabase limiter | RPC/permission checks; concurrent 8/IP chỉ 5 được phép; tổng chỉ 30; reset window; production auth đã đi tới kiểm mật khẩu và DB tăng bộ đếm | Không đọc mật khẩu thật; phiên cookie được test local, người dùng nhập mật khẩu cũ |
 | Notes | Vercel READY từ đúng nhánh; env Koofr riêng; Homepage /notes/ mở app riêng; legacy API 410 | Không đọc nội dung Notes thật hoặc kiểm lại CRUD Koofr trong đợt tài liệu này |
-| Guides | Mã API vẫn đọc/ghi private Blob | Chưa xác minh sửa/lưu thực tế hoặc chuyển guide overrides khỏi Blob |
+| Guides | Adapter Koofr đã có; public đọc bản nền khi kho chưa sẵn sàng | Chưa có credential guide, chưa lấy được overrides Blob; lưu bị khóa tới khi import/đối chiếu |
 | Chi tiêu/Gemini | Source API + env bridge tồn tại | Chưa gọi tính năng bằng phiên người dùng trong đợt tài liệu này; chưa đọc model runtime |
 | Blob | URL mặc định/secret cũ còn tồn tại; không còn được chọn cho reports/login | Mốc 14/11/2026 là thông báo quota được ghi nhận trước, chưa kiểm lại dashboard; không cam kết Blob hoạt động ngày đó |
 
@@ -172,18 +174,16 @@ engine trong một đợt cập nhật tài liệu.
 | NAS dữ liệu cũ/502 | received_at so với updated_at; API → GAS; pending/ack NAS | Xác định collector, publisher hay read adapter lỗi; không suy camera hỏng từ lỗi feed |
 | Backup NO_REPORT | Latest run/job + bước publish + key/source đúng | Sửa/kiểm chứng publisher riêng khi được giao; không tạo báo cáo giả |
 | Note mất/không lưu | Đang ở hunghvt-notes hay trang cũ; Koofr app/namespace/IDB | Không khởi động lại Notes Blob; export nháp trước, tránh ghi đè catalog |
-| Sửa guide lỗi lưu trữ | Private Blob và revision guides/<slug>.json | Giữ nội dung nền/QR; chưa thể cam kết khắc phục bằng Supabase limiter |
+| Sửa guide lỗi lưu trữ | KOOFR_GUIDES_* và revision/lock/readback | Giữ bản đang nhập; đọc QR bằng bản nền có cảnh báo; không tự tạo dữ liệu đè nguồn cũ |
 | Chi tiêu sai/lỗi | GAS bridge, spreadsheet đang dùng, quy tắc Date/DELETED | Không đổi Sheet hoặc sửa giao dịch theo suy đoán |
-| Gemini tự nói tên model lạ | Model cấu hình trong GAS và request Gemini thực | Câu trả lời tự giới thiệu không chứng minh model; thay đổi metadata/picker đang chuẩn bị, xem GEMINI-MODELS-20261019.md |
+| Gemini tự nói tên model lạ | Model cấu hình trong GAS và request Gemini thực | Câu trả lời tự giới thiệu không chứng minh model |
 | Viewer/FnNAS không vào | Tailscale/shortcut và NAS | Là link riêng; không đổi Vercel/GAS để sửa mạng NAS |
 
 ## 9. Dự phòng, backup và ranh giới
 
-- Blob giữ làm phương án cũ; **không coi là rollback đang dùng được** trong lúc
-  chưa đọc/ghi xác minh. Không tự chuyển feed API lỗi sang JSON Blob cũ.
-- Chủ đích người dùng: Supabase là bộ đếm tạm; khi Blob hoạt động lại thì đánh giá
-  chuyển bộ đếm về Blob. Chưa có lịch tự động chuyển. Còn guide overrides phải được
-  xử lý riêng trước khi tuyên bố “Blob chỉ dành bộ đếm”.
+- Homepage không còn SDK hoặc đường chạy Vercel Blob. Giữ nguyên object/secret Blob cũ chỉ để phục hồi/đối chiếu guide; chưa xóa dữ liệu hay ngắt integration.
+- Bộ đếm dùng Supabase lâu dài theo chỉ đạo mới nhất; không có nhánh hoặc lịch quay về Blob.
+- Guide Koofr dùng credential/namespace riêng, không dùng mật khẩu hoặc namespace Notes/backup. KOOFR_GUIDES_READY chỉ bật sau xác minh đủ sáu guide. [Quy trình chuyển](QR-KOOFR-20261019.md).
 - Notes Blob đã nghỉ; bằng chứng cleanup cũ ghi xóa 27 object (25 note, 1 share,
   1 index). Không coi store đó là bản dữ liệu Notes mới để rollback. Không dọn thêm.
 - Notes Koofr có export snapshot; tài liệu release chưa có backup độc lập tự động.
@@ -193,7 +193,7 @@ engine trong một đợt cập nhật tài liệu.
   chứa dữ liệu kinh doanh cần giữ dài hạn; ôn thi là dữ liệu khác, không xóa chung.
 - GAS các nguồn dùng key/HEAD riêng nhưng chung quota Google/ScriptLock trong
   project reporting; không thể hứa miễn nhiễm quota hoặc khóa tài khoản.
-- Guide nền/source có Git; guide overrides/history vẫn cần xử lý backup riêng.
+- Guide nền/source có Git; guide overrides/history Koofr vẫn cần export/backup riêng.
 - Drive bisync là hai chiều, không coi là bản sao bất biến. Photos là một chiều;
   state Koofr quan trọng cho phục hồi runner. Không resync/reset/purge trong đợt này.
 
@@ -212,4 +212,5 @@ engine trong một đợt cập nhật tài liệu.
 Việc cần xác minh tiếp: (1) nguyên nhân hai workflow failure và báo cáo GAS đầu
 tiên của từng nguồn; (2) hướng xử lý guide overrides còn ở Blob; (3) backup định kỳ
 Notes cùng thủ tục khôi phục. Đây là backlog, không tự tạo lịch hay thay production.
+
 

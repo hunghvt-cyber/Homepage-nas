@@ -23,7 +23,6 @@ VERIFIED_RETENTION = Path(os.environ.get(
 VERIFIED_RETENTION_RESULTS = Path(os.environ.get(
     "STATUS_VERIFIED_RETENTION_RESULTS", "/vol1/Docker/tapo-nas-lab/state/verified-retention"
 ))
-TOKEN_FILE = Path(os.environ.get("STATUS_TOKEN_FILE", "~/.config/homepage-nas/blob-token")).expanduser()
 OUTPUT = Path(os.environ.get("STATUS_OUTPUT", "~/.local/state/homepage-status/nas-status.json")).expanduser()
 LOCK = OUTPUT.with_suffix(".lock")
 STATES = {"ok", "pass", "warn", "fail", "unknown"}
@@ -288,7 +287,7 @@ def main():
             if os.path.exists(temp_name):
                 os.unlink(temp_name)
 
-        backend = os.environ.get("STATUS_BACKEND", "blob")
+        backend = os.environ.get("STATUS_BACKEND", "gas-drive")
         if backend == "gas-drive":
             # Same collector, snapshot allowlist, publisher lock and timer.
             try:
@@ -307,25 +306,7 @@ def main():
                 signal.alarm(0)
             print(json.dumps(result, separators=(",", ":")))
             return 0
-        if backend != "blob":
-            raise ValueError("Unknown status backend")
-        token = TOKEN_FILE.read_text(encoding="utf-8").strip()
-        if not token:
-            raise RuntimeError("Blob token file is empty")
-        from vercel.blob import put
-
-        signal.signal(signal.SIGALRM, timeout)
-        signal.alarm(25)
-        try:
-            result = put(
-                "nas-status.json", payload, access="public", content_type="application/json",
-                add_random_suffix=False, overwrite=True, cache_control_max_age=300,
-                token=token, multipart=False,
-            )
-        finally:
-            signal.alarm(0)
-        # Print only the public URL for initial configuration; never print credentials.
-        print(result.url)
+        raise ValueError("Unknown status backend")
     return 0
 
 
@@ -336,4 +317,5 @@ if __name__ == "__main__":
         code = str(exc) if isinstance(exc, ValueError) and re.fullmatch(r"[A-Z_]{1,64}", str(exc)) else type(exc).__name__
         print(json.dumps({"event": "nas-status-publish", "ok": False, "code": code}), file=sys.stderr)
         raise SystemExit(1)
+
 

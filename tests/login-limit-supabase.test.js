@@ -26,7 +26,8 @@ test('quota denial is 429 and unavailable, malformed or missing configuration fa
  assert.equal(called,false);
 });
 test('Supabase allowance retains encrypted login cookie, session GET, and logout; limiter failure never authenticates',async()=>{
- Object.assign(process.env,{PORTAL_PASSWORD:'test-correct-long-password',SESSION_PASSWORD:env.SESSION_PASSWORD,PORTAL_BASE_URL:'https://homepage-nas.vercel.app',PORTAL_PRIVATE_BLOB_TOKEN:'unused-test-token'});
+ Object.assign(process.env,{PORTAL_PASSWORD:'test-correct-long-password',SESSION_PASSWORD:env.SESSION_PASSWORD,PORTAL_BASE_URL:'https://homepage-nas.vercel.app'});
+ delete process.env.PORTAL_PRIVATE_BLOB_TOKEN;
  const res=()=>({headers:{},setHeader(k,v){this.headers[k]=v;},getHeader(k){return this.headers[k];},status(code){this.code=code;return this;},json(value){this.value=value;return this;}});
  const req={method:'POST',headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},body:{action:'login',password:process.env.PORTAL_PASSWORD}};
  let calls=0;
@@ -39,3 +40,4 @@ test('Supabase allowance retains encrypted login cookie, session GET, and logout
  const denied=res();await createAuthHandler({limit:createSupabaseLimiter({env,request:async()=>({ok:false})})})(req,denied);
  assert.equal(denied.code,503);assert.notEqual(denied.value.authenticated,true);assert.equal(denied.headers['set-cookie'],undefined);
 });
+

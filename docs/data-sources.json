@@ -3,7 +3,7 @@
   "verified_at": "2026-10-19T06:26:25.440Z",
   "timezone": "Asia/Ho_Chi_Minh",
   "scope": "Homepage operational inventory; metadata only; not a live status feed",
-  "source_commit": "ccb4fb264a4292a63b7ac12ad9f2f554474cfbb9",
+  "source_commit": "See containing Git commit; production rollout must be checked separately",
   "canonical_document": "docs/OPERATIONS.md",
   "platform_groups": [
     {
@@ -20,7 +20,7 @@
     },
     {
       "id": "supabase",
-      "role": "Temporary Homepage login attempt counters; shared project with exam application"
+      "role": "Homepage login counters in isolated schema; no return to Blob planned"
     },
     {
       "id": "google",
@@ -28,7 +28,7 @@
     },
     {
       "id": "koofr",
-      "role": "Independent Notes store, media backups and backup state"
+      "role": "Notes store, isolated guide destination pending activation, media backups and backup state"
     }
   ],
   "applications": {
@@ -69,14 +69,20 @@
     },
     {
       "id": "guide-overrides",
-      "authoritative_store": "Private Vercel Blob guides/<slug>.json",
-      "writer": "api/guides.js with owner session/origin/revision",
+      "authoritative_store": "Existing Blob overrides not yet recovered; destination isolated Koofr namespace",
+      "writer": "api/guides.js; owner/origin/revision/DAV lock/readback",
       "reader": "api/guides.js",
-      "state": "remaining_blob_dependency",
+      "state": "koofr_adapter_guarded_pending_credentials_and_verified_import",
       "live_write_verified_this_audit": false,
       "secret_names": [
-        "PORTAL_PRIVATE_BLOB_TOKEN"
-      ]
+        "KOOFR_GUIDES_USER",
+        "KOOFR_GUIDES_APP_PASSWORD"
+      ],
+      "env_names": [
+        "KOOFR_GUIDES_NAMESPACE",
+        "KOOFR_GUIDES_READY"
+      ],
+      "public_read": "Koofr when ready; labelled static original otherwise; never requires login"
     },
     {
       "id": "nas-report",
@@ -155,7 +161,7 @@
       ],
       "password_and_session_store": "Vercel env and encrypted browser cookie",
       "automatic_fallback": false,
-      "return_to_blob": "User-approved direction after Blob recovery; not scheduled or performed"
+      "return_to_blob": "No; latest user direction keeps Supabase and eliminates Blob runtime dependency"
     },
     {
       "id": "notes",
@@ -208,13 +214,14 @@
         "EXPENSES_API_URL",
         "EXPENSES_API_SECRET"
       ],
-      "runtime_model": "Not independently inspected; model self-identification is not evidence",
-      "model_metadata_change": {
-        "state": "prepared_not_deployed",
-        "document": "docs/GEMINI-MODELS-20261019.md",
-        "identity_source": "Google GenerateContentResponse.modelVersion, distinct from requestedModel",
-        "selection": "Request-local; reviewed allowlist intersected with Google models.list generateContent support",
-        "deployment_order": "GAS legacy Homepage bridge manual workflow, then Homepage main/Vercel",
+      "runtime_model": "Google modelVersion returned per answer; must not infer identity from generated text",
+      "chat_update": {
+        "document": "docs/GEMINI-CHAT-20261020.md",
+        "state": "prepared_pending_rollout",
+        "max_user_chars_utf16": 50000,
+        "max_history_chars_utf16": 200000,
+        "max_turns": 20,
+        "model_selection": "Reviewed allowlist intersected with models.list generateContent",
         "automatic_model_fallback": false
       }
     },
@@ -235,7 +242,7 @@
   "cross_cutting": {
     "reporting_and_bridge_share_endpoint": false,
     "nas_and_backup_reporting_share_endpoint": true,
-    "site_json_blob_urls": "Legacy build defaults overridden by production env; presence is not automatic fallback",
+    "site_json_blob_urls": "Removed; report API defaults only",
     "secondary_dependencies": [
       "Telegram for expense intake",
       "Tailscale for Viewer/FnNAS shortcuts",
@@ -246,10 +253,11 @@
     "known_gaps": [
       "Both backup aggregate endpoints NO_REPORT",
       "Latest Drive and Photos daily runs failure; cause not established from job metadata",
-      "Guide overrides still depend on Blob",
+      "Guide Koofr activation pending separate credentials and verified old override import",
       "Supabase Free inactivity pause",
       "Independent Notes automated backup not confirmed"
     ]
-  }
+  },
+  "migration_document": "docs/QR-KOOFR-20261019.md"
 }
 

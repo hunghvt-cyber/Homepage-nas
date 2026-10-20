@@ -3,7 +3,7 @@ import { checkAttempts } from '../lib/login-limit.js';
 export function createAuthHandler({limit = checkAttempts} = {}) {
  return async function handler(req, res) {
   try {
-    requireConfig('PORTAL_PASSWORD', 'SESSION_PASSWORD', 'PORTAL_BASE_URL', 'PORTAL_PRIVATE_BLOB_TOKEN');
+    requireConfig('PORTAL_PASSWORD', 'SESSION_PASSWORD', 'PORTAL_BASE_URL');
     if (process.env.PORTAL_PASSWORD.length < 12 || process.env.PORTAL_PASSWORD.length > 256) throw new HttpError(503, 'Mật khẩu quản trị cần từ 12 đến 256 ký tự.');
     if (req.method === 'GET') {
       try {await owner(req, res); return reply(res, 200, {authenticated: true});} catch(e) {if(e.status !== 401) throw e; return reply(res, 200, {authenticated: false});}
@@ -14,8 +14,7 @@ export function createAuthHandler({limit = checkAttempts} = {}) {
     if (b.action !== 'login') throw new HttpError(400, 'Thao tác không hợp lệ.');
     try {await limit(req);} catch(e) {
       if(e.status) throw e;
-      const blocked=/store.{0,40}blocked|quota|suspend|usage.?limit/i.test(String(e.message||''));
-      console.error(JSON.stringify({operation:'login',stage:'attempt-limit',reason:blocked?'blob-store-blocked':'storage-unavailable'}));
+      console.error(JSON.stringify({operation:'login',stage:'attempt-limit',backend:'supabase',reason:'unavailable'}));
       throw new HttpError(503, 'Chưa thể mở khóa: dịch vụ giới hạn đăng nhập đang không khả dụng. Vui lòng thử lại sau.');
     }
     if (!verifyPassword(b.password)) throw new HttpError(401, 'Mật khẩu không đúng.');
@@ -24,3 +23,4 @@ export function createAuthHandler({limit = checkAttempts} = {}) {
  };
 }
 export default createAuthHandler();
+

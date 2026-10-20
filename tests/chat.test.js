@@ -8,6 +8,14 @@ process.env.PORTAL_BASE_URL=origin;
 process.env.EXPENSES_API_URL='https://script.google.com/macros/s/example/exec';
 process.env.EXPENSES_API_SECRET='x'.repeat(32);
 const req=()=>({method:'POST',headers:{origin,'content-type':'application/json'},body:{messages:[{role:'user',text:'Chào'}]}});
+test('long multilingual messages and 20 turns are accepted with explicit bounds',()=>{
+ assert.equal(validateMessages([{role:'user',text:'Thông tin tiếng Việt\n'.repeat(2000)}]).length,1);
+ assert.equal(validateMessages([{role:'user',text:'x'.repeat(50000)}])[0].text.length,50000);
+ assert.throws(()=>validateMessages([{role:'user',text:'x'.repeat(50001)}]));
+ assert.equal(validateMessages(Array.from({length:39},(_,i)=>({role:i%2?'model':'user',text:'x'}))).length,39);
+ const total=[{role:'user',text:'a'.repeat(50000)},{role:'model',text:'b'.repeat(16000)},{role:'user',text:'c'.repeat(50000)},{role:'model',text:'d'.repeat(16000)},{role:'user',text:'e'.repeat(50000)},{role:'model',text:'f'.repeat(16000)},{role:'user',text:'g'.repeat(2000)}];
+ assert.equal(validateMessages(total).length,7);total[6].text+='g';assert.throws(()=>validateMessages(total));
+});
 test('model listing and selection are authenticated, signed and validated',async()=>{
  const requests=[];
  const handler=createChatHandler({authorize:()=>{},request:async(url,options)=>{
@@ -30,7 +38,7 @@ test('chat denies unauthorized and cross-origin requests before calling Gemini',
  const handler=createChatHandler({authorize:()=>{},request:()=>{called++;}}),other=req();other.headers.origin='https://other.example';const r=response();await handler(other,r);assert.equal(r.code,403);assert.equal(called,0);
 });
 test('chat validates turn order and history limits',()=>{
- for(const messages of [[],[{role:'model',text:'x'}],[{role:'user',text:''}],[{role:'user',text:'x'.repeat(4001)}],Array.from({length:23},(_,i)=>({role:i%2?'model':'user',text:'x'}))])assert.throws(()=>validateMessages(messages));
+ for(const messages of [[],[{role:'model',text:'x'}],[{role:'user',text:''}],[{role:'user',text:'x'.repeat(50001)}],Array.from({length:43},(_,i)=>({role:i%2?'model':'user',text:'x'}))])assert.throws(()=>validateMessages(messages));
  assert.equal(validateMessages([{role:'user',text:' x '}])[0].text,'x');
 });
 test('chat signs full action/history and hides upstream details',async()=>{

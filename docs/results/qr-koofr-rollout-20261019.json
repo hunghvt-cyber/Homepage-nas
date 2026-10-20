@@ -1,0 +1,31 @@
+{
+  "checked_at": "2026-10-19T08:19:53Z",
+  "runtime_commit": "df019cf80c127bdd2ddde6a331758862e8951a61",
+  "project": "homepage-nas",
+  "deployment_id": "dpl_8jzF14zH765xsVKxEE9bFdbkdrWS",
+  "deployment_state": "READY",
+  "production_alias": "https://homepage-nas.vercel.app/",
+  "local_validation": {"javascript_tests_passed": 68, "python_tests_passed": 30, "build": "passed", "local_links": "passed", "changed_js_syntax": "passed"},
+  "github_actions": {"run_id": 39221727936, "job_id": 117958351528, "conclusion": "failure", "steps": [], "reason": "Not established; no executed steps in returned metadata; local tests and Vercel build passed"},
+  "anonymous_production_reads": {
+    "guide_count": 6,
+    "all_status_200": true,
+    "all_slugs_match": true,
+    "all_source": "original",
+    "all_editable": false,
+    "all_have_stale_original_warning": true,
+    "auth_get": {"status": 200, "authenticated": false},
+    "static_guide_page": {"path": "/do-vat/bep-sunhouse-shb82191-vmc/", "status": 200},
+    "notes_route": {"status": 200},
+    "nas_config": "/api/nas-report",
+    "backup_config": "/api/backup-report"
+  },
+  "blob_runtime_dependency": false,
+  "old_blob_objects_or_secrets_deleted": false,
+  "koofr_guide_migration_complete": false,
+  "koofr_ready_flag": false,
+  "guide_namespace_configured": true,
+  "pending": ["Separate Homepage guide Koofr user/app password configuration", "Recover and verify old guide overrides/history or obtain owner verification of initial originals", "Import six records with readback", "Enable READY, redeploy and verify authenticated live save/reopen"],
+  "not_touched": ["NAS services and engines", "Backup/sync engines", "Independent Notes data and credentials", "Exam data and policies"],
+  "canonical_handoff": "docs/QR-KOOFR-20261019.md"
+}
