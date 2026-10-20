@@ -214,7 +214,16 @@
         "EXPENSES_API_URL",
         "EXPENSES_API_SECRET"
       ],
-      "runtime_model": "Not independently inspected; model self-identification is not evidence"
+      "runtime_model": "Google modelVersion returned per answer; must not infer identity from generated text",
+      "chat_update": {
+        "document": "docs/GEMINI-CHAT-20261020.md",
+        "state": "prepared_pending_rollout",
+        "max_user_chars_utf16": 50000,
+        "max_history_chars_utf16": 200000,
+        "max_turns": 20,
+        "model_selection": "Reviewed allowlist intersected with models.list generateContent",
+        "automatic_model_fallback": false
+      }
     },
     {
       "id": "backup-media-and-state",
@@ -251,3 +260,4 @@
   },
   "migration_document": "docs/QR-KOOFR-20261019.md"
 }
+

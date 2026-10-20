@@ -2,6 +2,9 @@
 
 # Hồ sơ quản trị và vận hành Homepage
 
+Chat Gemini 20/10: [chọn model và nội dung dài](GEMINI-CHAT-20261020.md).
+Giới hạn mới 50.000/tin, 200.000 lịch sử, 20 lượt; cần rollout GAS rồi Homepage.
+
 Cập nhật: 19/10/2026, Asia/Ho_Chi_Minh. Đối chiếu code Homepage `ccb4fb2`,
 Vercel production/env metadata, Supabase và HTTP public. Lần đọc mới:
 **13:26 giờ Việt Nam**. Đây là snapshot có thời điểm, không phải trang giám sát tự động.
@@ -209,4 +212,5 @@ engine trong một đợt cập nhật tài liệu.
 Việc cần xác minh tiếp: (1) nguyên nhân hai workflow failure và báo cáo GAS đầu
 tiên của từng nguồn; (2) hướng xử lý guide overrides còn ở Blob; (3) backup định kỳ
 Notes cùng thủ tục khôi phục. Đây là backlog, không tự tạo lịch hay thay production.
+
 
