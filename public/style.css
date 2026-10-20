@@ -156,3 +156,13 @@ button.expense-bar-row{width:100%;text-align:left;cursor:pointer} .expense-bar{d
 }
 
 #expenses-workspace .expense-table td:nth-child(4){min-width:180px;max-width:360px;white-space:pre-wrap;overflow-wrap:anywhere}
+
+
+/* Compact Gemini model selector and refresh control. */
+.chat-model-controls{display:flex;align-items:center;gap:8px;flex:none;min-width:0}
+.chat-model-controls label{flex:none;margin:0;color:#536357;font-size:.82rem;font-weight:600}
+.chat-model-controls select{flex:0 1 360px;width:auto;min-width:0;padding:.42rem .65rem;border-color:#a1b1a5;border-radius:8px;background:#f7faf5;font-size:.9rem}
+#chat-model-refresh{flex:none;width:36px;height:36px;padding:0;border:1px solid #a1b1a5;border-radius:50%;background:#edf1eb;color:#254c3c;font-size:1.2rem;line-height:1}
+#chat-model-refresh:hover{background:#dfe9df;color:#173c2b}
+html.gemini-embedded .chat-model-controls{flex:none}
+@media(max-width:380px){.chat-model-controls{gap:6px}.chat-model-controls select{font-size:.84rem;padding:.4rem .5rem}}
