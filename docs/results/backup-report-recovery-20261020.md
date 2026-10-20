@@ -79,3 +79,43 @@ Drive UI still explicitly says no workflow report.
 NAS UI continues receiving measurements (11:18:59 / receipt 11:19:15 Vietnam).
 Homepage remains original production deployment; no Vercel/GAS redeploy needed.
 Remaining blocker is Drive secret format; full two-source recovery is incomplete.
+
+## Completion 20 October 2026, 04:30 UTC / 11:30 Vietnam
+
+Owner corrected Drive key again. Probe 39367381382 attempt 3, job 118453479292,
+verifies signed_ack=true. Both source keys now authenticate correctly.
+
+Drive report-only recovery:
+- PR #5 merge 84a04b744cee8f5d8b8b5587b2fe7a56eb33aebf;
+  PR #6 diagnostics merge aa9a2d72cfadf43455c32bb2b5811cb22b8122c0;
+  PR #7 signed-log redirect fix merge 84597575fc1521d77303953d6fb7df54b785d830.
+- Recovery runs 39369559386 and 39369716348 failed before publication.
+  Diagnostics identified HTTP 401 downloading job logs: urllib forwarded the
+  GitHub Authorization header to signed storage. Fix removes bearer on redirect
+  and requires HTTPS; regression verifies this behavior.
+- Publisher/recovery tests 11/11 passed. Synthetic tests only validate code.
+- Successful real recovery run 39369850114, job 118455029142, source 84597575.
+  It read original artifact 12227092831, digest
+  33a0073344d70881ea65e7b38bfb5b7d5b1e7d74d9b6c3c6c5a76d0e28a5798b.
+  Downloaded digest matches. It independently checked original run metadata,
+  successful terminal steps and actual timestamped initial rclone exit 0.
+- Signed publication ACK: published=true, gdrive, run_id=39337249732,
+  run_attempt=1, replay=true (idempotent retry after commit).
+- Production Drive API HTTP 200: original run_number=82/run_attempt=1,
+  success, finished_at=2026-10-19T22:53:41Z (original Final Status completion),
+  received_at=2026-10-20T04:29:44.597Z, recovered_previous=false.
+- Original artifact contains 28 ignored files and a dangling-shortcut warning.
+  Transfer amount/speed and new-ignore count lack parseable evidence and stay
+  null; do not fabricate zero or run extra scans.
+
+Both backup production APIs now return 200 and reference original real runs.
+Photos remains original run 39343563085, 8 uploads, 0 errors; NAS HTTP 200.
+No backup engines, media, rclone state/cache, filters, schedules, Photos profile,
+GAS properties/code/permissions or NAS services were changed.
+
+Latest observed Homepage production is READY deployment
+dpl_AjNTLnFnqyEiohnLsByHkAxjowQX, commit
+6d856b42571db755a3baaf002d6d3ec50c8a72cb (independent Gemini PR #25).
+This report recovery did not require a Homepage or GAS runtime deployment.
+Future scheduled backup publication uses existing corrected keys and GAS
+default; the next scheduled execution has not yet occurred during this audit.
