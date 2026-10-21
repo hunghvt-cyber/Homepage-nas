@@ -1,0 +1,225 @@
+{
+  "migration_complete": true,
+  "owner_acceptance": {
+    "date": "2026-10-21",
+    "source": "owner-verified-originals",
+    "old_blob_overrides_recovered": false,
+    "old_blob_data_or_keys_deleted": false
+  },
+  "import_commit": "f3212b1048214178a032f2d49f2d96873ea275b4",
+  "import_deployment": "dpl_DrYnvViaiXSjcq84G6famB6eqQBt",
+  "import_result": {
+    "verified": 6,
+    "source": "owner-verified-originals",
+    "approvedDigest": "abb6c9549d88761b763110a07559af155a85fb696b89bed9b9f7f75b646553bf",
+    "checks": [
+      {
+        "slug": "hop-do-mau",
+        "sha256": "da64b2f5634e7438daf85dfbff19a7787c6b25c58d45b13a9efcf17528900469"
+      },
+      {
+        "slug": "bep-sunhouse-shb82191-vmc",
+        "sha256": "2dbdb2823a7325e2b3201f83dec317a99bbff8dbcdd97b8b6caf4f6d972e019e"
+      },
+      {
+        "slug": "tu-lanh-aqua-aqr-t305fa-lb",
+        "sha256": "5ac03b4b0c36a61a95190a0888af6e894c6faa5eaa26022d3e24639e6f1b5b13"
+      },
+      {
+        "slug": "may-giat-aqua-aw10-b4959u1k-b",
+        "sha256": "2423eb891ba2f558b56a86493838d94fcf950d0311ea2af657503dcd08b9ffe7"
+      },
+      {
+        "slug": "dieu-hoa-lenson-lv-09cx1",
+        "sha256": "43b2b109d12d1e79c77ce7405877d9f8d94a415649e6a6c57fc12250b414db8f"
+      },
+      {
+        "slug": "may-loc-nuoc-mutosi-mp-u110cp",
+        "sha256": "e5891478b6b065471eb988b96e7f636fe7e6d952406e5e1f1dacfc0110bb17af"
+      }
+    ],
+    "liveSaveReopen": true,
+    "idempotentRetry": true,
+    "visibleContentUnchanged": true,
+    "readyToEnable": true
+  },
+  "active_runtime_commit": "88d688e87e0df0b2ce18bc3873d971259bac7ec9",
+  "active_deployment": "dpl_ESVfa9UoMPUAHN59i9J4V6vGmkSY",
+  "production_alias": "https://homepage-nas.vercel.app/",
+  "ready": true,
+  "import_flag_disabled": true,
+  "normal_build_restored": true,
+  "local_tests": {
+    "javascript_passed": 78,
+    "guide_related_passed": 9,
+    "build": "pass",
+    "syntax": "pass",
+    "internal_links": "pass"
+  },
+  "actions": [
+    {
+      "id": 39536574426,
+      "conclusion": "success",
+      "commit": "88d688e87e0df0b2ce18bc3873d971259bac7ec9"
+    },
+    {
+      "id": 39536452557,
+      "conclusion": "success",
+      "commit": "f3212b1048214178a032f2d49f2d96873ea275b4"
+    }
+  ],
+  "limits": {
+    "authenticated_browser_save_tested": false,
+    "live_adapter_save_reopen_tested": true,
+    "anonymous_live_write_rejected": true
+  },
+  "untouched": [
+    "NAS",
+    "Notes",
+    "backup engines",
+    "exam data"
+  ],
+  "checked_at": "2026-10-21T03:08:18.440466+00:00",
+  "anonymous_reads": [
+    {
+      "slug": "hop-do-mau",
+      "api": {
+        "status": 200,
+        "bytes": 564,
+        "source": "koofr",
+        "editable": true,
+        "revision_present": true,
+        "matches_approved": true,
+        "warning": false,
+        "no_private_fields": true
+      },
+      "page": {
+        "status": 200,
+        "bytes": 3072,
+        "has_static_steps": true
+      },
+      "qr": {
+        "status": 200,
+        "bytes": 8674
+      }
+    },
+    {
+      "slug": "bep-sunhouse-shb82191-vmc",
+      "api": {
+        "status": 200,
+        "bytes": 3603,
+        "source": "koofr",
+        "editable": true,
+        "revision_present": true,
+        "matches_approved": true,
+        "warning": false,
+        "no_private_fields": true
+      },
+      "page": {
+        "status": 200,
+        "bytes": 6660,
+        "has_static_steps": true
+      },
+      "qr": {
+        "status": 200,
+        "bytes": 10837
+      }
+    },
+    {
+      "slug": "tu-lanh-aqua-aqr-t305fa-lb",
+      "api": {
+        "status": 200,
+        "bytes": 3934,
+        "source": "koofr",
+        "editable": true,
+        "revision_present": true,
+        "matches_approved": true,
+        "warning": false,
+        "no_private_fields": true
+      },
+      "page": {
+        "status": 200,
+        "bytes": 6990,
+        "has_static_steps": true
+      },
+      "qr": {
+        "status": 200,
+        "bytes": 10745
+      }
+    },
+    {
+      "slug": "may-giat-aqua-aw10-b4959u1k-b",
+      "api": {
+        "status": 200,
+        "bytes": 4868,
+        "source": "koofr",
+        "editable": true,
+        "revision_present": true,
+        "matches_approved": true,
+        "warning": false,
+        "no_private_fields": true
+      },
+      "page": {
+        "status": 200,
+        "bytes": 8012,
+        "has_static_steps": true
+      },
+      "qr": {
+        "status": 200,
+        "bytes": 10869
+      }
+    },
+    {
+      "slug": "dieu-hoa-lenson-lv-09cx1",
+      "api": {
+        "status": 200,
+        "bytes": 2951,
+        "source": "koofr",
+        "editable": true,
+        "revision_present": true,
+        "matches_approved": true,
+        "warning": false,
+        "no_private_fields": true
+      },
+      "page": {
+        "status": 200,
+        "bytes": 5822,
+        "has_static_steps": true
+      },
+      "qr": {
+        "status": 200,
+        "bytes": 10960
+      }
+    },
+    {
+      "slug": "may-loc-nuoc-mutosi-mp-u110cp",
+      "api": {
+        "status": 200,
+        "bytes": 3806,
+        "source": "koofr",
+        "editable": true,
+        "revision_present": true,
+        "matches_approved": true,
+        "warning": false,
+        "no_private_fields": true
+      },
+      "page": {
+        "status": 200,
+        "bytes": 6758,
+        "has_static_steps": true
+      },
+      "qr": {
+        "status": 200,
+        "bytes": 11143
+      }
+    }
+  ],
+  "anonymous_auth": {
+    "status": 200,
+    "authenticated": false
+  },
+  "anonymous_write": {
+    "status": 401,
+    "body": "{\"error\":\"Vui lòng nhập mật khẩu để mở khóa.\"}"
+  }
+}

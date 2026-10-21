@@ -1,6 +1,6 @@
-> Trạng thái mới 21/10/2026: [chốt backlog và tiếp tục QR](QR-RESUME-20261021.md). Chủ hệ thống xác nhận chi tiêu, báo cáo backup, chia sẻ Notes và điều hướng/model đã xong. QR đọc công khai 6/6; Actions success; Koofr vẫn thiếu credential riêng và xác nhận dữ liệu khởi tạo. Các bảng ngày 19/10 bên dưới là bằng chứng lịch sử.
+> QR hoàn tất 21/10/2026: [Koofr guide đã kích hoạt](QR-KOOFR-COMPLETE-20261021.md). Chủ hệ thống chấp nhận sáu bản nền; đã nhập, readback và lưu/mở lại thành công. Các ghi chú chờ phía dưới thuộc snapshot cũ, không mở lại việc này.
 
-> Cập nhật QR 19/10/2026: [QR → Koofr](QR-KOOFR-20261019.md) là nguồn hiện hành cho đợt chuyển đổi này. Mã Homepage đã bỏ Blob; Koofr guide chưa được kích hoạt khi chưa có credential riêng và dữ liệu đối chiếu. QR công khai vẫn đọc bản nền có cảnh báo. Bộ đếm giữ Supabase, không chuyển lại Blob.
+
 
 # Hồ sơ quản trị và vận hành Homepage
 
@@ -36,7 +36,7 @@ Homepage chỉ chứa link. Không cộng một shortcut thành database của H
 | Dữ liệu/tính năng | Nguồn chuẩn | Đường đi tới giao diện | Ghi ở đâu |
 | --- | --- | --- | --- |
 | Tiêu đề, shortcut, hướng dẫn nền, ảnh, QR | GitHub content/ và public/images/ | Build → Vercel dist | Sửa repo → main → build |
-| Sửa hướng dẫn trên web, lịch sử guide | Koofr namespace Homepage-Guides riêng (chờ cấu hình/import) | /api/guides + guide nền | Vercel API kiểm phiên/origin/revision, DAV lock/readback rồi ghi Koofr |
+| Sửa hướng dẫn trên web, lịch sử guide | Koofr namespace Homepage-Guides riêng (đã kích hoạt 21/10) | /api/guides + guide nền | Vercel API kiểm phiên/origin/revision, DAV lock/readback rồi ghi Koofr |
 | Camera, dung lượng, RAM/swap, bảo trì, dọn video | Cache/kết quả job NAS; Drive giữ báo cáo đã commit | NAS publisher → GAS reporting → Drive → /api/nas-report → UI | NAS gửi HMAC; GAS commit immutable file + HEAD |
 | Báo cáo Drive ↔ Koofr | Kết quả workflow bisync | Actions → GAS reporting/Drive → /api/backup-report?source=gdrive | Publisher ở repo backup |
 | Báo cáo Photos → Koofr | Kết quả workflow daily | Actions → GAS reporting/Drive → /api/backup-report?source=gphotos | Publisher ở repo Photos; backfill/reconcile không xuất feed này |

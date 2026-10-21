@@ -1,6 +1,6 @@
 # Homepage NAS — AI tiếp quản
 
-Repository: hunghvt-cyber/Homepage-nas. Current operating snapshot: 2026-10-19.
+Repository: hunghvt-cyber/Homepage-nas. Current operating snapshot: 2026-10-21 (QR update; dated reports retain their measurement dates).
 
 Read [docs/OPERATIONS.md](docs/OPERATIONS.md) and
 [docs/data-sources.json](docs/data-sources.json) before changing a backend,
@@ -13,7 +13,7 @@ configuration and production evidence; dated reports are not live status.
 - NAS timer checks every five minutes; GAS publishing uses event changes plus a 30-minute heartbeat. Preserve freshness timestamps, pending mutation identity, generation and sequence. Do not add collectors, timers or fabricate measurements.
 - Supabase is the Homepage login attempt counter in the isolated homepage_login schema of CongchungVND. Password verification/encrypted sessions stay on Vercel. Do not modify exam tables, users or policies. Never bypass the limiter or silently fall back between counter stores.
 - Legacy Homepage Notes APIs are retired (410). /notes/ opens the independent Koofr Notes project. Its source is hunghvt-cyber/Hunghvt-notes on release/minimal-notes, not its nearly empty main. Do not restore legacy Notes writers, import caches as authoritative data or assume deleted Blob Notes can be rolled back.
-- Guide overrides/history use the isolated Koofr guide adapter; activation is gated by KOOFR_GUIDES_READY after all six verified records are imported. Until then public reads return explicitly labelled static originals and writes fail closed. Never assume unavailable Blob overrides were empty; preserve old Blob objects/credentials until reconciled. See docs/QR-KOOFR-20261019.md. Keep public static QR reading independent of login. Preserve revisions and server-side shared-password checks; never change printed guide slugs.
+- Guide overrides/history are active in the isolated Koofr guide adapter after the owner approved all six static originals on 2026-10-21 and import/readback/save/reopen passed. KOOFR_GUIDES_READY=true. Old Blob overrides/history were not recovered; owner accepted Git originals for initialization. Preserve old Blob objects/credentials; do not rerun initialization or overwrite the live namespace. See docs/QR-KOOFR-20261019.md and docs/QR-KOOFR-COMPLETE-20261021.md. Public QR reading stays independent of login; unavailable Koofr returns explicitly labelled static originals and fails closed for writes. Preserve revisions, shared-password checks and printed slugs.
 - Expense/Gemini bridge, reporting GAS and active Telegram webhook GAS are separate deployments. Active bot is @PoormanTest0219_bot using doPost; do not bootstrap the legacy polling bot.
 - Home-AI is a shortcut to an independent application, not a Homepage database/API dependency.
 - No credentials, private keys, share tokens, raw events, recording paths or private data in repo/public output. Document secret names and storage locations only.

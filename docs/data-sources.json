@@ -69,11 +69,11 @@
     },
     {
       "id": "guide-overrides",
-      "authoritative_store": "Existing Blob overrides not yet recovered; destination isolated Koofr namespace",
+      "authoritative_store": "Koofr isolated Homepage Guides namespace; initialized from six owner-approved Git originals on 2026-10-21",
       "writer": "api/guides.js; owner/origin/revision/DAV lock/readback",
       "reader": "api/guides.js",
-      "state": "koofr_adapter_guarded_pending_credentials_and_verified_import",
-      "live_write_verified_this_audit": false,
+      "state": "active_koofr_verified_import",
+      "live_write_verified_this_audit": true,
       "secret_names": [
         "KOOFR_GUIDES_USER",
         "KOOFR_GUIDES_APP_PASSWORD"
@@ -82,7 +82,17 @@
         "KOOFR_GUIDES_NAMESPACE",
         "KOOFR_GUIDES_READY"
       ],
-      "public_read": "Koofr when ready; labelled static original otherwise; never requires login"
+      "public_read": "Koofr when ready; labelled static original otherwise; never requires login",
+      "verification": {
+        "date": "2026-10-21",
+        "source": "owner-verified-originals",
+        "old_blob_overrides_recovered": false,
+        "six_record_readback": true,
+        "adapter_save_reopen": true,
+        "adapter_idempotent_retry": true,
+        "authenticated_browser_save_tested": false,
+        "evidence": "docs/results/qr-koofr-activation-20261021.json"
+      }
     },
     {
       "id": "nas-report",
@@ -253,7 +263,6 @@
     "known_gaps": [
       "Both backup aggregate endpoints NO_REPORT",
       "Latest Drive and Photos daily runs failure; cause not established from job metadata",
-      "Guide Koofr activation pending separate credentials and verified old override import",
       "Supabase Free inactivity pause",
       "Independent Notes automated backup not confirmed"
     ]
@@ -268,8 +277,8 @@
       "Notes folder sharing UX",
       "Homepage/Home-AI navigation and compact model controls"
     ],
-    "qr_live_evidence": "docs/results/qr-resume-20261021.json",
-    "qr_status": "Public originals readable 6/6; Actions success; Koofr pending separate credentials and verified initialization",
+    "qr_live_evidence": "docs/results/qr-koofr-activation-20261021.json",
+    "qr_status": "Koofr active after verified six-guide import and live adapter save/reopen; owner approved Git originals",
     "historical_snapshot_note": "Remaining dated fields are the 19 October inventory; do not reopen completed work from old NO_REPORT or pending_rollout fields."
   }
 }
