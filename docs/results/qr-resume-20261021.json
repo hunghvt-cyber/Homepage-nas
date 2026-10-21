@@ -1,0 +1,149 @@
+{
+  "checked_at": "2026-10-21T02:40:42.928142+00:00",
+  "source_commit": "92d83dc1f42690aa7793ae5de4e44e71442c75a9",
+  "project": "homepage-nas",
+  "production_alias": "https://homepage-nas.vercel.app/",
+  "actions_run": 39382032577,
+  "actions_conclusion": "success",
+  "config_metadata": {
+    "guide_user_present": false,
+    "guide_app_password_present": false,
+    "namespace_present": true,
+    "ready": false
+  },
+  "local_validation": {
+    "guide_store_tests_passed": 6,
+    "build": "passed; six guides with QR",
+    "internal_links": "passed"
+  },
+  "anonymous_production_reads": [
+    {
+      "slug": "hop-do-mau",
+      "api": {
+        "status": 200,
+        "bytes": 644,
+        "source": "original",
+        "editable": false,
+        "matches_original": true,
+        "warning": true
+      },
+      "page": {
+        "status": 200,
+        "bytes": 3072,
+        "has_static_steps": true
+      },
+      "qr": {
+        "status": 200,
+        "bytes": 8674
+      }
+    },
+    {
+      "slug": "bep-sunhouse-shb82191-vmc",
+      "api": {
+        "status": 200,
+        "bytes": 3714,
+        "source": "original",
+        "editable": false,
+        "matches_original": true,
+        "warning": true
+      },
+      "page": {
+        "status": 200,
+        "bytes": 6660,
+        "has_static_steps": true
+      },
+      "qr": {
+        "status": 200,
+        "bytes": 10837
+      }
+    },
+    {
+      "slug": "tu-lanh-aqua-aqr-t305fa-lb",
+      "api": {
+        "status": 200,
+        "bytes": 4045,
+        "source": "original",
+        "editable": false,
+        "matches_original": true,
+        "warning": true
+      },
+      "page": {
+        "status": 200,
+        "bytes": 6990,
+        "has_static_steps": true
+      },
+      "qr": {
+        "status": 200,
+        "bytes": 10745
+      }
+    },
+    {
+      "slug": "may-giat-aqua-aw10-b4959u1k-b",
+      "api": {
+        "status": 200,
+        "bytes": 4979,
+        "source": "original",
+        "editable": false,
+        "matches_original": true,
+        "warning": true
+      },
+      "page": {
+        "status": 200,
+        "bytes": 8012,
+        "has_static_steps": true
+      },
+      "qr": {
+        "status": 200,
+        "bytes": 10869
+      }
+    },
+    {
+      "slug": "dieu-hoa-lenson-lv-09cx1",
+      "api": {
+        "status": 200,
+        "bytes": 3062,
+        "source": "original",
+        "editable": false,
+        "matches_original": true,
+        "warning": true
+      },
+      "page": {
+        "status": 200,
+        "bytes": 5822,
+        "has_static_steps": true
+      },
+      "qr": {
+        "status": 200,
+        "bytes": 10960
+      }
+    },
+    {
+      "slug": "may-loc-nuoc-mutosi-mp-u110cp",
+      "api": {
+        "status": 200,
+        "bytes": 3917,
+        "source": "original",
+        "editable": false,
+        "matches_original": true,
+        "warning": true
+      },
+      "page": {
+        "status": 200,
+        "bytes": 6758,
+        "has_static_steps": true
+      },
+      "qr": {
+        "status": 200,
+        "bytes": 11143
+      }
+    }
+  ],
+  "migration_complete": false,
+  "production_changed": false,
+  "old_blob_overrides_recovered": false,
+  "pending": [
+    "Configure separate guide credentials in Vercel Production",
+    "Recover old guide overrides/history or obtain explicit owner acceptance of all six static originals",
+    "Import with readback, enable READY, redeploy, verify live save/reopen"
+  ]
+}

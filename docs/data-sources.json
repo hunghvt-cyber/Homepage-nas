@@ -258,6 +258,18 @@
       "Independent Notes automated backup not confirmed"
     ]
   },
-  "migration_document": "docs/QR-KOOFR-20261019.md"
+  "migration_document": "docs/QR-KOOFR-20261019.md",
+  "latest_status_override": {
+    "as_of": "2026-10-21",
+    "document": "docs/QR-RESUME-20261021.md",
+    "owner_confirmed_complete": [
+      "Expense date correction",
+      "Drive/Photos backup reports and transfer metrics",
+      "Notes folder sharing UX",
+      "Homepage/Home-AI navigation and compact model controls"
+    ],
+    "qr_live_evidence": "docs/results/qr-resume-20261021.json",
+    "qr_status": "Public originals readable 6/6; Actions success; Koofr pending separate credentials and verified initialization",
+    "historical_snapshot_note": "Remaining dated fields are the 19 October inventory; do not reopen completed work from old NO_REPORT or pending_rollout fields."
+  }
 }
-
