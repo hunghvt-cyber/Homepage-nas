@@ -2,7 +2,7 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
   "installCommand": "npm ci --ignore-scripts && python3 -m pip install --target .build-deps -r requirements.txt",
-  "buildCommand": "PYTHONPATH=.build-deps python3 scripts/build.py",
+  "buildCommand": "node scripts/initialize-guides-once.mjs && PYTHONPATH=.build-deps python3 scripts/build.py",
   "outputDirectory": "dist",
   "trailingSlash": true,
   "headers": [
@@ -128,4 +128,3 @@
     }
   }
 }
-
