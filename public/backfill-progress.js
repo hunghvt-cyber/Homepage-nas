@@ -22,7 +22,7 @@
   put('snapshot','Số liệu chốt lúc '+when(report.measured_at)+(current&&current.run_id!==report.run_id?' · thuộc lượt trước.':'.'));
   put('coverage',metrics.inventory_complete?'Đã duyệt xong một vòng kiểm kê; còn phải đối chiếu mục chờ và lỗi.':'Chưa duyệt hết thư viện.');
   const age=Date.now()-Date.parse(report.measured_at);
-  put('note',(age>36*3600000?'Báo cáo đã quá 36 giờ. ':'')+'Số đã lưu là số manifest ghi nhận, còn cần kiểm chứng bản gốc. Không cộng các nhóm để suy ra tổng thư viện.');
+  put('note',(age>36*3600000?'Báo cáo đã quá 36 giờ. ':'')+'Chưa xác minh toàn bộ bản gốc; số đã kiểm kê chưa phải tổng thư viện.');
  }catch{
   put('state','Chưa tải được tiến độ Backfill');
   put('snapshot','Không có số liệu mới được xác minh.');
