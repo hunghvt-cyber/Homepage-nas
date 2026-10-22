@@ -1,3 +1,5 @@
+> Backfill 22/10: [thẻ tiến độ riêng](BACKFILL-PROGRESS-20261022.md) đọc snapshot tổng hợp từ nhánh GitHub `reports/backfill`, tách với trạng thái lượt đang chạy. Hai feed Daily/Drive vẫn dùng GAS; các bảng lịch sử phía dưới không bao gồm nguồn mới này.
+
 > QR hoàn tất 21/10/2026: [Koofr guide đã kích hoạt](QR-KOOFR-COMPLETE-20261021.md). Chủ hệ thống chấp nhận sáu bản nền; đã nhập, readback và lưu/mở lại thành công. Các ghi chú chờ phía dưới thuộc snapshot cũ, không mở lại việc này.
 
 
