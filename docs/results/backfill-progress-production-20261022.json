@@ -1,0 +1,91 @@
+{
+  "checked_at": "2026-10-22T03:14:21.212Z",
+  "runtime_commit": "573cc480d31a05a04fda1fb359b1fb440dff25b5",
+  "deployment": "dpl_DEBkz2hczxyZeyu4tFKR63K5Xfue",
+  "target": "production",
+  "production_alias": "https://homepage-nas.vercel.app/",
+  "ready": true,
+  "backfill_api": {
+    "status": 200,
+    "snapshot_run": 39519576698,
+    "current_run": 39698534252,
+    "current_status": "in_progress",
+    "snapshot_is_previous": true
+  },
+  "browser": [
+    {
+      "width": 390,
+      "real_production_page": true,
+      "current_running_label": true,
+      "previous_snapshot_label": true,
+      "uploaded_text": "1.640",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 820,
+      "real_production_page": true,
+      "current_running_label": true,
+      "previous_snapshot_label": true,
+      "uploaded_text": "1.640",
+      "horizontal_overflow": false
+    },
+    {
+      "width": 1366,
+      "real_production_page": true,
+      "current_running_label": true,
+      "previous_snapshot_label": true,
+      "uploaded_text": "1.640",
+      "horizontal_overflow": false
+    }
+  ],
+  "unchanged_feeds": {
+    "nas_status": 200,
+    "photos_daily_status": 200,
+    "daily_source_run": 39693250956,
+    "daily_transport": "GAS/Drive"
+  },
+  "validation": {
+    "homepage_github_run": 39714780554,
+    "homepage_tests": 84,
+    "homepage_tests_passed": 84,
+    "photo_publisher_local_tests": 60,
+    "callback_ci_run": 39715205986,
+    "callback_ci": "success"
+  },
+  "limits": {
+    "current_backfill_completed": false,
+    "completion_callback_live_success_observed": false,
+    "new_PR7_worker_started": false,
+    "three_original_videos_recovered": false,
+    "reason": "Existing serialized worker is still running its older checkout; no parallel writer started."
+  },
+  "initial_snapshot": {
+    "schema_version": 1,
+    "source": "gphotos-backfill",
+    "run_id": 39519576698,
+    "run_number": 14,
+    "run_attempt": 1,
+    "run_url": "https://github.com/hunghvt-cyber/google-photos-koofr/actions/runs/39519576698",
+    "source_sha": "73df68bb3c3474ac41200cae9cd6a2236417b261",
+    "measured_at": "2026-10-21T05:12:03.006913Z",
+    "outcome": "failure",
+    "metrics": {
+      "uploaded_total": 1640,
+      "pending_seen": 45515,
+      "pending_errors": 105,
+      "inventoried_total": 47247,
+      "albums": 49,
+      "album_memberships": 25299,
+      "attempted_this_run": 390,
+      "uploaded_this_run": 362,
+      "errors_this_run": 28,
+      "inventory_complete": false
+    }
+  },
+  "publication": {
+    "report_branch": "reports/backfill",
+    "callback_main_merge": "8b985c79a7e054cd65372d7fa21d697381cf1a2e",
+    "provider_credentials_in_publisher": false,
+    "provider_state_writes_by_publisher": false
+  }
+}
