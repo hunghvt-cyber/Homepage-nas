@@ -13,7 +13,7 @@ không đo lại dữ liệu riêng hoặc chạy thao tác ghi.
 | QR | [Kích hoạt Koofr 21/10](QR-KOOFR-COMPLETE-20261021.md); không nhập lại hoặc dùng Blob override cũ làm nguồn mới |
 | Notes | [Release Notes chuyên trách](https://github.com/hunghvt-cyber/Hunghvt-notes/blob/release/minimal-notes/docs/RELEASE.md); API Homepage cũ 410 |
 | Chi tiêu/Gemini | [Chat](GEMINI-CHAT-20261020.md), [trạng thái 21/10](QR-RESUME-20261021.md); GAS bridge khác reporting/webhook |
-| Đăng nhập | [Bộ đếm](LOGIN-LIMITER-SUPABASE-20261019.md); source SQL vẫn 5/IP, 30 tổng mỗi bucket 15 phút; chưa đọc DB trong đợt này |
+| Đăng nhập | [Bộ đếm](LOGIN-LIMITER-SUPABASE-20261019.md); SQL source và function DB `homepage_login.consume_attempt` cùng 5/IP, 30 tổng/900 giây; đã truy vấn metadata chỉ đọc 22/10, không gọi RPC hoặc đọc/sửa state |
 
 Nguồn máy đọc [data-sources.json](data-sources.json) chứa snapshot theo ngày và
 latest_status_override; không lấy riêng trường NO_REPORT cũ rồi mở lại việc đã xong.
