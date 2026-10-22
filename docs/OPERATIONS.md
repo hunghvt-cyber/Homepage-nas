@@ -1,3 +1,33 @@
+# Vận hành Homepage — cửa vào hiện hành
+
+Đối chiếu source và metadata alias ngày 22/10/2026, Asia/Ho_Chi_Minh.
+Alias production READY: `88a0f78879c0d91415061ace955458a02c4e204b`, main,
+deployment `dpl_4SoYwuZ6beoUEZ74FNgATJZbduff`. Chỉ xác minh metadata,
+không đo lại dữ liệu riêng hoặc chạy thao tác ghi.
+
+| Tính năng | Nguồn chi tiết và trạng thái bằng chứng |
+| --- | --- |
+| Báo cáo NAS | [GAS policy](NAS-REPORTS-EVENT-POLICY-20261018.md), [cutover](results/nas-gas-production-cutover-20261019.md); cần số đo NAS mới để kết luận hiện trạng host |
+| Drive/Photos Daily | [Phục hồi hoàn tất 20/10](results/backup-report-recovery-20261020.md), [metrics](BACKUP-REPORTING.md); hai feed HTTP 200 tại mốc đó, source mặc định GAS |
+| Photos Backfill | [Nguồn GitHub aggregate riêng](BACKFILL-PROGRESS-20261022.md); không trộn run sequence với Daily |
+| QR | [Kích hoạt Koofr 21/10](QR-KOOFR-COMPLETE-20261021.md); không nhập lại hoặc dùng Blob override cũ làm nguồn mới |
+| Notes | [Release Notes chuyên trách](https://github.com/hunghvt-cyber/Hunghvt-notes/blob/release/minimal-notes/docs/RELEASE.md); API Homepage cũ 410 |
+| Chi tiêu/Gemini | [Chat](GEMINI-CHAT-20261020.md), [trạng thái 21/10](QR-RESUME-20261021.md); GAS bridge khác reporting/webhook |
+| Đăng nhập | [Bộ đếm](LOGIN-LIMITER-SUPABASE-20261019.md); source SQL vẫn 5/IP, 30 tổng mỗi bucket 15 phút; chưa đọc DB trong đợt này |
+
+Nguồn máy đọc [data-sources.json](data-sources.json) chứa snapshot theo ngày và
+latest_status_override; không lấy riêng trường NO_REPORT cũ rồi mở lại việc đã xong.
+Bản đồ cấp hệ thống thuộc [NAS AIO](https://github.com/hunghvt-cyber/0219nas-aio).
+
+## Thứ tự đối chiếu và giới hạn
+
+Đọc entry này → hồ sơ tính năng → source/config → bằng chứng runtime mới nếu cần.
+Các snapshot phía dưới được giữ làm bằng chứng; thông số, hạn chế và lần kiểm tra
+phải giữ đúng ngày. Không dùng CI fixture hoặc READY để chứng nhận dữ liệu thật.
+Không đổi secret/backend, chạy lại initialization/migration/backup hay deploy chỉ để đồng bộ tài liệu.
+
+## Snapshot vận hành 19/10 và bổ sung 20–22/10 — lưu lịch sử
+
 > Backfill 22/10: [thẻ tiến độ riêng](BACKFILL-PROGRESS-20261022.md) đọc snapshot tổng hợp từ nhánh GitHub `reports/backfill`, tách với trạng thái lượt đang chạy. Hai feed Daily/Drive vẫn dùng GAS; các bảng lịch sử phía dưới không bao gồm nguồn mới này.
 
 > QR hoàn tất 21/10/2026: [Koofr guide đã kích hoạt](QR-KOOFR-COMPLETE-20261021.md). Chủ hệ thống chấp nhận sáu bản nền; đã nhập, readback và lưu/mở lại thành công. Các ghi chú chờ phía dưới thuộc snapshot cũ, không mở lại việc này.

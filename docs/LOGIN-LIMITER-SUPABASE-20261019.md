@@ -39,9 +39,11 @@ token gốc vào Vercel Secret. SQL không chứa token triển khai.
 - Node: bảo mật IP, lỗi/response sai, cookie login/session/logout và fail-closed.
 - Supabase advisors: không có ERROR/WARN mới; INFO RLS không policy là chủ ý.
 
-## Chuyển lại Blob
+## Phương án Blob cũ — không phải chỉ dẫn hiện hành
 
-Khi Blob hoạt động lại, kiểm tra đọc/ghi và giới hạn thật trước. Sau đó đổi
+**Quyết định hiện hành giữ Supabase, không chuyển lại Blob khi quota mở.** Đoạn dưới chỉ giữ phương án lịch sử, không thực hiện từ việc đọc tài liệu.
+
+Phương án từng đề xuất: khi Blob hoạt động lại, kiểm tra đọc/ghi và giới hạn thật trước. Sau đó đổi
 `LOGIN_LIMIT_BACKEND=blob` và redeploy. Không tự đổi backend khi lỗi vì hai bộ đếm
 độc lập có thể cho phép nhiều lượt hơn mức dự kiến. Chỉ thu hồi token/quyền và gỡ
 schema của bộ đếm sau khi xác minh chuyển lại; không tác động schema ôn thi.

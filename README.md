@@ -1,12 +1,16 @@
 # Homepage AIO — quản trị và vận hành
 
 Trang chính: https://homepage-nas.vercel.app/
-Cập nhật trạng thái: 19/10/2026, múi giờ Việt Nam.
+Đối chiếu tài liệu/source và alias Vercel: 22/10/2026, múi giờ Việt Nam.
+Production alias READY tại `88a0f78879c0d91415061ace955458a02c4e204b`, nhánh `main`.
+Đợt tài liệu không chạy kiểm thử ghi hoặc xác nhận lại mọi tính năng production.
 
 **AI tiếp quản đọc [Hồ sơ vận hành hiện tại](docs/OPERATIONS.md) trước.**
 [Bản đồ nguồn dữ liệu JSON](docs/data-sources.json) dùng để tra cứu có cấu trúc;
 [bằng chứng kiểm tra](docs/results/operations-20261019.json) phân biệt cấu hình,
 kiểm tra production và những phần chưa xác minh.
+
+Bản đồ 11 repo và ranh giới cấp hệ thống thuộc [NAS AIO](https://github.com/hunghvt-cyber/0219nas-aio); repo này giữ chi tiết UI/API/tích hợp.
 
 ## Sáu nhóm phụ thuộc
 
@@ -26,15 +30,15 @@ Telegram là nguồn ghi chi tiêu; Tailscale phục vụ hai shortcut NAS. Home
 
 - Camera/NAS: trình duyệt → `/api/nas-report` → GAS reporting → Drive.
 - Hai báo cáo backup: `/api/backup-report?source=gdrive|gphotos` → cùng GAS reporting.
-  Kiểm tra 19/10/2026 vẫn trả `503 NO_REPORT`; chưa có báo cáo thật để xác nhận hoàn tất.
+  [Bằng chứng 20/10](docs/results/backup-report-recovery-20261020.md) xác nhận cả hai HTTP 200, signed ACK và run gốc. Không coi NO_REPORT 19/10 là lỗi đang tồn.
 - Đăng nhập: mật khẩu chung và cookie mã hóa tại Vercel; bộ đếm Supabase
   từ commit `ccb4fb2`, giới hạn 5 lượt/IP và 30 lượt tổng/15 phút.
 - Notes: `/notes/` mở https://hunghvt-notes.vercel.app/; repo
   [Hunghvt-notes, nhánh release/minimal-notes](https://github.com/hunghvt-cyber/Hunghvt-notes/tree/release/minimal-notes).
   Backend Koofr và phiên đăng nhập riêng. API Notes cũ trả `410 NOTES_RETIRED`.
 - Hướng dẫn đồ vật: nội dung nền/ảnh ở GitHub; adapter sửa/lịch sử đã chuyển sang Koofr.
-  **Chưa mở lưu:** thiếu cấu hình Koofr riêng và chưa đối chiếu các bản sửa cũ trên Blob.
-  QR vẫn đọc bản nền công khai, có thông báo rõ khi chưa lấy được bản cập nhật.
+  [Đã kích hoạt 21/10](docs/QR-KOOFR-COMPLETE-20261021.md) từ sáu bản Git gốc được chủ hệ thống duyệt; đọc lại và adapter lưu/mở lại đạt. Không khởi tạo lại; overrides Blob cũ chưa phục hồi. QR đọc công khai, fallback bản nền được gắn nhãn.
+- Photos Backfill: `/api/backfill-progress` đọc aggregate từ GitHub và metadata lượt chạy, tách feed Daily GAS. Xem [hồ sơ](docs/BACKFILL-PROGRESS-20261022.md).
 - Chi tiêu/Gemini: API Vercel gọi GAS bridge hiện có bằng HMAC; dữ liệu chi tiêu ở Sheets.
   GAS bridge này khác GAS reporting và khác GAS webhook của bot hiện hành.
 
@@ -43,7 +47,7 @@ Telegram là nguồn ghi chi tiêu; Tailscale phục vụ hai shortcut NAS. Home
 - [Vận hành, nguồn dữ liệu, cấu hình và xử lý lỗi](docs/OPERATIONS.md)
 - [Danh mục nguồn dữ liệu có cấu trúc](docs/data-sources.json)
 - [Bộ đếm Supabase và quyền](docs/LOGIN-LIMITER-SUPABASE-20261019.md)
-- [Chuyển QR sang Koofr và điều kiện mở lưu](docs/QR-KOOFR-20261019.md)
+- [QR Koofr đã kích hoạt và giới hạn bằng chứng](docs/QR-KOOFR-COMPLETE-20261021.md)
 - [Notes cũ đã nghỉ và bằng chứng dọn dữ liệu](docs/NOTES-RETIREMENT-20261018.md)
 
 Tài liệu có ngày cũ là lịch sử khi mâu thuẫn với hồ sơ hiện tại; không dùng
