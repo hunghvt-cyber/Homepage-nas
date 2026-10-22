@@ -79,7 +79,7 @@ test('Homepage can select backup API without falling back silently to blocked Bl
  const dom=new JSDOM(ids.map(id=>id.endsWith('-link')?'<a id="'+id+'"></a>':'<span id="'+id+'"></span>').join(''),{runScripts:'outside-only'}),w=dom.window,calls=[];
  w.AbortSignal=AbortSignal;w.BACKUP_REPORTS_API_URL='/api/backup-report';w.BACKUP_REPORTS_BASE_URL='https://legacy.invalid';w.fetch=async url=>{calls.push(url);return {ok:true,json:async()=>report(url.endsWith('gdrive')?'gdrive':'gphotos')};};
  w.eval(readFileSync('public/backup-status.js','utf8'));for(let i=0;i<4;i++)await new Promise(r=>setImmediate(r));
- assert.deepEqual(calls,['/api/backup-report?source=gdrive','/api/backup-report?source=gphotos']);assert.equal(w.document.getElementById('backup-state').textContent,'Backup thành công');dom.window.close();
+ assert.deepEqual(calls,['/api/backup-report?source=gdrive']);assert.equal(w.document.getElementById('backup-state').textContent,'Backup thành công');dom.window.close();
 });
 test('configured GAS without a terminal report stays uncacheable and never claims success',async()=>{
  const res=response();
@@ -90,7 +90,7 @@ test('configured GAS without a terminal report stays uncacheable and never claim
  w.AbortSignal=AbortSignal;w.BACKUP_REPORTS_API_URL='/api/backup-report';w.BACKUP_REPORTS_BASE_URL='https://legacy.invalid';
  w.fetch=async url=>{calls.push(url);return {ok:false,json:async()=>({code:'NO_REPORT'})};};
  w.eval(readFileSync('public/backup-status.js','utf8'));for(let i=0;i<4;i++)await new Promise(r=>setImmediate(r));
- assert.equal(calls.length,2);for(const p of ['backup','photos'])assert.equal(w.document.getElementById(p+'-state').textContent,'Chưa có báo cáo từ workflow');
+ assert.equal(calls.length,1);for(const p of ['backup'])assert.equal(w.document.getElementById(p+'-state').textContent,'Chưa có báo cáo từ workflow');
  assert.ok(calls.every(x=>x.startsWith('/api/backup-report?')));dom.window.close();
 });
 

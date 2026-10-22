@@ -28,9 +28,21 @@ test('UI labels old snapshot during running job and avoids whole-library success
  const dom=new JSDOM(ids.map(id=>'<span id="backfill-'+id+'"></span>').join('')+'<a id="backfill-link"></a>',{runScripts:'outside-only'});
  dom.window.AbortSignal=AbortSignal;dom.window.fetch=async()=>Response.json({snapshot:snapshot(),current:currentRun(running())});
  dom.window.eval(readFileSync('public/backfill-progress.js','utf8'));for(let i=0;i<4;i++)await new Promise(r=>setImmediate(r));
- assert.match(dom.window.document.getElementById('backfill-state').textContent,/đang chạy/);
+ assert.match(dom.window.document.getElementById('backfill-state').textContent,/Đang backup/);
  assert.match(dom.window.document.getElementById('backfill-snapshot').textContent,/lượt trước/);
  assert.match(dom.window.document.getElementById('backfill-coverage').textContent,/Chưa duyệt hết/);
  assert.equal(dom.window.document.getElementById('backfill-uploaded').textContent,'1.640');
+ assert.equal(dom.window.document.getElementById('backfill-pending').textContent,'45.620');
  assert.ok(!dom.window.document.body.textContent.includes('%'));dom.window.close();
+});
+
+test('Photos totals fail closed for missing pending errors or overflow, without inventing zero',async()=>{
+ for(const mutate of [d=>delete d.metrics.pending_errors,d=>{d.metrics.pending_seen=Number.MAX_SAFE_INTEGER;d.metrics.pending_errors=1;}]){
+  const data=snapshot();mutate(data);
+  const dom=new JSDOM(['state','snapshot','uploaded','pending','coverage','note'].map(id=>'<span id="backfill-'+id+'"></span>').join(''),{runScripts:'outside-only'});
+  dom.window.AbortSignal=AbortSignal;dom.window.fetch=async()=>Response.json({snapshot:data,current:null});
+  dom.window.eval(readFileSync('public/backfill-progress.js','utf8'));for(let i=0;i<4;i++)await new Promise(r=>setImmediate(r));
+  assert.equal(dom.window.document.getElementById('backfill-pending').textContent,'—');
+  assert.equal(dom.window.document.getElementById('backfill-uploaded').textContent,'—');dom.window.close();
+ }
 });
