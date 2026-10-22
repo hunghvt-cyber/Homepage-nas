@@ -14,8 +14,8 @@ or weaken GAS run-order checks.
 
 ## Data and publication
 
-Backfill's existing engine produces its final health artifact. A separate job
-reads that exact run's artifact and publishes allowlisted counts. The engine job
+Backfill's existing engine produces its final health artifact. A separate
+main-branch workflow_run callback reads that exact completed run's artifact and publishes allowlisted counts. The engine job
 retains contents:read; only the publisher job receives contents:write/actions:read.
 It receives no Koofr/Google secrets and does not read/write media or the manifest.
 GitHub token is scoped to the publication step. GitHub's token cannot scope writes
@@ -51,10 +51,13 @@ pending_seen 45515, pending_errors 105, inventoried 47247, 49 albums,
 inventory_complete=false. No backup rerun or synthetic production counts.
 
 On implementation, Backfill 39698534252 is still running older ba89bee source.
-It cannot retroactively acquire the new publication step or PR #7 fixes. Do not
-start a second worker against its manifest. The next scheduled Backfill on new
-main publishes automatically. Future publisher success needs real-run evidence;
-initial seed/read verification does not prove that future job executed.
+Its engine does not acquire PR #7 fixes. Do not start a second worker against
+its manifest. The separate completion callback can publish its final artifact
+when it ends, even though the engine was already running before this release.
+Only reviewed main code executes; artifact content is strictly data, never code.
+The callback checks fixed workflow/event, main source branch and completed source
+identity. Future callback success needs real-run evidence; initial seed/read
+verification does not prove a future callback executed.
 
 ## Verification
 
