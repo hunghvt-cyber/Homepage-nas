@@ -1,3 +1,12 @@
+> Giao diện thống nhất 22/10: Homepage chỉ còn một mục Google Photos → Koofr,
+> hai số Đã upload (`uploaded_total`) và Còn cần upload (`pending_seen + pending_errors`).
+> Đây là snapshot manifest dùng chung, không cộng số upload của các lượt Daily/Backfill.
+> Thời điểm chốt giữ nguyên; chỉ cập nhật sau khi Backfill kết thúc. Daily hoàn tất
+> sau snapshot sẽ chưa phản ánh cho tới snapshot kế tiếp. Chưa kiểm kê hết thì
+> số còn cần upload được ghi rõ có thể tăng. API Daily GAS vẫn được giữ nguyên,
+> nhưng trình duyệt không đọc/hiển thị báo cáo phiên Daily riêng nữa.
+> Không thay engine, lịch, state, media hoặc transport báo cáo.
+
 # Homepage Backfill progress — 22 October 2026
 
 ## Scope

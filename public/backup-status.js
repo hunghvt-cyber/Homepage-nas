@@ -5,8 +5,7 @@
   const when=v=>v?new Date(v).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}):'Chưa có dữ liệu';
   const val=v=>v==null?'Chưa có dữ liệu':v;
   const sources=[
-    {key:'gdrive',file:'gdrive-backup-latest.json',source:'gdrive-koofr',prefix:'backup',repo:'my-backup-gdrive-koofr'},
-    {key:'gphotos',file:'gphotos-backup-latest.json',source:'gphotos-koofr',prefix:'photos',repo:'google-photos-koofr'}
+    {key:'gdrive',file:'gdrive-backup-latest.json',source:'gdrive-koofr',prefix:'backup',repo:'my-backup-gdrive-koofr'}
   ];
   for(const item of sources){
     const p=item.prefix;
@@ -26,15 +25,9 @@
       const states={success:'Backup thành công',paused:'Tạm dừng theo giới hạn thời gian',failure:'Backup thất bại',unknown:'Chưa xác minh'};
       put(p+'-state',states[data.status]||states.unknown);
       put(p+'-time',when(data.finished_at));
-      if(p==='backup'){
-        put('backup-bytes',data.metrics.transferred_gib==null?'Chưa có dữ liệu':Number(data.metrics.transferred_gib).toFixed(3)+' GiB');
-        put('backup-speed',data.metrics.speed_mib_s==null?'Chưa có dữ liệu':Number(data.metrics.speed_mib_s).toFixed(3)+' MiB/s');
-        put('backup-ignored',val(data.metrics.ignored_count));
-      }else{
-        put('photos-uploaded',val(data.metrics.uploaded));
-        put('photos-skipped',val(data.metrics.skipped));
-        put('photos-errors',val(data.metrics.errors));
-      }
+      put('backup-bytes',data.metrics.transferred_gib==null?'Chưa có dữ liệu':Number(data.metrics.transferred_gib).toFixed(3)+' GiB');
+      put('backup-speed',data.metrics.speed_mib_s==null?'Chưa có dữ liệu':Number(data.metrics.speed_mib_s).toFixed(3)+' MiB/s');
+      put('backup-ignored',val(data.metrics.ignored_count));
       const warning=Array.isArray(data.warnings)?data.warnings.filter(x=>typeof x==='string').join(' '):'';
       put(p+'-note',warning||'Số liệu của lần chạy gần nhất.');
       const expected='https://github.com/hunghvt-cyber/'+item.repo+'/actions/runs/';

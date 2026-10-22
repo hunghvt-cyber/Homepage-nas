@@ -9,7 +9,7 @@ không đo lại dữ liệu riêng hoặc chạy thao tác ghi.
 | --- | --- |
 | Báo cáo NAS | [GAS policy](NAS-REPORTS-EVENT-POLICY-20261018.md), [cutover](results/nas-gas-production-cutover-20261019.md); cần số đo NAS mới để kết luận hiện trạng host |
 | Drive/Photos Daily | [Phục hồi hoàn tất 20/10](results/backup-report-recovery-20261020.md), [metrics](BACKUP-REPORTING.md); hai feed HTTP 200 tại mốc đó, source mặc định GAS |
-| Photos Backfill | [Nguồn GitHub aggregate riêng](BACKFILL-PROGRESS-20261022.md); không trộn run sequence với Daily |
+| Photos tổng tiến độ | [Snapshot manifest chung](BACKFILL-PROGRESS-20261022.md): một mục với Đã upload và Còn cần upload (chờ + lỗi); giữ thời điểm chốt, không cộng số lượt Daily/Backfill |
 | QR | [Kích hoạt Koofr 21/10](QR-KOOFR-COMPLETE-20261021.md); không nhập lại hoặc dùng Blob override cũ làm nguồn mới |
 | Notes | [Release Notes chuyên trách](https://github.com/hunghvt-cyber/Hunghvt-notes/blob/release/minimal-notes/docs/RELEASE.md); API Homepage cũ 410 |
 | Chi tiêu/Gemini | [Chat](GEMINI-CHAT-20261020.md), [trạng thái 21/10](QR-RESUME-20261021.md); GAS bridge khác reporting/webhook |
