@@ -24,9 +24,9 @@ test('guide initialization requires exact approval, production project and disab
   await assert.rejects(initializeGuidesOnce({env:{...env,...bad},migrate}),/IMPORT_GUARD_REJECTED/);
  assert.equal(calls,0);
 });
-test('migration writes and verifies exactly six accepted guides, never overwrites existing data',async()=>{
- const h=davHarness();assert.deepEqual(await migrateGuides(manifest,{connect:h.connect}),{verified:6,readyToEnable:true});
- assert.equal(h.writes,6);assert.equal(h.unlocks,1);
+test('migration writes and verifies every accepted guide, never overwrites existing data',async()=>{
+ const h=davHarness();assert.deepEqual(await migrateGuides(manifest,{connect:h.connect}),{verified:originals.length,readyToEnable:true});
+ assert.equal(h.writes,originals.length);assert.equal(h.unlocks,1);
  const occupied=davHarness(true);await assert.rejects(migrateGuides(manifest,{connect:occupied.connect}),/DESTINATION_NOT_EMPTY/);
  assert.equal(occupied.writes,0);assert.equal(occupied.unlocks,1);
 });
