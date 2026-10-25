@@ -36,7 +36,7 @@
  async function refresh(){
   if(requestPending||document.hidden)return;requestPending=true;
   try{
-   const response=await fetch('/api/donations',{cache:'no-store',signal:AbortSignal.timeout(20000)});if(!response.ok)throw Error('HTTP');const data=validate(await response.json());
+   const response=await fetch('/api/backfill-progress?feed=donations',{cache:'no-store',signal:AbortSignal.timeout(20000)});if(!response.ok)throw Error('HTTP');const data=validate(await response.json());
    const latest=data.items.slice().sort((a,b)=>Date.parse(b.received_at)-Date.parse(a.received_at)||b.id.localeCompare(a.id));
    const server=Date.parse(data.server_time);
    if(initialized&&feedHealthy){for(const item of latest.slice().reverse()){const at=Date.parse(item.received_at);if(!seen.has(item.id)&&cursor!==null&&at>=cursor&&server-at<=120000&&server-at>=-300000)queue.push(item);}}

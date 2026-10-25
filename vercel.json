@@ -129,11 +129,5 @@
     "api/backfill-progress.js": {
       "maxDuration": 45
     }
-  },
-  "rewrites": [
-    {
-      "source": "/api/donations",
-      "destination": "/api/backfill-progress?feed=donations"
-    }
-  ]
+  }
 }
