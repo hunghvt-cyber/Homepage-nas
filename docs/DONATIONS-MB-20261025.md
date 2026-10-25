@@ -1,4 +1,4 @@
-# Donate MB — đang chuẩn bị, chưa bật production
+# Donate MB — source đã hoàn thiện, xác minh production riêng
 
 Chủ hệ thống chọn chỉ MB tài khoản 566766, lời nhắn tự do. Màn hình cạnh mèo dành cho số tiền/lời nhắn/câu cảm ơn; NAS/camera đưa xuống ngoài màn hình. Dùng QR chủ hệ thống đã cung cấp, không yêu cầu nội dung chuyển tiền theo mẫu.
 
@@ -16,10 +16,11 @@ Gemini chỉ được gọi khi ghi mới một khoản đã xác minh, dùng AP
 
 Homepage thăm dò mỗi 10 giây khi tab đang hiện. Khi mở trang, quay lại tab hoặc hồi phục sau mất kết nối, chốt mốc và không phát lại khoản cũ. Chỉ reo khoản mới, không quá hai phút tuổi, xếp hàng 10 giây/khoản. Tiếng cần bấm bật. Hiệu ứng tôn trọng nút dừng và reduced motion. Lịch sử vẫn hiển thị khoản đến chậm.
 
-## Trạng thái và chặn kích hoạt
+## Bằng chứng và triển khai
 
-Chưa có mẫu thông báo MB thực tế. `DONATE_MB_FORMAT_VERIFIED_=false` và `donationFromMB_` luôn trả null; không thể coi mock parser là bằng chứng runtime. Cần đọc ảnh/thông báo chủ hệ thống sắp cung cấp để khớp package, tài khoản, dấu chiều, số tiền, nội dung và ID/thời gian giao dịch. Không tự suy số tiền hoặc chiều từ Gemini để công khai giao dịch.
+Ảnh thông báo MB/VCB thật đã được chủ hệ thống cung cấp 25/10/2026. Đã thêm parser xác định cho com.mbmobile và com.VCB (đối chiếu package với snapshot MacroDroid); MB chỉ ghi donate tiền vào đúng 566766, dùng mã ngân hàng chống trùng, loại metadata đối ứng khỏi lời nhắn. Telegram vẫn nhận thu và chi. Bộ donate có mốc kích hoạt cố định, không nhập lại thông báo cũ.
 
-Chưa xuất bản giao diện này và chưa triển khai nhánh bot. Kiểm thử local: 95 Node tests Homepage đạt; 128 tests GAS gồm lưu/dedupe/retention/fallback đạt trước khi có parser MB thật. Browser QA và quét QR cần ghi bằng chứng riêng.
+Bot PR #17 đã merge vào nhánh active; workflow 40197876852 qua 135 tests và cập nhật GAS deployment revision 41 thành công. Chưa có giao dịch mới sau triển khai để kiểm chứng end-to-end nhận tiền/Gemini/Sheet. Homepage local qua 95 tests; preview deploy đầu có lỗi nên đã gom route donate vào function backfill hiện có qua rewrite /api/donations, giữ tổng 12 function như production. Hai handler độc lập, không đổi nguồn/backfill data. Không khẳng định nguyên nhân lỗi Vercel nếu chưa có log build.
+
 
 QR đã giải mã từ ảnh gốc: BIN 970422, payload có tài khoản định danh VietQR; SVG được tạo từ đúng payload gốc, không tự thay alias bằng số tài khoản. Trên giao diện giữ số tài khoản 566766 như chủ hệ thống cung cấp. Nội dung mẫu có sẵn trong QR gốc được giữ nguyên; người gửi có thể sửa lời nhắn trong ứng dụng ngân hàng.

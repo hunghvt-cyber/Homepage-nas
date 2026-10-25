@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {validateDonationFeed,fetchDonationFeed} from '../lib/donations.js';
-import {createDonationsHandler} from '../api/donations.js';
+import {createDonationsHandler} from '../lib/donations.js';
 const now=Date.now(),row=(n,h=0)=>({id:n.toString(16).padStart(64,'0'),amount:10000,received_at:new Date(now-h*3600000).toISOString(),message:'=1+1 <script>test</script>',thanks:'Cảm ơn đại ca đã tiếp tế pate!'}),feed=items=>({schema:1,bank:'MB',enabled:true,server_time:new Date(now).toISOString(),items});
 test('rolling day includes every recent gift and at least newest ten older gifts',()=>{
  const old=Array.from({length:20},(_,i)=>row(i,25+i));assert.equal(validateDonationFeed(feed(old)).items.length,10);
