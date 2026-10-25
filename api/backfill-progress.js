@@ -1,3 +1,4 @@
+import {createDonationsHandler} from '../lib/donations.js';
 import {SNAPSHOT_URL,RUNS_URL,validateProgress,currentRun,boundedJson} from '../lib/backfill-progress.js';
 export function createBackfillProgressHandler({request=fetch,now=Date.now}={}){
  return async(req,res)=>{
@@ -12,4 +13,8 @@ export function createBackfillProgressHandler({request=fetch,now=Date.now}={}){
   return res.status(200).json({snapshot,current,checked_at:new Date(now()).toISOString(),snapshot_available:!!snapshot,current_available:runResult.status==='fulfilled'});
  };
 }
-export default createBackfillProgressHandler();
+export function createPublicProgressHandler(options={}){
+ const backfill=createBackfillProgressHandler(options),donations=createDonationsHandler(options);
+ return (req,res)=>req.query?.feed==='donations'?donations(req,res):backfill(req,res);
+}
+export default createPublicProgressHandler();
