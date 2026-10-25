@@ -50,7 +50,7 @@
   finally{requestPending=false;}
  }
  document.addEventListener('visibilitychange',()=>{if(document.hidden){feedHealthy=false;queue=[];}else refresh();});
- const dialog=$('donate-dialog');$('donate-open').addEventListener('click',()=>dialog.showModal());$('donate-close').addEventListener('click',()=>dialog.close());
+ const dialog=$('donate-dialog');$('donate-open').addEventListener('click',()=>dialog.showModal());document.querySelectorAll('[data-donate-zoom]').forEach(button=>button.addEventListener('click',()=>dialog.showModal()));$('donate-close').addEventListener('click',()=>dialog.close());
  dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
  $('donate-copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText('566766');$('donate-copy-state').textContent='Đã sao chép 566766';}catch{$('donate-copy-state').textContent='Số tài khoản: 566766';}});
  refresh();setInterval(refresh,10000);

@@ -26,3 +26,5 @@ Bot PR #17 đã merge vào nhánh active; workflow 40197876852 qua 135 tests và
 QR đã giải mã từ ảnh gốc: BIN 970422, payload có tài khoản định danh VietQR; SVG được tạo từ đúng payload gốc, không tự thay alias bằng số tài khoản. Trên giao diện giữ số tài khoản 566766 như chủ hệ thống cung cấp. Nội dung mẫu có sẵn trong QR gốc được giữ nguyên; người gửi có thể sửa lời nhắn trong ứng dụng ngân hàng.
 
 Kiểm tra production đầu: route alias rewrite trả 404 trong cấu hình trailingSlash. Client chuyển sang gọi thẳng function hiện có với query feed=donations; bỏ rewrite, giữ nguồn public feed và số function.
+
+QR ngoài trang: mã MB luôn hiện sẵn trong khối cạnh mèo, 220×220 CSS px, vùng trắng giữ nguyên SVG gốc. Bấm mã hoặc nút Phóng to QR mở cùng hộp phóng lớn; Enter/Space dùng được bằng button native. Không đổi payload, tài khoản hoặc backend.
