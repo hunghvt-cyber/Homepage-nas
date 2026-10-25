@@ -34,6 +34,7 @@ async function refresh(){
       }
     }
     stamp.textContent=snapshotTime?'Đo lúc: '+snapshotTime+(receivedTime?' · Nhận lúc: '+receivedTime:'')+(stale?' · Dữ liệu cũ hoặc chưa xác minh.':'')+(data._report?.recovered_previous?' · Đang dùng bản báo cáo trước.':''):'Chưa có thời gian báo cáo';
+    window.dispatchEvent(new CustomEvent('portal:nas-status',{detail:{data,stale,snapshotTime,receivedTime}}));
     const health=data.health||{};
     const healthStamp=document.getElementById('health-updated');
     healthStamp.textContent=snapshotTime?'Theo báo cáo gần nhất · '+snapshotTime+(stale?' · Dữ liệu cũ':''):'Chưa có dữ liệu';
@@ -49,6 +50,7 @@ async function refresh(){
     display('health-swap-usage',swapUsage,stale,!!snapshotTime);
     display('health-swap-percent',swapPercent,stale,!!snapshotTime);
   }catch{
+    window.dispatchEvent(new CustomEvent('portal:nas-status',{detail:{error:true}}));
     stamp.textContent='Không tải được báo cáo mới. Camera/NAS hiện chưa được xác minh.';
     for(const key of ['cam1','cam2','nas'])document.getElementById(key).textContent='Chưa xác minh';
     document.getElementById('health-updated').textContent='Chưa tải được báo cáo mới';
