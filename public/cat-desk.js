@@ -2,6 +2,13 @@
 (()=>{
   const desk=document.getElementById('cat-desk');
   if(!desk)return;
+  const profile=document.getElementById('cat-profile');
+  const wideProfile=window.matchMedia?.('(min-width: 641px)');
+  if(profile&&wideProfile){
+    profile.open=wideProfile.matches;
+    wideProfile.addEventListener('change',event=>{profile.open=event.matches;});
+  }
+
   const put=(id,value)=>{document.getElementById(id).textContent=value;};
   let expiry;
   function waiting(message,stamp){
