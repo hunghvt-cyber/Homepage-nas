@@ -19,6 +19,7 @@
  async function play(){if(playing)return;playing=true;while(queue.length){const item=queue.shift();if(!document.hidden){show(item,true);await new Promise(resolve=>setTimeout(resolve,10000));desk.classList.remove('donate-celebrate');}}playing=false;}
  function history(){
   const list=$('donate-history');list.replaceChildren();
+  const earned=$('donate-earned');if(earned)earned.textContent=money(items.reduce((sum,item)=>sum+item.amount,0));
   for(const item of items.slice(0,visible)){
    const li=document.createElement('li'),amount=document.createElement('strong'),time=document.createElement('time'),message=document.createElement('p'),thanks=document.createElement('small');
    amount.textContent='🐟 +'+money(item.amount);time.textContent=when(item.received_at);time.dateTime=item.received_at;message.textContent=item.message||'Không kèm lời nhắn';thanks.textContent=item.thanks;
@@ -46,7 +47,7 @@
    if(!latest.length){$('donate-amount').textContent='Chờ ting ting…';$('donate-message').textContent='Ai cho ăn thì mèo cảm ơn. Ai chưa cho ăn, mèo vẫn nhìn.';$('donate-thanks').textContent='MB 566766 · lời nhắn chuyển khoản tùy ý.';}
    $('donate-connection').textContent=data.enabled?'Đã kết nối · '+when(data.server_time)+(resetBaseline?' · chỉ reo các khoản mới khi trang đang mở.':''):'Đang chờ bật bộ nhận thông báo MB.';
    history();play();
-  }catch{feedHealthy=false;queue=[];$('donate-connection').textContent='Chưa tải được sổ donate mới; không thể xác nhận khoản mới.';if(!initialized)$('donate-history-state').textContent='Chưa kết nối được sổ donate. Không có số liệu được xác minh.';}
+  }catch{feedHealthy=false;queue=[];if($('donate-earned'))$('donate-earned').textContent=initialized?'Chờ cập nhật lại':'Chưa có số liệu';$('donate-connection').textContent='Chưa tải được sổ donate mới; không thể xác nhận khoản mới.';if(!initialized)$('donate-history-state').textContent='Chưa kết nối được sổ donate. Không có số liệu được xác minh.';}
   finally{requestPending=false;}
  }
  document.addEventListener('visibilitychange',()=>{if(document.hidden){feedHealthy=false;queue=[];}else refresh();});
