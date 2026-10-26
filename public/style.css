@@ -166,3 +166,4 @@ button.expense-bar-row{width:100%;text-align:left;cursor:pointer} .expense-bar{d
 #chat-model-refresh:hover{background:#dfe9df;color:#173c2b}
 html.gemini-embedded .chat-model-controls{flex:none}
 @media(max-width:380px){.chat-model-controls{gap:6px}.chat-model-controls select{font-size:.84rem;padding:.4rem .5rem}}
+#portal-account{padding:20px 24px;scroll-margin-top:16px}#portal-account h2{font-size:1.1rem;margin:0 0 8px}#portal-account p{font-size:.85rem;line-height:1.6}#portal-account .account-actions{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}#portal-account form{max-width:480px;margin-top:16px}#portal-account input{width:100%;box-sizing:border-box}#portal-account [hidden]{display:none!important}#portal-account #account-state{color:#d5bd80;font-size:.85rem}#portal-account #change-password-form{border-top:1px solid #59624b;padding-top:16px}

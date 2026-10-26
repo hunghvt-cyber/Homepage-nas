@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createSupabaseLimiter} from '../lib/login-limit-supabase.js';
+import {passwordVersion,verifyPassword} from '../lib/security.js';
 import {createAuthHandler} from '../api/auth.js';
 
 const env={LOGIN_LIMIT_SUPABASE_URL:'https://test-project.supabase.co',LOGIN_LIMIT_SUPABASE_KEY:'test-publishable-key',LOGIN_LIMIT_TOKEN:'a'.repeat(64),SESSION_PASSWORD:'test-session-at-least-32-characters'};
@@ -32,7 +33,8 @@ test('Supabase allowance retains encrypted login cookie, session GET, and logout
  const req={method:'POST',headers:{origin:process.env.PORTAL_BASE_URL,'content-type':'application/json'},body:{action:'login',password:process.env.PORTAL_PASSWORD}};
  let calls=0;
  const limit=createSupabaseLimiter({env,request:async()=>{calls++;return {ok:true,json:async()=>({allowed:true,retry_after:200})};}});
- const handler=createAuthHandler({limit}),login=res();await handler(req,login);
+ const passwordStore={current:async()=>({version:passwordVersion()}),matches:async value=>verifyPassword(value)};
+ const handler=createAuthHandler({limit,passwordStore}),login=res();await handler(req,login);
  assert.equal(login.code,200);assert.equal(login.value.authenticated,true);assert.equal(calls,1);
  const cookies=login.headers['set-cookie'];const cookie=(Array.isArray(cookies)?cookies[0]:cookies).split(';')[0];
  const check=res();await handler({method:'GET',headers:{cookie}},check);assert.equal(check.value.authenticated,true);assert.equal(calls,1);

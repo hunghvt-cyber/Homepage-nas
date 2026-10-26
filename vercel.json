@@ -128,6 +128,9 @@
     },
     "api/backfill-progress.js": {
       "maxDuration": 45
+    },
+    "api/auth.js": {
+      "maxDuration": 60
     }
   }
 }

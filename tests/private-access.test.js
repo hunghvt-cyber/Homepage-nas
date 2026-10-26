@@ -31,7 +31,7 @@ test('encrypted session grants access and password rotation revokes the same coo
  const {sealData}=await import('iron-session');const {owner}=await import('../lib/security.js');
  process.env.SESSION_PASSWORD='a-strong-test-session-secret-more-than-32-characters';process.env.PORTAL_PASSWORD='session-test-password';
  const sealed=await sealData({authVersion:passwordVersion()},{password:process.env.SESSION_PASSWORD,ttl:7*86400});const req={headers:{cookie:'__Host-homepage='+sealed}};const res=response();res.getHeader=k=>res.headers[k];
- await owner(req,res);process.env.PORTAL_PASSWORD='rotated-session-password';await assert.rejects(owner(req,res),{status:401});
+ const store={current:async()=>({version:passwordVersion()})};await owner(req,res,store);process.env.PORTAL_PASSWORD='rotated-session-password';await assert.rejects(owner(req,res,store),{status:401});
  await assert.rejects(owner({headers:{cookie:'__Host-homepage=forged'}},res),{status:401});
 });
 
