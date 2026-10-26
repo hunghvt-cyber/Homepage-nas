@@ -42,9 +42,9 @@ Telegram là nguồn ghi chi tiêu; Tailscale phục vụ hai shortcut NAS. Home
 - Chi tiêu/Gemini: API Vercel gọi GAS bridge hiện có bằng HMAC; dữ liệu chi tiêu ở Sheets.
   GAS bridge này khác GAS reporting và khác GAS webhook của bot hiện hành.
 
-## Quyết định đã duyệt, chưa triển khai
+## Nguồn mật khẩu chung — đã triển khai 26/10/2026
 
-- **26/10/2026 — Chung nguồn mật khẩu Homepage/Notes:** đổi mật khẩu tại Homepage; Notes xác thực qua Homepage, giữ phiên riêng; chưa làm SSO. Hiện hai mật khẩu vẫn độc lập. [Quyết định và ràng buộc triển khai](docs/SHARED-PASSWORD-DECISION-20261026.md).
+Homepage quản lý/đổi mật khẩu chung; Notes xác thực qua Homepage, giữ phiên riêng (chưa SSO). Dùng mật khẩu Homepage hiện tại để mở Notes. [Cấu hình và bằng chứng triển khai](docs/SHARED-PASSWORD-DECISION-20261026.md).
 
 ## Đường dẫn cần đọc
 
