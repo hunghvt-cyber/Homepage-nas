@@ -13,7 +13,7 @@
   const r=await fetch(url,{credentials:'same-origin',cache:'no-store',...(value?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(value)}:{})});
   const data=await r.json();if(!r.ok){if(r.status===401){state={authenticated:false,expired:true};update();}const error=new Error(data.error||'Không thể thực hiện.');error.status=r.status;error.reference=/^N4-[0-9a-f]{8}$/.test(data.reference||'')?data.reference:null;throw error;}return data;
  }
- function login(){if(home){$('password-form').hidden=false;$('account-password').focus();}else{window.top.location.href='/#portal-account';}}
+ function login(){if(home){$('portal-account').open=true;$('password-form').hidden=false;$('account-password').focus();}else{window.top.location.href='/#portal-account';}}
  window.PortalAccount={api,get state(){return state;},login};
  async function refresh(){if(busy)return;const id=++generation;try{const s=await api('/api/auth');if(id===generation){state=s;update();}}catch(e){if(id===generation){state={authenticated:false};show(e.message);update();}}}
  channel?.addEventListener('message',refresh);window.addEventListener('focus',refresh);window.addEventListener('pageshow',refresh);
