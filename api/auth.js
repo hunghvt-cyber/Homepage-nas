@@ -5,6 +5,11 @@ export function createAuthHandler({limit=checkAttempts,passwordStore=passwords}=
  return async function handler(req,res){
   try{
    requireConfig('PORTAL_PASSWORD','SESSION_PASSWORD','PORTAL_BASE_URL');
+   if(req.method==='GET'&&req.query?.health==='supabase'){
+    let reachable=false;
+    try{const r=await fetch('https://sxnuwfnqgqjrjvoosjep.supabase.co/rest/v1/',{redirect:'error',signal:AbortSignal.timeout(8000),cache:'no-store'});const text=await r.text();reachable=r.status===401&&text.includes('No API key found');}catch{}
+    return reply(res,200,{reachable,checkedAt:new Date().toISOString()});
+   }
    if(req.method==='GET'){
     try{await owner(req,res,passwordStore);return reply(res,200,{authenticated:true});}catch(e){if(e.status!==401)throw e;return reply(res,200,{authenticated:false});}
    }
