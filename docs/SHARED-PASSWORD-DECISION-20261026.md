@@ -1,37 +1,23 @@
-# Quyết định: dùng chung nguồn mật khẩu Homepage và Notes
+# Chung nguồn mật khẩu Homepage và Notes
+Trạng thái **ĐÃ TRIỂN KHAI PRODUCTION**, ngày 26/10/2026 (Asia/Ho_Chi_Minh).
 
-Ngày duyệt: **26/10/2026** (Asia/Ho_Chi_Minh).
-Trạng thái: **ĐÃ ĐƯỢC NGƯỜI DÙNG ĐỒNG Ý — CHƯA TRIỂN KHAI**.
-Lượt này chỉ ghi nhận quyết định, không đổi code, mật khẩu, biến môi trường hoặc cấu hình xác thực.
+## Hành vi
+Homepage là nơi duy nhất quản lý/đổi mật khẩu. Notes dùng mật khẩu Homepage hiện tại; NOTES_PASSWORD cũ không còn được dùng khi NOTES_AUTH_MODE=homepage-v1. Mỗi trang vẫn mở khóa riêng, không SSO. Session secret/cookie hai ứng dụng riêng biệt; không thay đổi mật khẩu hiện có.
 
-## Lý do
-Đổi mật khẩu trên Homepage hiện không cập nhật Notes. Người dùng muốn đổi tại một nơi để dễ quản lý, không thêm dịch vụ quản trị mới.
+Mỗi yêu cầu owner của Notes lấy password version trực tiếp từ Homepage, không cache version. Phiên cũ bị từ chối ở lần kiểm tra tiếp theo khi version đổi; không bảo đảm hủy yêu cầu đang xử lý trước thời điểm đổi mật khẩu. Dịch vụ lỗi thì đóng với 503, không fallback mật khẩu cũ. Link chia sẻ Notes và Code Inbox vẫn độc lập.
 
-## Hiện trạng đã đối chiếu mã
-- Homepage: `api/auth.js` dùng `lib/password-store.js`; mật khẩu đổi qua UI được lưu dạng bản băm scrypt có version trong `portal-auth.json` của Koofr guide adapter. Có kiểm tra chữ ký HMAC, khóa và readback. Nếu chưa có record thì dùng cấu hình khởi đầu. Phiên đăng nhập gắn authVersion.
-- Notes: `lib/app-config.mjs` và `lib/preview-api.mjs` kiểm tra `NOTES_PASSWORD` của project Vercel Notes; cookie/session secret riêng.
-- Hai ứng dụng hiện vẫn độc lập. Không hiểu “đã duyệt” là đã đồng bộ.
+## Kỹ thuật
+- Homepage: POST /api/auth/?service=notes, action version hoặc verify. Dùng lại API có sẵn để giữ trong giới hạn 12 Functions của Vercel Hobby.
+- Chỉ xác thực service bằng NOTES_AUTH_SERVICE_KEY (sensitive, Production, hai project); key này khác session secrets và không đưa ra browser.
+- Verify giữ limiter Supabase Homepage, nhận IP từ Notes server; Notes vẫn có limiter riêng. Không trả hash/salt/mật khẩu.
+- Nguồn quản lý mật khẩu vẫn lib/password-store.js/portal-auth.json trên Koofr như trước.
+- Notes: lib/shared-auth.mjs gọi URL HTTPS cố định, redirect:error, timeout; NOTES_AUTH_MODE=homepage-v1. URL cần dấu / sau auth để tránh redirect theo trailingSlash của Homepage.
+- Bản nháp, nội dung, CAS/ACL/khóa Koofr không thay đổi. Không xóa secret Notes cũ; hiện để rollback có chủ đích, không phải fallback tự động.
 
-## Phương án đã chọn
-1. **Homepage là nơi duy nhất quản lý và đổi mật khẩu chung.**
-2. Notes sẽ xác thực mật khẩu qua dịch vụ của Homepage; không đồng bộ bản rõ sang hai biến môi trường và không chia sẻ quyền đọc trực tiếp kho Koofr của Homepage.
-3. Hai ứng dụng giữ session secret/cookie riêng; người dùng vẫn mở khóa riêng trên từng trang bằng cùng mật khẩu.
-4. Đổi mật khẩu tại Homepage sẽ thu hồi phiên cũ của cả Homepage và Notes thông qua version chung.
-5. Không thêm GAS, database, nhà cung cấp đăng nhập hoặc dịch vụ mới.
-6. **Chưa làm SSO/đăng nhập một lần.** Muốn mở khóa Homepage rồi sang Notes không nhập lại cần quyết định và phạm vi riêng.
-
-## Ràng buộc cho đợt triển khai sau
-- Thiết kế endpoint server-to-server có xác thực riêng; không mở API kiểm tra mật khẩu công khai, không đưa service credential ra browser.
-- Khóa phiên Notes vẫn riêng. Không sao chép SESSION_PASSWORD của Homepage sang Notes.
-- Giữ giới hạn thử đăng nhập, kiểm tra nguồn yêu cầu và chế độ đóng khi dịch vụ chung không khả dụng; không fallback âm thầm sang mật khẩu Notes cũ.
-- Xác định cách lấy/revalidate password version cho phiên Notes, giới hạn độ trễ thu hồi, cache và hành vi khi Homepage/Koofr lỗi. Đây là chi tiết chưa thiết kế, chưa có cam kết thu hồi tức thời.
-- Kiểm thử đổi mật khẩu → phiên cũ của cả hai ứng dụng bị từ chối, mật khẩu mới hoạt động; phân biệt mật khẩu không khớp với phiên hết hạn.
-- Giữ mọi bản nháp Notes, revision/CAS/khóa/ACL/chia sẻ và dữ liệu Koofr; không sửa schema Supabase ôn thi.
-- Kết nối xuất code Notes bằng GitHub OIDC (Code Inbox) tiếp tục độc lập; đổi mật khẩu UI không cấp thêm hoặc thu hồi nhầm quyền của kết nối này.
-- Đăng nhập/mở khóa Notes sẽ thêm phụ thuộc vào Homepage. Cần thông báo lỗi đúng, không coi hỏng dịch vụ xác thực là sai mật khẩu hoặc mất dữ liệu.
-- Chỉ bỏ phụ thuộc runtime vào NOTES_PASSWORD sau khi kiểm thử và cutover thành công; không tự xóa secret/config hiện tại trong đợt ghi tài liệu.
-
-## Khi tiếp tục
-Đọc mã và cấu hình hiện hành của cả hai repo; lập thay đổi cụ thể, kiểm thử rồi triển khai theo phạm vi được người dùng yêu cầu ở lượt tiếp theo. Không triển khai chỉ vì tài liệu này ghi “đã duyệt”.
-
-Repo Notes: [Hunghvt-notes / release/minimal-notes](https://github.com/hunghvt-cyber/Hunghvt-notes/tree/release/minimal-notes).
+## Bằng chứng
+- Homepage PR #32; source cuối 737897f4d441e30004b64d972a7cafd0aeea3a40, deployment dpl_7uRsAYTHB3i578uiHMUYDMz9tqSD READY, alias homepage-nas.vercel.app.
+- Notes PR #15 và sửa URL canonical; source 0c8c0761c2625ae2be747e448a7259f974dccb34, deployment dpl_EESNjsEpJkd2N7V45rkJ28mn3kwf READY, alias hunghvt-notes.vercel.app.
+- Local Notes 139/139 tests PASS; thêm test service Homepage PASS. CI Homepage 40287406971 success; CI Notes 40287414406 Node/Chromium success trước sửa URL canonical (sửa URL đã chạy lại Node local).
+- Live GET Notes auth 200/authenticated:false, KP-88a9862d: luồng này đã gọi và kiểm version nguồn Homepage thật trước khi kiểm cookie; chứng minh liên lạc server-to-server hoạt động.
+- Sai mật khẩu, phiên được seal, đổi password version làm phiên cũ bị từ chối và lỗi authority/rate-limit đã kiểm thử fixture.
+- Chưa nhập mật khẩu người dùng hoặc đổi mật khẩu thật trong phiên triển khai; không coi fixture là nghiệm thu đăng nhập/đổi pass trên iPad. Không thay/xóa Notes thật để thử.
