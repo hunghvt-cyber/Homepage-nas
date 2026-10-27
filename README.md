@@ -1,8 +1,10 @@
 # Homepage AIO — quản trị và vận hành
 
 Trang chính: https://homepage-nas.vercel.app/
-Đối chiếu tài liệu/source và alias Vercel: 22/10/2026, múi giờ Việt Nam.
-Production alias READY tại `88a0f78879c0d91415061ace955458a02c4e204b`, nhánh `main`.
+Tài liệu bổ sung ngày 27/10/2026, múi giờ Việt Nam. Runtime xác thực đã đối chiếu
+26/10 tại `737897f`; deployment và giới hạn xác minh ở
+[hồ sơ mật khẩu chung](docs/SHARED-PASSWORD-DECISION-20261026.md).
+Chủ hệ thống đã xác nhận mục nghiệm thu đăng nhập chung OK ngày 27/10.
 Đợt tài liệu không chạy kiểm thử ghi hoặc xác nhận lại mọi tính năng production.
 
 **AI tiếp quản đọc [Hồ sơ vận hành hiện tại](docs/OPERATIONS.md) trước.**
@@ -35,7 +37,8 @@ Telegram là nguồn ghi chi tiêu; Tailscale phục vụ hai shortcut NAS. Home
   từ commit `ccb4fb2`, giới hạn 5 lượt/IP và 30 lượt tổng/15 phút.
 - Notes: `/notes/` mở https://hunghvt-notes.vercel.app/; repo
   [Hunghvt-notes, nhánh release/minimal-notes](https://github.com/hunghvt-cyber/Hunghvt-notes/tree/release/minimal-notes).
-  Backend Koofr và phiên đăng nhập riêng. API Notes cũ trả `410 NOTES_RETIRED`.
+  Backend Koofr và phiên đăng nhập riêng; mật khẩu lấy từ Homepage theo rollout 26/10.
+  API Notes cũ trả `410 NOTES_RETIRED`.
 - Hướng dẫn đồ vật: nội dung nền/ảnh ở GitHub; adapter sửa/lịch sử đã chuyển sang Koofr.
   [Đã kích hoạt 21/10](docs/QR-KOOFR-COMPLETE-20261021.md) từ sáu bản Git gốc được chủ hệ thống duyệt; đọc lại và adapter lưu/mở lại đạt. Không khởi tạo lại; overrides Blob cũ chưa phục hồi. QR đọc công khai, fallback bản nền được gắn nhãn.
 - Photos Backfill: `/api/backfill-progress` đọc aggregate từ GitHub và metadata lượt chạy, tách feed Daily GAS. Xem [hồ sơ](docs/BACKFILL-PROGRESS-20261022.md).
@@ -44,7 +47,7 @@ Telegram là nguồn ghi chi tiêu; Tailscale phục vụ hai shortcut NAS. Home
 
 ## Nguồn mật khẩu chung — đã triển khai 26/10/2026
 
-Homepage quản lý/đổi mật khẩu chung; Notes xác thực qua Homepage, giữ phiên riêng (chưa SSO). Dùng mật khẩu Homepage hiện tại để mở Notes. [Cấu hình và bằng chứng triển khai](docs/SHARED-PASSWORD-DECISION-20261026.md).
+Homepage quản lý/đổi mật khẩu chung; Notes xác thực qua Homepage, giữ phiên riêng (chưa SSO). Dùng mật khẩu Homepage hiện tại để mở Notes. Chủ hệ thống xác nhận mục nghiệm thu OK ngày 27/10. [Cấu hình và bằng chứng triển khai](docs/SHARED-PASSWORD-DECISION-20261026.md).
 
 ## Đường dẫn cần đọc
 

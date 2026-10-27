@@ -1,9 +1,10 @@
 # Vận hành Homepage — cửa vào hiện hành
 
-Đối chiếu source và metadata alias ngày 22/10/2026, Asia/Ho_Chi_Minh.
-Alias production READY: `88a0f78879c0d91415061ace955458a02c4e204b`, main,
-deployment `dpl_4SoYwuZ6beoUEZ74FNgATJZbduff`. Chỉ xác minh metadata,
-không đo lại dữ liệu riêng hoặc chạy thao tác ghi.
+Bổ sung ngày 27/10/2026, Asia/Ho_Chi_Minh. Runtime xác thực 26/10:
+`737897f`, deployment `dpl_7uRsAYTHB3i578uiHMUYDMz9tqSD`; xem
+[bằng chứng và giới hạn](SHARED-PASSWORD-DECISION-20261026.md). Chủ hệ thống xác nhận
+mục nghiệm thu đăng nhập chung/thu hồi phiên OK ngày 27/10; không phải smoke test mới
+do AI nhập mật khẩu thật. Snapshot alias 22/10 và inventory 19/10 bên dưới là lịch sử.
 
 | Tính năng | Nguồn chi tiết và trạng thái bằng chứng |
 | --- | --- |
@@ -13,11 +14,20 @@ không đo lại dữ liệu riêng hoặc chạy thao tác ghi.
 | QR | [Kích hoạt Koofr 21/10](QR-KOOFR-COMPLETE-20261021.md); không nhập lại hoặc dùng Blob override cũ làm nguồn mới |
 | Notes | [Release Notes chuyên trách](https://github.com/hunghvt-cyber/Hunghvt-notes/blob/release/minimal-notes/docs/RELEASE.md); API Homepage cũ 410 |
 | Chi tiêu/Gemini | [Chat](GEMINI-CHAT-20261020.md), [trạng thái 21/10](QR-RESUME-20261021.md); GAS bridge khác reporting/webhook |
-| Đăng nhập | [Bộ đếm](LOGIN-LIMITER-SUPABASE-20261019.md); SQL source và function DB `homepage_login.consume_attempt` cùng 5/IP, 30 tổng/900 giây; đã truy vấn metadata chỉ đọc 22/10, không gọi RPC hoặc đọc/sửa state |
+| Đăng nhập | [Mật khẩu chung Homepage–Notes, owner accepted 27/10](SHARED-PASSWORD-DECISION-20261026.md), [quản lý mật khẩu](HOMEPAGE-ACCESS-20261026.md); cookies riêng, chưa SSO. [Bộ đếm](LOGIN-LIMITER-SUPABASE-20261019.md); SQL source và function DB `homepage_login.consume_attempt` cùng 5/IP, 30 tổng/900 giây; đã truy vấn metadata chỉ đọc 22/10, không gọi RPC hoặc đọc/sửa state |
 
 Nguồn máy đọc [data-sources.json](data-sources.json) chứa snapshot theo ngày và
 latest_status_override; không lấy riêng trường NO_REPORT cũ rồi mở lại việc đã xong.
 Bản đồ cấp hệ thống thuộc [NAS AIO](https://github.com/hunghvt-cyber/0219nas-aio).
+
+## Bổ sung NAS ngày 27/10
+
+Theo output host do chủ hệ thống cung cấp, công cụ Node/npm/Python đã chuyển sang
+HDD và giữ đường dẫn cũ bằng symlink; root giảm 81% → 74%, trống khoảng 1,6G.
+Publisher user service có gate mountpoint cho /vol1; chưa kiểm cloud ACK sau chuyển
+hoặc reboot. Không coi bản snapshot trước chuyển là nghiệm thu publisher mới.
+Chi tiết ở [hồ sơ storage NAS](https://github.com/hunghvt-cyber/0219nas-aio/blob/main/NAS-STORAGE-20261027.md); retention bị ngắt/chặn là việc riêng
+ở [repo Tapo](https://github.com/hunghvt-cyber/tapo-nas-lab/blob/main/docs/CURRENT-OPERATIONS.md).
 
 ## Thứ tự đối chiếu và giới hạn
 

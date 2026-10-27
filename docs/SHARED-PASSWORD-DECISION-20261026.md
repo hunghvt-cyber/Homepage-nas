@@ -21,3 +21,11 @@ Mỗi yêu cầu owner của Notes lấy password version trực tiếp từ Hom
 - Live GET Notes auth 200/authenticated:false, KP-88a9862d: luồng này đã gọi và kiểm version nguồn Homepage thật trước khi kiểm cookie; chứng minh liên lạc server-to-server hoạt động.
 - Sai mật khẩu, phiên được seal, đổi password version làm phiên cũ bị từ chối và lỗi authority/rate-limit đã kiểm thử fixture.
 - Chưa nhập mật khẩu người dùng hoặc đổi mật khẩu thật trong phiên triển khai; không coi fixture là nghiệm thu đăng nhập/đổi pass trên iPad. Không thay/xóa Notes thật để thử.
+
+## Xác nhận chủ hệ thống ngày 27/10/2026
+
+Trong hội thoại vận hành, chủ hệ thống xác nhận mục nghiệm thu đăng nhập chung
+Homepage/Notes và thu hồi phiên sau đổi mật khẩu là OK (“Xác nhận mục 2 ok”).
+Đây là xác nhận người dùng, không phải một smoke test mới do AI đăng nhập hoặc
+đổi mật khẩu thật. Không mở lại yêu cầu nghiệm thu này chỉ vì giới hạn của phiên
+triển khai 26/10 bên dưới; giữ nguyên bằng chứng fixture và deployment theo ngày.

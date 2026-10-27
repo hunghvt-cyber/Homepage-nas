@@ -3,7 +3,10 @@
 Homepage owns the unlock, lock and change-password forms at `/#portal-account`.
 Expenses, Gemini (including its iframe) and guide editing share the existing
 HttpOnly encrypted cookie. Subpages link to Homepage rather than asking again.
-Notes remains an independent application; its password/cookie are unchanged.
+Notes remains an independent application with a separate cookie. The later
+26 October shared-password rollout made Homepage its password authority too;
+see [shared-password evidence and owner acceptance](SHARED-PASSWORD-DECISION-20261026.md).
+This is shared password management, not SSO.
 Lock signs this browser out. Password change revokes every previous Homepage
 session version; other open tabs refresh on a broadcast or when focused.
 
@@ -32,3 +35,11 @@ limiter checks, plus centralized account UI. Static build passed. No production
 password was changed for testing; actual first change is performed by the owner
 through the form. Production authenticated Koofr read/write remains to be checked
 by the owner on first use; deployment/public UI checks do not prove that write.
+
+## Owner acceptance — 27 October 2026
+
+The owner marked the shared Homepage/Notes login and password-version revocation
+acceptance item OK in the operations conversation. This is owner-reported acceptance;
+no new authenticated test or password change was performed by the documentation agent.
+The limits above describe the original rollout session. This acceptance does not
+certify unrelated guide writes or every Koofr feature.
