@@ -1,5 +1,14 @@
 # Vận hành Homepage — cửa vào hiện hành
 
+## Backfill repository rename repair — 29/10/2026
+
+Nguồn API trạng thái và snapshot Backfill dùng repo canonical `hunghvt-cyber/backup-drive`
+(repository ID `1336978361`). Reader chấp nhận đúng link run của tên canonical hoặc
+alias lịch sử `google-photos-koofr`, giữ nguyên timestamp/số liệu snapshot. Không theo
+redirect tùy ý hoặc trộn Backfill vào GAS Daily. Bộ xuất snapshot được sửa ở repo backup
+để xác thực callback bằng repo canonical. Xem [hồ sơ sửa và kiểm chứng](BACKFILL-RENAME-20261029.md).
+
+
 Bổ sung ngày 27/10/2026, Asia/Ho_Chi_Minh. Runtime xác thực 26/10:
 `737897f`, deployment `dpl_7uRsAYTHB3i578uiHMUYDMz9tqSD`; xem
 [bằng chứng và giới hạn](SHARED-PASSWORD-DECISION-20261026.md). Chủ hệ thống xác nhận

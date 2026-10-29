@@ -250,14 +250,18 @@
     },
     {
       "id": "gphotos-backfill-progress",
-      "authoritative_store": "Final worker aggregate on google-photos-koofr reports/backfill branch; live run metadata from GitHub",
+      "authoritative_store": "Final worker aggregate on hunghvt-cyber/backup-drive reports/backfill branch; current Backfill workflow metadata from canonical GitHub API",
       "writer": "isolated publish-progress job after Backfill health artifact; no provider secrets",
       "reader": "api/backfill-progress.js",
       "public_fields": "counts, inventory_complete, run identity/source SHA, original snapshot time; current workflow state separately",
       "no_full_library_percentage": true,
       "no_original_media_verification_claim": true,
       "added_at": "2026-10-22",
-      "evidence": "docs/BACKFILL-PROGRESS-20261022.md"
+      "evidence": "docs/BACKFILL-PROGRESS-20261022.md",
+      "repository": "hunghvt-cyber/backup-drive",
+      "repository_id": 1336978361,
+      "historical_report_repository_alias": "hunghvt-cyber/google-photos-koofr",
+      "rename_repair_document": "docs/BACKFILL-RENAME-20261029.md"
     }
   ],
   "cross_cutting": {
