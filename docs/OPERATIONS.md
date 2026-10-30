@@ -1,5 +1,13 @@
 # Vận hành Homepage — cửa vào hiện hành
 
+## Notes và bằng chứng reports — đối chiếu 30/10/2026
+
+Notes hiện dùng Firebase Firestore; source canonical là [web-notes/main](https://github.com/hunghvt-cyber/web-notes), không phải nhánh ứng dụng Koofr cũ. Koofr giữ backup Firestore riêng; GAS/Drive chỉ giữ reports. Hồ sơ vận hành Notes và deployment phải đọc tại [repo Notes](https://github.com/hunghvt-cyber/web-notes/blob/main/docs/OPERATIONS.md), không suy runtime từ HEAD tài liệu.
+
+Đối chiếu chỉ đọc khoảng 08:11 ICT ngày 30/10: alias Homepage trỏ deployment `dpl_Ei517Bp82wsJtpejULUmf8t7asQQ`, SHA `02806ac4c1c4903b3489c59904250f970b389c05`; `/api/nas-report`, hai `/api/backup-report` và `/api/backfill-progress` trả 200; `/api/notes` trả 410 `NOTES_RETIRED`. Feed Drive run `40970527964` báo success, Photos run `40976637785` báo failure; Backfill vẫn giữ snapshot 27/10. HTTP 200 chứng minh đọc được báo cáo, không chứng minh Photos backup thành công hoặc tiến độ mới.
+
+Backup Notes [40977423422](https://github.com/hunghvt-cyber/web-notes/actions/runs/40977423422) phát `backup_verified` lúc 07:06:08 ICT; restore [40977519777](https://github.com/hunghvt-cyber/web-notes/actions/runs/40977519777) phát `restore_parity_pass` và `restore_vault_removed` lúc 07:07. Cùng backup ID/fingerprint; không đọc payload hoặc thay đổi Notes trong đợt tài liệu này. Các snapshot Koofr/NO_REPORT phía dưới là lịch sử theo ngày, không phải trạng thái hiện hành.
+
 ## Backfill repository rename repair — 29/10/2026
 
 Nguồn API trạng thái và snapshot Backfill dùng repo canonical `hunghvt-cyber/backup-drive`
@@ -21,7 +29,7 @@ do AI nhập mật khẩu thật. Snapshot alias 22/10 và inventory 19/10 bên 
 | Drive/Photos Daily | [Phục hồi hoàn tất 20/10](results/backup-report-recovery-20261020.md), [metrics](BACKUP-REPORTING.md); hai feed HTTP 200 tại mốc đó, source mặc định GAS |
 | Photos tổng tiến độ | [Snapshot manifest chung](BACKFILL-PROGRESS-20261022.md): một mục với Đã upload và Còn cần upload (chờ + lỗi); giữ thời điểm chốt, không cộng số lượt Daily/Backfill |
 | QR | [Kích hoạt Koofr 21/10](QR-KOOFR-COMPLETE-20261021.md); không nhập lại hoặc dùng Blob override cũ làm nguồn mới |
-| Notes | [Release Notes chuyên trách](https://github.com/hunghvt-cyber/Hunghvt-notes/blob/release/minimal-notes/docs/RELEASE.md); API Homepage cũ 410 |
+| Notes | [Vận hành Firestore Notes](https://github.com/hunghvt-cyber/web-notes/blob/main/docs/OPERATIONS.md); API Homepage cũ 410 |
 | Chi tiêu/Gemini | [Chat](GEMINI-CHAT-20261020.md), [trạng thái 21/10](QR-RESUME-20261021.md); GAS bridge khác reporting/webhook |
 | Đăng nhập | [Mật khẩu chung Homepage–Notes, owner accepted 27/10](SHARED-PASSWORD-DECISION-20261026.md), [quản lý mật khẩu](HOMEPAGE-ACCESS-20261026.md); cookies riêng, chưa SSO. [Bộ đếm](LOGIN-LIMITER-SUPABASE-20261019.md); SQL source và function DB `homepage_login.consume_attempt` cùng 5/IP, 30 tổng/900 giây; đã truy vấn metadata chỉ đọc 22/10, không gọi RPC hoặc đọc/sửa state |
 
