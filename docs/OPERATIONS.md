@@ -1,5 +1,9 @@
 # Vận hành Homepage — cửa vào hiện hành
 
+## Đổi lại tên repo backup — 31/10/2026
+
+Đã đối chiếu ID: Drive là `hunghvt-cyber/backup-drive` (1191594464); Photos là `hunghvt-cyber/backup-photos-` (1336978361, có dấu gạch cuối). Reader Backfill dùng tên Photos mới. Tên `backup-drive` chỉ còn được chấp nhận cho link snapshot Photos lịch sử, không cho current-run. Publisher GAS xác thực workflow và repository ID khi GitHub cung cấp; giữ wire link lịch sử để tương thích schema GAS đã triển khai. Không đổi lịch, media, profile hoặc manifest. Test/CI và production readback phải ghi riêng, không coi sửa reader là khôi phục engine Photos.
+
 ## Notes và bằng chứng reports — đối chiếu 30/10/2026
 
 Notes hiện dùng Firebase Firestore; source canonical là [web-notes/main](https://github.com/hunghvt-cyber/web-notes), không phải nhánh ứng dụng Koofr cũ. Koofr giữ backup Firestore riêng; GAS/Drive chỉ giữ reports. Hồ sơ vận hành Notes và deployment phải đọc tại [repo Notes](https://github.com/hunghvt-cyber/web-notes/blob/main/docs/OPERATIONS.md), không suy runtime từ HEAD tài liệu.
@@ -10,7 +14,7 @@ Backup Notes [40977423422](https://github.com/hunghvt-cyber/web-notes/actions/ru
 
 ## Backfill repository rename repair — 29/10/2026
 
-Nguồn API trạng thái và snapshot Backfill dùng repo canonical `hunghvt-cyber/backup-drive`
+Checkpoint lịch sử 29/10: nguồn API trạng thái và snapshot Backfill khi đó dùng `hunghvt-cyber/backup-drive`
 (repository ID `1336978361`). Reader chấp nhận đúng link run của tên canonical hoặc
 alias lịch sử `google-photos-koofr`, giữ nguyên timestamp/số liệu snapshot. Không theo
 redirect tùy ý hoặc trộn Backfill vào GAS Daily. Bộ xuất snapshot được sửa ở repo backup
