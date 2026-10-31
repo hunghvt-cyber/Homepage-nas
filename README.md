@@ -1,7 +1,7 @@
 # Homepage AIO — quản trị và vận hành
 
 Trang chính: https://homepage-nas.vercel.app/
-Tài liệu bổ sung ngày 27/10/2026, múi giờ Việt Nam. Runtime xác thực đã đối chiếu
+Tài liệu bổ sung ngày 30/10/2026, múi giờ Việt Nam. Runtime xác thực đã đối chiếu
 26/10 tại `737897f`; deployment và giới hạn xác minh ở
 [hồ sơ mật khẩu chung](docs/SHARED-PASSWORD-DECISION-20261026.md).
 Chủ hệ thống đã xác nhận mục nghiệm thu đăng nhập chung OK ngày 27/10.
@@ -23,7 +23,7 @@ Bản đồ 11 repo và ranh giới cấp hệ thống thuộc [NAS AIO](https:/
 | Vercel | Website tĩnh và API; không còn đường chạy dùng Vercel Blob |
 | Supabase | Bộ đếm đăng nhập Homepage, tách trong schema riêng của dự án CongchungVND |
 | Google: GAS, Drive, Sheets, Photos, Gemini | GAS/Drive phục vụ báo cáo; GAS/Sheets phục vụ chi tiêu; GAS gọi Gemini |
-| Koofr | Notes độc lập, đích guide QR riêng, bản sao Drive/Photos và trạng thái backup |
+| Koofr | Đích guide QR riêng, bản sao Drive/Photos, trạng thái backup và backup Firestore Notes; không phải backend Notes hiện hành |
 
 Telegram là nguồn ghi chi tiêu; Tailscale phục vụ hai shortcut NAS. Home-AI là
 ứng dụng riêng được liên kết, không phải backend của Homepage.
@@ -36,8 +36,10 @@ Telegram là nguồn ghi chi tiêu; Tailscale phục vụ hai shortcut NAS. Home
 - Đăng nhập: mật khẩu chung và cookie mã hóa tại Vercel; bộ đếm Supabase
   từ commit `ccb4fb2`, giới hạn 5 lượt/IP và 30 lượt tổng/15 phút.
 - Notes: `/notes/` mở https://hunghvt-notes.vercel.app/; repo
-  [Hunghvt-notes, nhánh release/minimal-notes](https://github.com/hunghvt-cyber/Hunghvt-notes/tree/release/minimal-notes).
-  Backend Koofr và phiên đăng nhập riêng; mật khẩu lấy từ Homepage theo rollout 26/10.
+  [web-notes, nhánh main](https://github.com/hunghvt-cyber/web-notes).
+  Backend Firebase Firestore; phiên đăng nhập riêng, mật khẩu lấy từ Homepage theo rollout 26/10.
+  Koofr chỉ giữ backup Notes riêng; GAS/Drive chỉ phục vụ reports, không lưu Notes.
+  [Vận hành và bằng chứng backup/restore](https://github.com/hunghvt-cyber/web-notes/blob/main/docs/OPERATIONS.md).
   API Notes cũ trả `410 NOTES_RETIRED`.
 - Hướng dẫn đồ vật: nội dung nền/ảnh ở GitHub; adapter sửa/lịch sử đã chuyển sang Koofr.
   [Đã kích hoạt 21/10](docs/QR-KOOFR-COMPLETE-20261021.md) từ sáu bản Git gốc được chủ hệ thống duyệt; đọc lại và adapter lưu/mở lại đạt. Không khởi tạo lại; overrides Blob cũ chưa phục hồi. QR đọc công khai, fallback bản nền được gắn nhãn.
